@@ -1,0 +1,5 @@
+.env
+rag/vectorstore/
+__pycache__/
+*.pyc
+pdfs/

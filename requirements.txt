@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+langchain
+langchain-openai
+langchain-community
+langchain-ollama
+faiss-cpu
+pdfplumber
+duckduckgo-search
+python-dotenv
