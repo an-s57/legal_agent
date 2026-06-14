@@ -1,4 +1,4 @@
-# agent/legal_agent.py
+# legal_agent.py
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, ToolMessage

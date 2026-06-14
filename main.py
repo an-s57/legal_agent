@@ -6,13 +6,14 @@ from agent.legal_agent import run_legal_agent
 from memory.case_memory import get_session, update_case_summary
 import json
 
-app = FastAPI(title="AI Legal Assistant")
+app = FastAPI(title="AI Legal Assistant")#
 
 class ChatRequest(BaseModel):
     session_id: str
     message: str
 
 @app.post("/legal/chat")
+#req相当于函数变量名，ChatRequest类型的
 async def legal_chat(req: ChatRequest):
     session = get_session(req.session_id)
     
@@ -23,7 +24,7 @@ async def legal_chat(req: ChatRequest):
         history.append(AIMessage(content=turn["ai"]))
     
     # 拿案情摘要
-    case_summary = json.dumps(
+    case_summary = json.dumps(#把python对象转换成JSON格式
         session["case_summary"], ensure_ascii=False
     ) if session["case_summary"] else ""
     
@@ -34,7 +35,7 @@ async def legal_chat(req: ChatRequest):
     # 更新历史
     session["history"].append({"human": req.message, "ai": answer})
     
-    # 异步更新案情摘要（不阻塞返回）
+    # 更新案情摘要
     exchange = f"用户：{req.message}\n助手：{answer}"
     updated_summary = update_case_summary(req.session_id, exchange)
     
