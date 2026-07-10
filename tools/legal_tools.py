@@ -1,6 +1,8 @@
-# tools/legal_tools.py
+"""法律工具集 — RAG 检索 + 联网搜索"""
 from langchain.tools import tool
+
 from rag.retriever import retrieve_legal_docs
+
 
 @tool
 def legal_rag_search(query: str) -> str:
@@ -14,6 +16,7 @@ def legal_rag_search(query: str) -> str:
         return "法律文档库中未找到相关内容"
     return "\n\n---\n\n".join(results)
 
+
 @tool
 def web_legal_search(query: str) -> str:
     """
@@ -22,17 +25,19 @@ def web_legal_search(query: str) -> str:
     比如"新规"、"2024"、"2025"等时效性关键词的问题。
     """
     from duckduckgo_search import DDGS
+
     try:
         with DDGS() as ddgs:
-            results = list(ddgs.text(
-                query + " 法律法规 中国",
-                max_results=3
-            ))
+            results = list(
+                ddgs.text(query + " 法律法规 中国", max_results=3)
+            )
         if not results:
             return "联网搜索未找到相关结果"
         formatted = []
         for r in results:
-            formatted.append(f"【{r['title']}】\n{r['body']}\n链接：{r['href']}")
+            formatted.append(
+                f"【{r['title']}】\n{r['body']}\n链接：{r['href']}"
+            )
         return "\n\n---\n\n".join(formatted)
     except Exception as e:
         return f"搜索失败：{str(e)}"

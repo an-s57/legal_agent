@@ -1,5 +1,28 @@
+# 环境变量
 .env
-rag/vectorstore/
+
+# Python
 __pycache__/
 *.pyc
-pdfs/
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# 虚拟环境
+.venv/
+venv/
+
+# 向量库（需自行 build_vectorstore.py 生成）
+rag/vectorstore/
+
+# PDF 源文件
+legal_pdfs/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

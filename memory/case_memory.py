@@ -1,30 +1,29 @@
-# memory/case_memory.py
-# 使用简单的内存字典，保存会话和案情摘要
-from langchain_openai import ChatOpenAI
+"""会话管理 — 内存会话字典 + LLM 案情摘要"""
+import json
+import os
+
 from dotenv import load_dotenv
-import os, json
+from langchain_openai import ChatOpenAI
 
 load_dotenv()
 
 llm = ChatOpenAI(
     model="glm-4-flash",
     openai_api_key=os.getenv("GLM_API_KEY"),
-    openai_api_base="https://open.bigmodel.cn/api/paas/v4/"
+    openai_api_base="https://open.bigmodel.cn/api/paas/v4/",
 )
 
-# 全局会话数据：{session_id: {"history": [], "case_summary": {}}}
 sessions: dict = {}
+
 
 def get_session(session_id: str) -> dict:
     if session_id not in sessions:
-        sessions[session_id] = {
-            "history": [],
-            "case_summary": {}
-        }
+        sessions[session_id] = {"history": [], "case_summary": {}}
     return sessions[session_id]
 
+
 def update_case_summary(session_id: str, new_exchange: str) -> dict:
-    """每轮对话后调用，让LLM更新案情摘要"""
+    """每轮对话后调用，让 LLM 更新案情摘要"""
     session = get_session(session_id)
     current = json.dumps(session["case_summary"], ensure_ascii=False)
 
