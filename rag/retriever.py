@@ -1,7 +1,8 @@
 """FAISS 向量库 — 自定义 Ollama 嵌入 + 法律文档检索"""
 import os
-
+import torch
 import httpx
+from transformers import AutoModelForSequenceClassification,AutoTokenizer
 from langchain_community.document_loaders import PDFPlumberLoader
 from langchain_community.vectorstores import FAISS
 from langchain_core.embeddings import Embeddings
@@ -46,6 +47,18 @@ embedding_model = OllamaEmbeddings()
 
 _faiss_db = None
 
+_reranker_model=None
+_reranker_tokenizer=None
+RERANKER_MODEL_NAME="BAAI/bge-reranker-base"
+
+#加载模型  只在第一次调用的时候执行 
+def _get_reranker():
+    global _reranker_model,_reranker_tokenizer
+    if _reranker_model is None:
+        _reranker_tokenizer=AutoTokenizer.from_pretrained(RERANKER_MODEL_NAME)
+        _reranker_model=AutoModelForSequenceClassification.from_pretrained(RERANKER_MODEL_NAME)
+        _reranker_model.eval()
+    return _reranker_model,_reranker_tokenizer
 
 def _get_faiss_db():
     global _faiss_db
@@ -56,6 +69,15 @@ def _get_faiss_db():
             allow_dangerous_deserialization=True,
         )
     return _faiss_db
+#输出为重排列后的文档列表
+def _rerank(query:str,docs:list,top_k:int=5)->list:
+    model,tokenizer=_get_reranker()
+    pairs=[[query,doc.page_content] for doc in docs]#配对
+    with torch.no_grad():
+        inputs = tokenizer(pairs, padding=True, truncation=True, return_tensors="pt", max_length=512)#翻译
+        scores=model(**inputs).logits.squeeze(-1)#打分
+        ranked_indices = scores.argsort(descending=True)[:top_k]#排序取前5条
+        return [docs[i] for i in ranked_indices]
 
 
 def build_legal_vectorstore(pdf_folder: str):
@@ -81,10 +103,16 @@ def build_legal_vectorstore(pdf_folder: str):
     return faiss_db
 
 
-def retrieve_legal_docs(query: str, k: int = 10) -> list[str]:
+def retrieve_legal_docs(query: str, k: int = 20,top_k:int=5) -> list[str]:
     """对外暴露的检索接口，返回字符串列表"""
     faiss_db = _get_faiss_db()
     docs = faiss_db.similarity_search(query, k=k)
+    try:
+        docs=_rerank(query,docs,top_k=top_k)
+    except Exception as e:
+        print(f"Rerank 失败，使用 FAISS 原始结果: {e}")
+        docs=docs[:top_k]
+
     results = []
     for doc in docs:
         source = doc.metadata.get("source", "未知文件")

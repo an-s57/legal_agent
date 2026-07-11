@@ -1,0 +1,79 @@
+[
+  {
+    "id": "q01",
+    "question": "买到假货怎么索赔？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国消费者权益保护法(2013修正).pdf"],
+    "note": "三倍赔偿，消法第55条"
+  },
+  {
+    "id": "q02",
+    "question": "商家拒绝七天无理由退货怎么办？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国消费者权益保护法(2013修正).pdf"],
+    "note": "七天无理由退货，消法第25条"
+  },
+  {
+    "id": "q03",
+    "question": "什么是霸王条款？哪些格式条款无效？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国消费者权益保护法(2013修正).pdf"],
+    "note": "格式条款无效情形，消法第26条"
+  },
+  {
+    "id": "q04",
+    "question": "商家虚假宣传，消费者可以要求什么赔偿？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国消费者权益保护法(2013修正).pdf"],
+    "note": "虚假宣传赔偿，消法第45条、第55条"
+  },
+  {
+    "id": "q05",
+    "question": "消费者有哪些基本权利？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国消费者权益保护法(2013修正).pdf"],
+    "note": "消费者九项基本权利，消法第7-15条"
+  },
+  {
+    "id": "q06",
+    "question": "预付卡消费后商家跑路了怎么办？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国消费者权益保护法(2013修正).pdf"],
+    "note": "预付卡消费纠纷，消法第53条"
+  },
+  {
+    "id": "q07",
+    "question": "发生消费纠纷，可以通过哪些途径解决？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国消费者权益保护法(2013修正).pdf"],
+    "note": "消费纠纷解决途径，消法第39条"
+  },
+  {
+    "id": "q08",
+    "question": "2026年有什么新的消费者保护法规？",
+    "expect_tool": "web_legal_search",
+    "category": "联网搜索",
+    "note": "需要搜索最新法规动态"
+  },
+  {
+    "id": "q09",
+    "question": "2025年有没有关于直播带货的最新规定？",
+    "expect_tool": "web_legal_search",
+    "category": "联网搜索",
+    "note": "需要搜索直播带货新规"
+  },
+  {
+    "id": "q10",
+    "question": "消费者权益保护法最近有什么修订？",
+    "expect_tool": "web_legal_search",
+    "category": "联网搜索",
+    "note": "需要搜索法律修订动态"
+  }
+]
