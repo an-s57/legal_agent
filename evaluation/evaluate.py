@@ -179,14 +179,27 @@ def evaluate_tool_selection(questions: list, rounds: int = 1) -> dict:
             else:
                 print(f"  round {r+1}: [ERROR] {result['error']}")
 
-        # 多轮多数投票
-        if rounds > 1:
-            correct_count = sum(1 for r in round_results if r.get("correct"))
-            majority_correct = correct_count > rounds / 2
-            consistency = f"{correct_count}/{rounds}"
+        # 分离成功和失败的 round
+        ok_rounds = [r for r in round_results if r["status"] == "ok"]
+        error_rounds = [r for r in round_results if r["status"] == "error"]
+
+        if not ok_rounds:
+            # 全部 round 都报错 → 排除在准确率统计之外
+            question_status = "error"
+            majority_correct = False
+            consistency = f"0/{rounds} (全部超时/报错)"
         else:
-            majority_correct = round_results[0].get("correct", False)
-            consistency = "1/1"
+            # 至少有一轮成功
+            question_status = "partial" if error_rounds else "ok"
+
+            # 只在成功的 round 里做多数投票
+            if rounds > 1:
+                correct_count = sum(1 for r in ok_rounds if r.get("correct"))
+                majority_correct = correct_count > len(ok_rounds) / 2
+                consistency = f"{correct_count}/{len(ok_rounds)}"
+            else:
+                majority_correct = ok_rounds[0].get("correct", False)
+                consistency = "1/1"
 
         all_results.append({
             "id": q["id"],
@@ -194,17 +207,22 @@ def evaluate_tool_selection(questions: list, rounds: int = 1) -> dict:
             "category": q["category"],
             "expected_tool": q["expect_tool"],
             "correct": majority_correct,
+            "status": question_status,
             "consistency": consistency,
             "rounds": round_results,
         })
 
-    # 统计
+    # 统计：排除全部 error 的题
     total = len(all_results)
-    correct_num = sum(1 for r in all_results if r["correct"])
-    accuracy = round(correct_num / total * 100, 1) if total else 0
+    valid_results = [r for r in all_results if r["status"] != "error"]
+    error_results = [r for r in all_results if r["status"] == "error"]
+    valid_total = len(valid_results)
+    error_total = len(error_results)
+    correct_num = sum(1 for r in valid_results if r["correct"])
+    accuracy = round(correct_num / valid_total * 100, 1) if valid_total else 0
 
-    rag_results = [r for r in all_results if r["category"] == "法条检索"]
-    web_results = [r for r in all_results if r["category"] == "联网搜索"]
+    rag_results = [r for r in valid_results if r["category"] == "法条检索"]
+    web_results = [r for r in valid_results if r["category"] == "联网搜索"]
     rag_acc = round(sum(1 for r in rag_results if r["correct"]) / len(rag_results) * 100, 1) if rag_results else 0
     web_acc = round(sum(1 for r in web_results if r["correct"]) / len(web_results) * 100, 1) if web_results else 0
 
@@ -216,7 +234,9 @@ def evaluate_tool_selection(questions: list, rounds: int = 1) -> dict:
     avg_time = round(sum(all_elapsed) / len(all_elapsed), 2) if all_elapsed else 0
 
     print(f"\n{'─' * 40}")
-    print(f"工具选择准确率: {correct_num}/{total} = {accuracy}%")
+    print(f"工具选择准确率: {correct_num}/{valid_total} = {accuracy}%")
+    if error_total:
+        print(f"  ⚠️  {error_total} 题因超时/报错被排除，不计入准确率")
     print(f"  法条检索: {rag_acc}%")
     print(f"  联网搜索: {web_acc}%")
     print(f"  平均耗时: {avg_time}s")
@@ -224,6 +244,8 @@ def evaluate_tool_selection(questions: list, rounds: int = 1) -> dict:
 
     return {
         "total": total,
+        "valid_total": valid_total,
+        "error_total": error_total,
         "correct": correct_num,
         "accuracy": accuracy,
         "rag_accuracy": rag_acc,
