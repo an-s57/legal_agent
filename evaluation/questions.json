@@ -75,5 +75,85 @@
     "expect_tool": "web_legal_search",
     "category": "联网搜索",
     "note": "需要搜索法律修订动态"
+  },
+  {
+    "id": "q11",
+    "question": "销售的产品存在缺陷造成人身伤害，消费者该怎么追偿？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国产品质量法_20181229.pdf"],
+    "note": "产品缺陷责任，产品质量法第43条"
+  },
+  {
+    "id": "q12",
+    "question": "产品质量不合格，商家需要承担什么责任？什么是产品三包？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国产品质量法_20181229.pdf"],
+    "note": "产品质量责任与三包，产品质量法第40条"
+  },
+  {
+    "id": "q13",
+    "question": "商家搞虚假宣传贬低竞争对手，算什么违法行为？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国反不正当竞争法_20250627.pdf"],
+    "note": "虚假宣传与商业诋毁，反不正当竞争法第8条、第11条"
+  },
+  {
+    "id": "q14",
+    "question": "什么是不正当竞争行为？有哪些常见类型？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国反不正当竞争法_20250627.pdf"],
+    "note": "不正当竞争行为定义，反不正当竞争法第二章"
+  },
+  {
+    "id": "q15",
+    "question": "广告中使用绝对化用语比如国家级最高级，是否违法？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国广告法_20210429.pdf"],
+    "note": "广告禁止用语，广告法第9条"
+  },
+  {
+    "id": "q16",
+    "question": "保健食品广告能宣称有治疗效果吗？有什么限制？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国广告法_20210429.pdf"],
+    "note": "保健食品广告限制，广告法第18条"
+  },
+  {
+    "id": "q17",
+    "question": "电商平台对平台内商家售假是否需要承担连带责任？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国电子商务法_20180831.pdf"],
+    "note": "平台连带责任，电子商务法第38条"
+  },
+  {
+    "id": "q18",
+    "question": "电商商家可以自己刷单刷好评吗？法律怎么规定的？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国电子商务法_20180831.pdf"],
+    "note": "禁止刷单炒信，电子商务法第17条"
+  },
+  {
+    "id": "q19",
+    "question": "买到不符合食品安全标准的食品，可以要求多少赔偿？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国食品安全法_20250912.pdf"],
+    "note": "十倍赔偿，食品安全法第148条"
+  },
+  {
+    "id": "q20",
+    "question": "进口食品需要中文标签吗？没有中文标签怎么处罚？",
+    "expect_tool": "legal_rag_search",
+    "category": "法条检索",
+    "expected_sources": ["中华人民共和国食品安全法_20250912.pdf"],
+    "note": "进口食品标签要求，食品安全法第97条"
   }
 ]

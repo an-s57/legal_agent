@@ -56,7 +56,7 @@ def _get_reranker():
     global _reranker_model,_reranker_tokenizer
     if _reranker_model is None:
         _reranker_tokenizer=AutoTokenizer.from_pretrained(RERANKER_MODEL_NAME)
-        _reranker_model=AutoModelForSequenceClassification.from_pretrained(RERANKER_MODEL_NAME)
+        _reranker_model=AutoModelForSequenceClassification.from_pretrained(RERANKER_MODEL_NAME, torch_dtype=torch.float16)
         _reranker_model.eval()
     return _reranker_model,_reranker_tokenizer
 
@@ -102,8 +102,39 @@ def build_legal_vectorstore(pdf_folder: str):
     print(f"向量库建好了，共 {len(all_chunks)} 个文本段")
     return faiss_db
 
+def add_legal_documents(pdf_folder:str):
+    """向已有向量库增量添加新PDF，不重新建已有的"""
+    faiss_db=_get_faiss_db()
+    existing_sources=set()
+    for doc in faiss_db.docstore._dict.values():
+        existing_sources.add(doc.metadata.get("source",""))
+    new_chunks=[]
+    for filename in os.listdir(pdf_folder):
+        if not filename.endswith(".pdf"):
+            continue
+        if filename in existing_sources:
+            print(f"跳过已存在：{filename}")
+            continue
+        print(f"正在处理:{filename}")
+        file_path=os.path.join(pdf_folder,filename)
+        loader=PDFPlumberLoader(file_path)
+        documents=loader.load()
+        splitter=RecursiveCharacterTextSplitter(chunk_size=1000,chunk_overlap=200,add_start_index=True)
+        chunks=splitter.split_documents(documents)
+        for chunk in chunks:
+            chunk.metadata["source"]=filename
+        new_chunks.extend(chunks)
+    
+    if not new_chunks:
+        print("没有新的PDF要添加")
+        return faiss_db
+    
+    faiss_db.add_documents(new_chunks)
+    faiss_db.save_local(FAISS_DB_PATH)
+    print(f"新增{len(new_chunks)}个文本段，来自{len(set(c.metadata['source'] for c in new_chunks))}个文件")
+    return faiss_db
 
-def retrieve_legal_docs(query: str, k: int = 20,top_k:int=5) -> list[str]:
+def retrieve_legal_docs(query: str, k: int = 10,top_k:int=5) -> list[str]:
     """对外暴露的检索接口，返回字符串列表"""
     faiss_db = _get_faiss_db()
     docs = faiss_db.similarity_search(query, k=k)
