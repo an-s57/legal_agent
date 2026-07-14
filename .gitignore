@@ -23,6 +23,11 @@ legal_pdfs/
 .vscode/
 .idea/
 
+# 临时测试文件
+result*.txt
+test_clean*.txt
+test_result.txt
+
 # OS
 .DS_Store
 Thumbs.db

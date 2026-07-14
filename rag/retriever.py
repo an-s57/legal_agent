@@ -1,5 +1,7 @@
 """FAISS 向量库 — 自定义 Ollama 嵌入 + 法律文档检索"""
 import os
+os.environ['TRANSFORMERS_OFFLINE'] = '1'
+os.environ['HF_HUB_OFFLINE'] = '1'
 import torch
 import httpx
 from transformers import AutoModelForSequenceClassification,AutoTokenizer
@@ -56,7 +58,7 @@ def _get_reranker():
     global _reranker_model,_reranker_tokenizer
     if _reranker_model is None:
         _reranker_tokenizer=AutoTokenizer.from_pretrained(RERANKER_MODEL_NAME)
-        _reranker_model=AutoModelForSequenceClassification.from_pretrained(RERANKER_MODEL_NAME, torch_dtype=torch.float16)
+        _reranker_model=AutoModelForSequenceClassification.from_pretrained(RERANKER_MODEL_NAME, torch_dtype=torch.float32)
         _reranker_model.eval()
     return _reranker_model,_reranker_tokenizer
 
@@ -134,7 +136,7 @@ def add_legal_documents(pdf_folder:str):
     print(f"新增{len(new_chunks)}个文本段，来自{len(set(c.metadata['source'] for c in new_chunks))}个文件")
     return faiss_db
 
-def retrieve_legal_docs(query: str, k: int = 10,top_k:int=5) -> list[str]:
+def retrieve_legal_docs(query: str, k: int = 5, top_k: int = 3) -> list[str]:
     """对外暴露的检索接口，返回字符串列表"""
     faiss_db = _get_faiss_db()
     docs = faiss_db.similarity_search(query, k=k)

@@ -8,7 +8,7 @@ from langchain_openai import ChatOpenAI
 load_dotenv()
 
 llm = ChatOpenAI(
-    model="glm-4-flash",
+    model="glm-4.7",
     openai_api_key=os.getenv("GLM_API_KEY"),
     openai_api_base="https://open.bigmodel.cn/api/paas/v4/",
 )
@@ -35,7 +35,9 @@ def update_case_summary(session_id: str, new_exchange: str) -> dict:
 输出格式：
 {{
   "case_type": "案件类型，如劳动纠纷/合同纠纷/刑事案件，未知则为空字符串",
-  "key_facts": ["关键事实1", "关键事实2"],
+  "event_description": "事件描述：发生了什么事情，未知则为空字符串",
+  "event_time": "事情发生时间，未知则为空字符串",
+  "damages": "损失或后果：造成了什么损失，未知则为空字符串",
   "user_claim": "用户诉求，未知则为空字符串"
 }}"""
 
