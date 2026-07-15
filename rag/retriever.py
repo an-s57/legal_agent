@@ -49,19 +49,28 @@ embedding_model = OllamaEmbeddings()
 
 _faiss_db = None
 
-_reranker_model=None
-_reranker_tokenizer=None
-RERANKER_MODEL_NAME="BAAI/bge-reranker-base"
+_reranker_model = None
+_reranker_tokenizer = None
+RERANKER_MODEL_NAME = "BAAI/bge-reranker-base"
 
-#加载模型  只在第一次调用的时候执行 
+
 def _get_reranker():
-    global _reranker_model,_reranker_tokenizer
+    """加载 reranker 模型（首次调用时加载，后续使用缓存）"""
+    global _reranker_model, _reranker_tokenizer
     if _reranker_model is None:
-        _reranker_tokenizer=AutoTokenizer.from_pretrained(RERANKER_MODEL_NAME)
-        _reranker_model=AutoModelForSequenceClassification.from_pretrained(RERANKER_MODEL_NAME, torch_dtype=torch.float32)
-        #16位改成32位，之前精度溢出了，rerank打分不准确
+        _reranker_tokenizer = AutoTokenizer.from_pretrained(RERANKER_MODEL_NAME)
+        _reranker_model = AutoModelForSequenceClassification.from_pretrained(
+            RERANKER_MODEL_NAME, torch_dtype=torch.float32
+        )
         _reranker_model.eval()
-    return _reranker_model,_reranker_tokenizer
+    return _reranker_model, _reranker_tokenizer
+
+
+def preload_reranker():
+    """启动时预加载 reranker，避免首次请求等待"""
+    print("[RAG] 预加载 reranker 模型...", flush=True)
+    _get_reranker()
+    print("[RAG] reranker 模型加载完成", flush=True)
 
 def _get_faiss_db():
     global _faiss_db

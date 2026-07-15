@@ -1,5 +1,6 @@
 """FastAPI 入口 — AI 法律助手"""
 import json
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -11,8 +12,17 @@ from pydantic import BaseModel
 
 from agent.legal_agent import run_legal_agent, run_legal_agent_stream
 from memory.case_memory import get_session, update_case_summary
+from rag.retriever import preload_reranker
 
-app = FastAPI(title="AI Legal Assistant", version="1.0.0")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """启动时预加载模型，避免首次请求等待"""
+    preload_reranker()
+    yield
+
+
+app = FastAPI(title="AI Legal Assistant", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
