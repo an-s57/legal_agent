@@ -41,7 +41,7 @@ export default function ChatArea({ messages, isTyping }: ChatAreaProps) {
           >
             <div className="group relative max-w-[70%]">
               <div
-                className={`px-3.5 py-2 text-[11px] leading-relaxed
+                className={`px-3.5 py-2 text-[15px] leading-relaxed
                   ${msg.role === 'user'
                     ? 'rounded-2xl rounded-br-md text-white'
                     : 'glass rounded-2xl rounded-bl-md text-ink'
@@ -51,7 +51,7 @@ export default function ChatArea({ messages, isTyping }: ChatAreaProps) {
               >
                 {msg.role === 'bot' && idx === 0 && (
                   <div className="flex items-center gap-2 mb-0.5">
-                    <span className="text-[9px] font-medium text-gray-400">LexAgent</span>
+                    <span className="text-[11px] font-medium text-gray-400">LexAgent</span>
                   </div>
                 )}
                 <div className="whitespace-pre-wrap">{msg.content}</div>
@@ -60,7 +60,7 @@ export default function ChatArea({ messages, isTyping }: ChatAreaProps) {
                     {msg.tools.map((tool) => (
                       <span
                         key={tool}
-                        className="text-[8px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-500"
+                        className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-500"
                       >
                         {tool}
                       </span>
@@ -72,7 +72,7 @@ export default function ChatArea({ messages, isTyping }: ChatAreaProps) {
               {msg.role === 'bot' && idx !== 0 && (
                 <button
                   onClick={() => handleCopy(msg.content, idx)}
-                  className="absolute -bottom-4 left-1 text-[8px] text-gray-300
+                  className="absolute -bottom-4 left-1 text-[10px] text-gray-300
                              opacity-0 group-hover:opacity-100 transition-opacity duration-200
                              hover:text-gray-500"
                 >

@@ -29,15 +29,15 @@ export default function Sidebar({ sessionId, onNewSession, caseSummary, sessionL
       <div className="mb-5 flex-shrink-0 flex items-center gap-2">
         <Logo size={22} />
         <div>
-          <h1 className="text-xs font-semibold text-ink leading-tight">LexAgent</h1>
-          <p className="text-[8px] text-gray-400 leading-tight">AI 法律助手</p>
+          <h1 className="text-sm font-semibold text-ink leading-tight">LexAgent</h1>
+          <p className="text-[12px] text-gray-400 leading-tight">AI 法律助手</p>
         </div>
       </div>
 
       {/* 新建会话 */}
       <button
         onClick={onNewSession}
-        className="w-full py-1.5 px-3 rounded-3xl text-white text-[10px] font-medium
+        className="w-full py-1.5 px-3 rounded-3xl text-white text-[12px] font-medium
                    transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-lg flex-shrink-0"
         style={{ background: '#374151' }}
       >
@@ -46,16 +46,16 @@ export default function Sidebar({ sessionId, onNewSession, caseSummary, sessionL
 
       {/* 会话列表 */}
       <div className="mt-5 flex-1 overflow-y-auto min-h-0">
-        <p className="text-[9px] font-medium text-gray-400 mb-1.5 px-1">历史会话</p>
+        <p className="text-[11px] font-medium text-gray-400 mb-1.5 px-1">历史会话</p>
         <div className="space-y-0.5">
           {sessionList.length === 0 ? (
-            <p className="text-[9px] text-gray-300 px-1">暂无历史会话</p>
+            <p className="text-[11px] text-gray-300 px-1">暂无历史会话</p>
           ) : (
             sessionList.map((s) => (
               <button
                 key={s.id}
                 onClick={() => onSelectSession(s.id)}
-                className={`w-full text-left px-2.5 py-1.5 rounded-xl text-[10px] transition-all duration-200
+                className={`w-full text-left px-2.5 py-1.5 rounded-xl text-[12px] transition-all duration-200
                   ${s.id === sessionId
                     ? 'bg-gray-100 text-ink'
                     : 'text-gray-500 hover:bg-gray-50'
@@ -63,7 +63,7 @@ export default function Sidebar({ sessionId, onNewSession, caseSummary, sessionL
                 }
               >
                 <p className="truncate">{s.preview}</p>
-                <p className="text-[8px] text-gray-300 mt-0.5">
+                <p className="text-[12px] text-gray-300 mt-0.5">
                   {new Date(s.time).toLocaleDateString('zh-CN')}
                 </p>
               </button>
@@ -75,7 +75,7 @@ export default function Sidebar({ sessionId, onNewSession, caseSummary, sessionL
       {/* 案情摘要 */}
       {hasSummary && (
         <div className="mt-3 pt-3 border-t border-gray-100 flex-shrink-0 max-h-[35vh] overflow-y-auto">
-          <p className="text-[9px] font-medium text-gray-400 mb-1.5">案情摘要</p>
+          <p className="text-[11px] font-medium text-gray-400 mb-1.5">案情摘要</p>
           <div className="space-y-1.5">
             {Object.entries(summaryLabels).map(([key, label]) => {
               const value = caseSummary[key]
@@ -86,7 +86,7 @@ export default function Sidebar({ sessionId, onNewSession, caseSummary, sessionL
                   initial={{ opacity: 0, x: -6 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="text-[9px]"
+                  className="text-[11px]"
                 >
                   <span className="text-gray-400">{label}</span>
                   <p className="text-gray-600 mt-0.5 leading-relaxed">{value}</p>
@@ -99,7 +99,7 @@ export default function Sidebar({ sessionId, onNewSession, caseSummary, sessionL
 
       {/* 风险提示 */}
       <div className="mt-3 pt-3 border-t border-gray-100 flex-shrink-0">
-        <p className="text-[8px] text-gray-300 leading-relaxed">
+        <p className="text-[12px] text-gray-300 leading-relaxed">
           本工具仅提供法律信息参考，不构成正式法律意见。具体情况请咨询专业律师。
         </p>
       </div>

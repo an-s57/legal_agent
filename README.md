@@ -1,6 +1,10 @@
 # AI 法律助手
 
-基于 **LangGraph + RAG + FastAPI** 的智能法律问答系统。用户输入法律问题后，Agent 自主决策调用 RAG 法条检索或联网搜索，整合后给出带来源标注的回答，同时维护多轮会话记忆和案情摘要。
+基于 **LangGraph + RAG + FastAPI** 的智能法律问答系统。Agent 先通过 Planner 节点判断用户信息是否完整（缺失则追问），信息完备后自主决策调用 RAG 法条检索或联网搜索，整合后给出带来源标注的回答，同时维护多轮会话记忆和案情摘要。
+
+## 预览
+
+> TODO：运行前端后截图/GIF 放这里 — 面试官只看图，这是最重要的！
 
 ## 架构
 
@@ -11,10 +15,14 @@
 FastAPI (/legal/chat)
   │
   ▼
+Planner 节点 ──→ 信息不完整？──→ 追问用户
+  │
+  │ 信息完整
+  ▼
 LangGraph ReAct Agent ──→ should_continue?
   │                           │
   ├─ legal_rag_search         ├─ 有 tool_calls → 执行工具
-  │   (FAISS 向量检索)        │
+  │   (FAISS + Reranker)      │
   │                           └─ 无 tool_calls → 输出最终回答
   ├─ web_legal_search
   │   (DuckDuckGo 联网搜索)
@@ -31,14 +39,20 @@ LangGraph ReAct Agent ──→ should_continue?
 ```
 legal_agent/
 ├── main.py                  # FastAPI 入口
+├── frontend/                # React + TypeScript + Tailwind 前端
+│   ├── src/
+│   │   ├── components/      # ChatArea, Sidebar, InputBox 等
+│   │   └── App.tsx
+│   └── dist/                # 构建产物（npm run build）
 ├── agent/
-│   └── legal_agent.py       # LangGraph ReAct 智能体（手写 StateGraph）
+│   └── legal_agent.py       # LangGraph 智能体（Planner + ReAct）
 ├── tools/
 │   └── legal_tools.py       # legal_rag_search + web_legal_search
 ├── rag/
-│   └── retriever.py         # FAISS 检索 + 自定义 OllamaEmbeddings
+│   └── retriever.py         # FAISS 检索 + Reranker + 自定义 OllamaEmbeddings
 ├── memory/
 │   └── case_memory.py       # 会话管理 + LLM 案情摘要
+├── evaluation/              # 评测系统（检索质量 + 工具选择）
 ├── build_vectorstore.py     # 构建向量库（首次运行执行一次）
 ├── legal_pdfs/              # 法律 PDF 源文件
 └── docs/                    # 学习笔记与周报
@@ -48,12 +62,14 @@ legal_agent/
 
 | 组件 | 技术 |
 |------|------|
-| LLM | GLM-4-flash（智谱 AI） |
-| Agent 框架 | LangGraph（手写 StateGraph，非 AgentExecutor） |
+| LLM | GLM-4.7（智谱 AI） |
+| Agent 框架 | LangGraph（手写 StateGraph，含 Planner + ReAct） |
 | 向量库 | FAISS（本地） |
 | Embedding | nomic-embed-text（Ollama 本地服务） |
+| Reranker | BAAI/bge-reranker-base（CrossEncoder） |
 | Web 搜索 | DuckDuckGo |
-| Web 框架 | FastAPI + Uvicorn |
+| 后端 | FastAPI + Uvicorn |
+| 前端 | React + TypeScript + Tailwind CSS |
 
 ## 快速开始
 
@@ -96,12 +112,23 @@ ollama pull nomic-embed-text
 python build_vectorstore.py
 ```
 
-### 5. 启动服务
+### 5. 构建前端（可选，首次需要）
+
+```bash
+cd frontend
+npm install
+npm run build      # 生成 dist/
+cd ..
+```
+
+### 6. 启动服务
 
 ```bash
 python main.py
 # 或 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
+
+访问 http://localhost:8000
 
 ## API 接口
 
@@ -123,8 +150,8 @@ python main.py
   "tools_used": ["legal_rag_search"],
   "case_summary": {
     "case_type": "劳动纠纷",
-    "key_facts": ["拖欠工资三个月"],
-    "user_claim": "维权"
+    "event_description": "公司拖欠三个月工资",
+    "user_claim": "维权追回工资"
   }
 }
 ```
@@ -139,9 +166,13 @@ python main.py
 
 ## 核心设计
 
+### Planner 节点：先收集信息，再回答
+
+在传统 ReAct 之前增加 Planner 节点，判断用户输入是否包含四个关键维度（事件描述、时间、损失、诉求）。缺失则生成自然的追问，信息完备后才进入检索+回答流程。使用同一个 LLM 调用完成分析和追问生成，零额外成本。
+
 ### 为什么手写 LangGraph StateGraph？
 
-`create_agent()` 是黑盒，手写 StateGraph 可以完全控制 Agent 的状态流转：每个节点（`llm`、`tools`）和边（条件跳转 `should_continue`）都是显式定义的，便于调试和扩展。
+`create_agent()` 是黑盒，手写 StateGraph 可以完全控制 Agent 的状态流转：每个节点（`planner`、`llm`、`tools`）和边（条件跳转 `should_continue`）都是显式定义的，便于调试和扩展。
 
 ### 为什么自定义 OllamaEmbeddings？
 
@@ -151,6 +182,10 @@ python main.py
 
 - **短期记忆**：保存原始对话历史（`history`），用于上下文连续性
 - **长期记忆**：LLM 增量提取案情摘要（`case_summary`），压缩为结构化 JSON（案件类型/关键事实/用户诉求），注入下一轮对话的 SystemMessage
+
+### Reranker 二次排序
+
+FAISS 粗召回 20 条后，用 CrossEncoder（`bge-reranker-base`）对 query-doc 对重新打分，取 top 5。比纯 FAISS 的余弦相似度更精准，本地 CPU 可运行，无需额外 API 费用。
 
 ## License
 

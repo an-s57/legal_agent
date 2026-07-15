@@ -4,7 +4,11 @@ langchain
 langchain-openai
 langchain-community
 langchain-ollama
+langgraph
 faiss-cpu
 pdfplumber
 duckduckgo-search
 python-dotenv
+torch
+transformers
+httpx

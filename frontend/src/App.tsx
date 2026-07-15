@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import Background from './components/Background'
 import Sidebar from './components/Sidebar'
 import ChatArea, { type Message } from './components/ChatArea'
@@ -62,37 +62,85 @@ export default function App() {
   }, [sessionId, messages, caseSummary, saveCurrentSession, sessions])
 
   const handleSend = useCallback(async (msg: string) => {
-    setMessages(prev => [...prev, { role: 'user', content: msg }])
+    const userMsg: Message = { role: 'user', content: msg }
+    setMessages(prev => [...prev, userMsg])
     setIsTyping(true)
 
+    let botContent = ''
+    let toolsUsed: string[] = []
+    let botAdded = false
+    let finalSummary = caseSummary
+
     try {
-      const res = await fetch('/legal/chat', {
+      const res = await fetch('/legal/chat/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ session_id: sessionId, message: msg }),
       })
-      const data = await res.json()
 
-      let answerText = ''
-      if (Array.isArray(data.answer)) {
-        answerText = data.answer.map((s: string, i: number) => `${i + 1}. ${s}`).join('\n')
-      } else {
-        answerText = data.answer || '抱歉，无法生成回答'
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
+      const reader = res.body!.getReader()
+      const decoder = new TextDecoder()
+      let buf = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        buf += decoder.decode(value, { stream: true })
+        const parts = buf.split('\n\n')
+        buf = parts.pop() || ''
+
+        for (const part of parts) {
+          for (const line of part.split('\n')) {
+            if (!line.startsWith('data: ')) continue
+            try {
+              const event = JSON.parse(line.slice(6))
+
+              if (event.type === 'token') {
+                botContent += event.text
+                if (!botAdded) {
+                  setMessages(prev => [...prev, { role: 'bot', content: botContent }])
+                  botAdded = true
+                } else {
+                  setMessages(prev => {
+                    const next = [...prev]
+                    next[next.length - 1] = { ...next[next.length - 1], content: botContent }
+                    return next
+                  })
+                }
+              } else if (event.type === 'planner_question') {
+                botContent = event.text
+                setMessages(prev => [...prev, { role: 'bot', content: event.text }])
+                botAdded = true
+              } else if (event.type === 'tool_start') {
+                toolsUsed.push(event.name)
+              } else if (event.type === 'done') {
+                if (event.tools_used) toolsUsed = event.tools_used
+              } else if (event.type === 'case_summary') {
+                finalSummary = event.data || {}
+                setCaseSummary(finalSummary)
+              }
+            } catch { /* skip malformed events */ }
+          }
+        }
       }
 
-      const newMessages = [...messages, { role: 'user' as const, content: msg }, { role: 'bot' as const, content: answerText, tools: data.tools_used || [] }]
-      setMessages(prev => [...prev, {
-        role: 'bot',
-        content: answerText,
-        tools: data.tools_used || [],
-      }])
+      // Stream complete — attach tools to final message and save session
+      const botMsg: Message = { role: 'bot', content: botContent, tools: toolsUsed }
+      const newMessages: Message[] = [...messages, userMsg, botMsg]
 
-      if (data.case_summary && typeof data.case_summary === 'object') {
-        setCaseSummary(data.case_summary)
-        saveCurrentSession(sessionId, newMessages, data.case_summary)
-      } else {
-        saveCurrentSession(sessionId, newMessages, caseSummary)
-      }
+      setMessages(prev => {
+        const next = [...prev]
+        if (next.length > 0 && next[next.length - 1].role === 'bot') {
+          next[next.length - 1] = botMsg
+        }
+        return next
+      })
+
+      saveCurrentSession(sessionId, newMessages, finalSummary)
+
     } catch (err) {
       setMessages(prev => [...prev, {
         role: 'bot',

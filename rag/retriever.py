@@ -1,7 +1,7 @@
 """FAISS 向量库 — 自定义 Ollama 嵌入 + 法律文档检索"""
 import os
-os.environ['TRANSFORMERS_OFFLINE'] = '1'
-os.environ['HF_HUB_OFFLINE'] = '1'
+os.environ['TRANSFORMERS_OFFLINE'] = '1'#不检查更新
+os.environ['HF_HUB_OFFLINE'] = '1'#不联网下载
 import torch
 import httpx
 from transformers import AutoModelForSequenceClassification,AutoTokenizer
@@ -59,6 +59,7 @@ def _get_reranker():
     if _reranker_model is None:
         _reranker_tokenizer=AutoTokenizer.from_pretrained(RERANKER_MODEL_NAME)
         _reranker_model=AutoModelForSequenceClassification.from_pretrained(RERANKER_MODEL_NAME, torch_dtype=torch.float32)
+        #16位改成32位，之前精度溢出了，rerank打分不准确
         _reranker_model.eval()
     return _reranker_model,_reranker_tokenizer
 

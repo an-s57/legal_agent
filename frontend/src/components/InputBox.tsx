@@ -46,7 +46,7 @@ export default function InputBox({ onSend, disabled }: InputBoxProps) {
           placeholder="描述你遇到的法律问题..."
           rows={1}
           disabled={disabled}
-          className="flex-1 bg-transparent resize-none outline-none text-[11px] text-ink
+          className="flex-1 bg-transparent resize-none outline-none text-[15px] text-ink
                      placeholder:text-gray-300 disabled:opacity-50"
           style={{ maxHeight: '80px' }}
         />
@@ -70,7 +70,7 @@ export default function InputBox({ onSend, disabled }: InputBoxProps) {
           </svg>
         </button>
       </div>
-      <p className="text-center text-[8px] text-gray-300 mt-1.5">
+      <p className="text-center text-[10px] text-gray-300 mt-1.5">
         Agent 会先了解案情再检索法条 · 按 Enter 发送
       </p>
     </div>

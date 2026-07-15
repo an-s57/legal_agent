@@ -22,19 +22,16 @@ llm = ChatOpenAI(
 
 tools = [legal_rag_search, web_legal_search]
 
-SYSTEM_PROMPT = """重要规则：每次回答用户的法律问题前，你都必须先调用 legal_rag_search 进行检索，
-确认法条原文后再回答。禁止凭记忆直接回答。
-强制规则：每次回答法律问题前，必须先调用至少一个工具进行检索！禁止凭记忆直接回答法律条文内容。
-你是一个专业的AI法律助手，你有以下工具可以使用：
+SYSTEM_PROMPT = """你是一个专业的AI法律助手。你可以使用以下工具：
 
 1. **legal_rag_search** — 在法律文档库中搜索法条原文和案例
 2. **web_legal_search** — 联网搜索最新法律法规和司法解释
 
 回答规则：
-- 如果用户问的是法律条文定义、概念解释等，优先用 legal_rag_search 查文档库。
-- 如果涉及最新动态、司法解释（如"新规"、"2026"、"2025"），用 web_legal_search。
-- 把文档库搜索结果和联网搜索结果整合后回答，并标注来源。
-- 如果工具没有返回结果，再根据自己的知识回答，但必须标注"请注意核实"。
+- 回答法律问题前必须先调用 legal_rag_search 确认法条原文，禁止凭记忆直接回答。
+- 如果涉及最新动态、司法解释（如"新规"、"2026"、"2025"），同时调用 web_legal_search。
+- 整合检索结果后回答，并标注来源。
+- 如果工具没有返回结果，根据自己的知识回答，但必须标注"请注意核实"。
 """
 
 
@@ -165,3 +162,66 @@ async def run_legal_agent(
         "output": answer,
         "intermediate_steps": [(tc, None) for tc in tool_calls_seen],
     }
+
+
+async def run_legal_agent_stream(
+    user_input: str, chat_history: list, case_summary: str = ""
+):
+    """流式版本 — 逐 token yield，格式 {"type": "token"|"planner_question"|"tool_start"|"tool_end"|"done", ...}"""
+    messages = list(chat_history)
+    messages.insert(0, SystemMessage(content=SYSTEM_PROMPT))
+    if case_summary:
+        messages.append(SystemMessage(content=f"当前案情摘要：{case_summary}"))
+    messages.append(HumanMessage(content=user_input))
+
+    state = {"messages": messages, "case_summary": case_summary}
+
+    planner_buf = ""
+    tools_used = set()
+    llm_has_tool_calls = False
+
+    async for event in _compiled_graph.astream_events(state, version="v2"):
+        kind = event["event"]
+        metadata = event.get("metadata", {})
+        node = metadata.get("langgraph_node", "")
+
+        if kind == "on_chat_model_stream":
+            chunk = event["data"]["chunk"]
+            content = chunk.content if hasattr(chunk, "content") and chunk.content else ""
+
+            if node == "planner":
+                planner_buf += content
+
+            elif node == "llm":
+                tc = getattr(chunk, "tool_calls", None)
+                if tc:
+                    llm_has_tool_calls = True
+
+                if not llm_has_tool_calls and content:
+                    yield {"type": "token", "text": content}
+
+        elif kind == "on_chat_model_end":
+            if node == "planner":
+                try:
+                    clean = planner_buf.strip().strip("```json").strip("```").strip()
+                    result = json.loads(clean)
+                    if not result.get("info_complete", True) and result.get("follow_up"):
+                        yield {"type": "planner_question", "text": result["follow_up"]}
+                        return
+                except Exception:
+                    pass
+            elif node == "llm":
+                llm_has_tool_calls = False
+
+        elif kind == "on_tool_start":
+            name = event.get("name", "")
+            if name:
+                tools_used.add(name)
+                yield {"type": "tool_start", "name": name}
+
+        elif kind == "on_tool_end":
+            name = event.get("name", "")
+            if name:
+                yield {"type": "tool_end", "name": name}
+
+    yield {"type": "done", "tools_used": list(tools_used)}
