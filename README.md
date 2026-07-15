@@ -8,6 +8,7 @@
 
 ## 架构
 
+```mermaid
 flowchart TD
     A["👤 用户提问"] --> B["FastAPI<br/>POST /legal/chat/stream"]
     B --> C["加载会话上下文<br/>history + case_summary"]
@@ -27,6 +28,8 @@ flowchart TD
 
     J --> K["💾 更新会话<br/>history + case_summary"]
     K --> L["✅ 返回完整回答<br/>+ 工具调用链 + 案情摘要"]
+```
+
 
 ## 项目结构
 
