@@ -2,19 +2,15 @@
 
 基于 **LangGraph + RAG + FastAPI** 的智能法律问答系统。Agent 先通过 Planner 节点判断用户信息是否完整（缺失则追问），信息完备后自主决策调用 RAG 法条检索或联网搜索，整合后给出带来源标注的回答，同时维护多轮会话记忆和案情摘要。
 
-## 预览
+## 界面展示
 
-> TODO：运行前端后截图/GIF 放这里 — 面试官只看图，这是最重要的！
-> <img width="3065" height="1575" alt="image" src="https://github.com/user-attachments/assets/f94c6190-f0b8-4155-bb38-e7ea4a222e7b" />
-> <img width="2820" height="4411" alt="image" src="https://github.com/user-attachments/assets/06c0a94b-e17c-4796-965e-b739df0b98ae" />
+**完整对话流程** — Planner 追问 + RAG 检索 + 工具调用 + 结构化回答
 
+<img src="https://github.com/user-attachments/assets/f94c6190-f0b8-4155-bb38-e7ea4a222e7b" width="700" alt="完整对话流程" />
 
+**案情摘要（侧边栏）** — 两层记忆机制：LLM 增量提取结构化案情
 
-
-
-
-
-
+<img src="https://github.com/user-attachments/assets/06c0a94b-e17c-4796-965e-b739df0b98ae" width="300" alt="案情摘要侧边栏" />
 
 ## 架构
 
@@ -39,7 +35,6 @@ flowchart TD
     J --> K["💾 更新会话<br/>history + case_summary"]
     K --> L["✅ 返回完整回答<br/>+ 工具调用链 + 案情摘要"]
 ```
-
 
 ## 项目结构
 

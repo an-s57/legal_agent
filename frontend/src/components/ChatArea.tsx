@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 export interface Message {
   role: 'user' | 'bot'
@@ -54,7 +56,15 @@ export default function ChatArea({ messages, isTyping }: ChatAreaProps) {
                     <span className="text-[11px] font-medium text-gray-400">LexAgent</span>
                   </div>
                 )}
-                <div className="whitespace-pre-wrap">{msg.content}</div>
+                {msg.role === 'bot' && idx === 0 ? (
+                  <div className="whitespace-pre-wrap">{msg.content}</div>
+                ) : msg.role === 'bot' ? (
+                  <div className="markdown-body">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+                  </div>
+                ) : (
+                  <div className="whitespace-pre-wrap">{msg.content}</div>
+                )}
                 {msg.tools && msg.tools.length > 0 && (
                   <div className="mt-1.5 pt-1.5 border-t border-gray-100 flex gap-1.5 flex-wrap">
                     {msg.tools.map((tool) => (
