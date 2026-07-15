@@ -6,7 +6,14 @@
 
 > TODO：运行前端后截图/GIF 放这里 — 面试官只看图，这是最重要的！
 > <img width="3065" height="1575" alt="image" src="https://github.com/user-attachments/assets/f94c6190-f0b8-4155-bb38-e7ea4a222e7b" />
-> 
+> <img width="2820" height="4411" alt="image" src="https://github.com/user-attachments/assets/06c0a94b-e17c-4796-965e-b739df0b98ae" />
+
+
+
+
+
+
+
 
 
 ## 架构
