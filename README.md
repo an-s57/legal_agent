@@ -8,31 +8,25 @@
 
 ## 架构
 
-```
-用户提问
-  │
-  ▼
-FastAPI (/legal/chat)
-  │
-  ▼
-Planner 节点 ──→ 信息不完整？──→ 追问用户
-  │
-  │ 信息完整
-  ▼
-LangGraph ReAct Agent ──→ should_continue?
-  │                           │
-  ├─ legal_rag_search         ├─ 有 tool_calls → 执行工具
-  │   (FAISS + Reranker)      │
-  │                           └─ 无 tool_calls → 输出最终回答
-  ├─ web_legal_search
-  │   (DuckDuckGo 联网搜索)
-  │
-  ▼
-更新会话历史 + LLM 案情摘要
-  │
-  ▼
-返回回答 + 工具调用链 + 案情摘要
-```
+flowchart TD
+    A["👤 用户提问"] --> B["FastAPI<br/>POST /legal/chat/stream"]
+    B --> C["加载会话上下文<br/>history + case_summary"]
+    C --> D["🧠 Planner 节点<br/>信息完整性检查"]
+
+    D --> E{"四个维度<br/>是否齐备？"}
+    E -->|"❌ 缺失 → 追问用户"| F["返回追问<br/>等待用户补充"]
+    E -->|"✅ 完整 → 放行"| G["🤖 LLM 决策<br/>ReAct 循环"]
+
+    G --> H{"有 tool_calls？"}
+    H -->|"有"| I["🔧 执行工具"]
+    I --> I1["legal_rag_search<br/>📚 FAISS 粗召回 20 条<br/>🎯 Reranker 精排 Top 5"]
+    I --> I2["web_legal_search<br/>🌐 DuckDuckGo 联网搜索"]
+    I1 --> G
+    I2 --> G
+    H -->|"无 → 输出回答"| J["📤 SSE 流式输出<br/>逐 token 推送前端"]
+
+    J --> K["💾 更新会话<br/>history + case_summary"]
+    K --> L["✅ 返回完整回答<br/>+ 工具调用链 + 案情摘要"]
 
 ## 项目结构
 
