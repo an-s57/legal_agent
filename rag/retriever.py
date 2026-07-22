@@ -146,7 +146,7 @@ def add_legal_documents(pdf_folder:str):
     print(f"新增{len(new_chunks)}个文本段，来自{len(set(c.metadata['source'] for c in new_chunks))}个文件")
     return faiss_db
 
-def retrieve_legal_docs(query: str, k: int = 5, top_k: int = 3) -> list[str]:
+def retrieve_legal_docs(query: str, k: int = 20, top_k: int = 5) -> list[str]:
     """对外暴露的检索接口，返回字符串列表"""
     faiss_db = _get_faiss_db()
     docs = faiss_db.similarity_search(query, k=k)
