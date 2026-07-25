@@ -1,6 +1,7 @@
 """LangGraph ReAct 法律智能体"""
 import os
 import json
+import re
 from typing import Annotated, TypedDict
 
 from dotenv import load_dotenv
@@ -13,6 +14,21 @@ from langgraph.prebuilt import ToolNode
 from tools.legal_tools import legal_rag_search, web_legal_search
 
 load_dotenv()
+
+
+def _clean_visible_text(text: str) -> str:
+    """移除不应展示给用户的模型推理标签。"""
+    if not text:
+        return ""
+
+    # 某些模型会把内部推理放在 </think> 前，只保留其后的正式回答。
+    if "</think>" in text:
+        text = text.rsplit("</think>", 1)[-1]
+
+    # 同时处理完整或未闭合的 <think> 标签。
+    text = re.sub(r"<think>.*?(</think>|$)", "", text, flags=re.DOTALL)
+    return text.strip()
+
 
 llm = ChatOpenAI(
     model="glm-4.7",
@@ -49,6 +65,9 @@ PLANNER_PROMPT = """你是一个法律咨询信息收集员。
 你的任务是判断用户的消息属于哪种类型，并决定是否需要追问。
 
 已知的案情摘要：{case_summary}
+最近对话记录：
+{recent_history}
+
 用户最新消息：{user_message}
 
 第一步：判断消息类型
@@ -65,6 +84,10 @@ PLANNER_PROMPT = """你是一个法律咨询信息收集员。
 只有完全没提到某个维度时才算缺失。
 例如"上个月在淘宝买了假货花了3000块要求退款"——四个维度都有，应判为完整。
 
+重要：判断时必须合并“已知案情摘要、最近对话记录、用户最新消息”。
+历史中已经明确提供的信息视为已具备，绝不能重复追问。
+如果仍有缺失，只询问真正缺少的字段；多个缺失字段可以合并成一句自然追问。
+
 如果信息有缺失，返回：
 {{"info_complete": false, "missing_fields": ["缺失的字段"], "follow_up": "追问的问题，语气自然友好，像律师一样"}}
 
@@ -73,14 +96,29 @@ PLANNER_PROMPT = """你是一个法律咨询信息收集员。
 """
 
 
+def _format_recent_dialogue(messages: list, max_messages: int = 6) -> str:
+    """将最近的用户/助手对话整理为 Planner 可读取的短期上下文。"""
+    dialogue = []
+    for message in messages:
+        if isinstance(message, HumanMessage):
+            dialogue.append(f"用户：{message.content}")
+        elif isinstance(message, AIMessage):
+            dialogue.append(f"助手：{message.content}")
+
+    recent_dialogue = dialogue[-max_messages:]
+    return "\n".join(recent_dialogue) if recent_dialogue else "（暂无历史对话）"
+
+
 def call_planner(state: AgentState):
     last_message = state["messages"][-1]
     user_message = last_message.content
 
     case_summary = state.get("case_summary", "{}")
+    recent_history = _format_recent_dialogue(state["messages"][:-1])
 
     prompt = PLANNER_PROMPT.format(
         case_summary=case_summary,
+        recent_history=recent_history,
         user_message=user_message,
     )
     response = llm.invoke(prompt)
@@ -181,6 +219,7 @@ async def run_legal_agent_stream(
     planner_buf = ""
     tools_used = set()
     llm_has_tool_calls = False
+    llm_text_buffer = ""
 
     async for event in _compiled_graph.astream_events(
         state, version="v2",
@@ -190,7 +229,12 @@ async def run_legal_agent_stream(
         metadata = event.get("metadata", {})
         node = metadata.get("langgraph_node", "")
 
-        if kind == "on_chat_model_stream":
+        if kind == "on_chat_model_start" and node == "llm":
+            # 暂存本轮文本，等确认不调用工具后再作为正式答案发送。
+            llm_has_tool_calls = False
+            llm_text_buffer = ""
+
+        elif kind == "on_chat_model_stream":
             chunk = event["data"]["chunk"]
             content = chunk.content if hasattr(chunk, "content") and chunk.content else ""
 
@@ -202,8 +246,8 @@ async def run_legal_agent_stream(
                 if tc:
                     llm_has_tool_calls = True
 
-                if not llm_has_tool_calls and content:
-                    yield {"type": "token", "text": content}
+                if content:
+                    llm_text_buffer += content
 
         elif kind == "on_chat_model_end":
             if node == "planner":
@@ -216,7 +260,19 @@ async def run_legal_agent_stream(
                 except Exception:
                     pass
             elif node == "llm":
-                llm_has_tool_calls = False
+                output = event.get("data", {}).get("output")
+                output_tool_calls = getattr(output, "tool_calls", None) if output else None
+                if output_tool_calls:
+                    llm_has_tool_calls = True
+
+                # 调用工具的轮次只展示工具状态，不把“我先检索”当成最终回答。
+                if not llm_has_tool_calls:
+                    content = llm_text_buffer or (
+                        getattr(output, "content", "") if output else ""
+                    )
+                    visible_text = _clean_visible_text(content)
+                    if visible_text:
+                        yield {"type": "token", "text": visible_text}
 
         elif kind == "on_tool_start":
             name = event.get("name", "")

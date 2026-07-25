@@ -6,6 +6,32 @@ import InputBox from './components/InputBox'
 
 const WELCOME = '你好，我是 AI 法律助手。请描述你遇到的法律问题，我会先了解案情再为你查找相关法条。'
 
+/**
+ * 仅处理不会影响案情判断的纯闲聊，避免“你好”也进入 Planner + Agent 链路。
+ * 法律问题、带具体事实的问题仍然必须发送到后端。
+ */
+function getQuickReply(message: string): string | null {
+  const normalized = message
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .replace(/[!！?？。．.]/g, '')
+
+  if (['你好', '您好', '嗨', '哈喽', 'hello', 'hi', '在吗', '在不在'].includes(normalized)) {
+    return '你好！我是 AI 法律助手。你可以直接描述遇到的法律问题，我会先了解案情，再帮你查找相关法条。'
+  }
+
+  if (['你是谁', '你能做什么', '你可以做什么', '你能干什么', '有什么功能'].includes(normalized)) {
+    return '我可以协助梳理法律咨询中的关键信息、检索本地法律资料，并在需要时联网查询较新的法律信息。你可以直接说说发生了什么。'
+  }
+
+  if (['谢谢', '谢谢你', '感谢', 'thanks', 'thank you'].includes(normalized)) {
+    return '不客气。如果你愿意，可以继续补充案情的时间、经过、损失和希望解决的问题。'
+  }
+
+  return null
+}
+
 interface SessionInfo {
   id: string
   messages: Message[]
@@ -63,6 +89,17 @@ export default function App() {
 
   const handleSend = useCallback(async (msg: string) => {
     const userMsg: Message = { role: 'user', content: msg }
+
+    // 纯问候/闲聊由前端立即响应，不请求后端，也不写入服务端案情摘要。
+    const quickReply = getQuickReply(msg)
+    if (quickReply) {
+      const botMsg: Message = { role: 'bot', content: quickReply }
+      const newMessages: Message[] = [...messages, userMsg, botMsg]
+      setMessages(newMessages)
+      saveCurrentSession(sessionId, newMessages, caseSummary)
+      return
+    }
+
     setMessages(prev => [...prev, userMsg])
     setIsTyping(true)
 
