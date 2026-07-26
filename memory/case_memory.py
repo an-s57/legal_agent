@@ -165,13 +165,10 @@ llm = ChatOpenAI(
     openai_api_base="https://open.bigmodel.cn/api/paas/v4/",
 )
 
-sessions: dict = {}
-
 
 def get_session(session_id: str) -> dict:
-    if session_id not in sessions:
-        sessions[session_id] = {"history": [], "case_summary": {}}
-    return sessions[session_id]
+    """读取指定会话的持久化数据。"""
+    return load_session_from_db(session_id)
 
 
 def update_case_summary(session_id: str, new_exchange: str) -> dict:
@@ -197,7 +194,7 @@ def update_case_summary(session_id: str, new_exchange: str) -> dict:
     try:
         text = response.content.strip().strip("```json").strip("```").strip()
         updated = json.loads(text)
-        session["case_summary"] = updated
+        save_case_summary(session_id, updated)
         return updated
     except Exception:
         return session["case_summary"]

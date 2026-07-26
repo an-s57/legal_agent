@@ -11,13 +11,14 @@ from langchain_core.messages import HumanMessage, AIMessage
 from pydantic import BaseModel
 
 from agent.legal_agent import run_legal_agent, run_legal_agent_stream
-from memory.case_memory import get_session, update_case_summary
+from memory.case_memory import get_session, init_db, save_exchange, update_case_summary
 from rag.retriever import preload_reranker
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """启动时预加载模型，避免首次请求等待"""
+    """启动时初始化数据库并预加载模型。"""
+    init_db()
     preload_reranker()
     yield
 
@@ -76,7 +77,7 @@ async def legal_chat(req: ChatRequest):
     result = await run_legal_agent(req.message, history, case_summary)
     answer = result["output"]
 
-    session["history"].append({"human": req.message, "ai": answer})
+    save_exchange(req.session_id, req.message, answer)
 
     exchange = f"用户：{req.message}\n助手：{answer}"
     updated_summary = update_case_summary(req.session_id, exchange)
@@ -96,7 +97,7 @@ async def legal_chat_stream(req: ChatRequest,background_tasks:BackgroundTasks):
     session = get_session(req.session_id)
     quick_reply=get_quick_reply(req.message)
     if quick_reply:
-        session["history"].append({"human":req.message,"ai":quick_reply})
+        save_exchange(req.session_id, req.message, quick_reply)
 
         async def quick_reply_generator():#异步生成器对象
             token_event={"type":"token","text":quick_reply}
@@ -131,7 +132,7 @@ async def legal_chat_stream(req: ChatRequest,background_tasks:BackgroundTasks):
             if event["type"] in ("token","planner_question"):
                 full_answer+=event["text"]
         if full_answer:
-            session["history"].append({"human":req.message,"ai":full_answer})
+            save_exchange(req.session_id, req.message, full_answer)
 
             exchange=f"用户:{req.message}\n助手:{full_answer}"
             background_tasks.add_task(
