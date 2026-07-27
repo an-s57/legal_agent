@@ -37,8 +37,8 @@ body {
   position: absolute;
   border-radius: 50%;
   filter: blur(70px);
-  opacity: 0.14;
-  animation: float 20s ease-in-out infinite;
+  opacity: 0.18;
+  animation: float 18s ease-in-out infinite;
 }
 
 .blob-1 {

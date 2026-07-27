@@ -2,6 +2,7 @@
 import json
 import os
 import sqlite3
+import time
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -171,12 +172,21 @@ def get_session(session_id: str) -> dict:
     return load_session_from_db(session_id)
 
 
-def update_case_summary(session_id: str, new_exchange: str) -> dict:
+def update_case_summary(
+    session_id: str,
+    new_exchange: str,
+    request_id: str = "",
+    background: bool = False,
+) -> dict:
     """每轮对话后调用，让 LLM 更新案情摘要"""
-    session = get_session(session_id)
-    current = json.dumps(session["case_summary"], ensure_ascii=False)
+    started_at = time.perf_counter()
+    status = "error"
 
-    prompt = f"""请根据以下对话提取或更新案件关键信息，以JSON格式返回，不要包含任何其他内容：
+    try:
+        session = get_session(session_id)
+        current = json.dumps(session["case_summary"], ensure_ascii=False)
+
+        prompt = f"""请根据以下对话提取或更新案件关键信息，以JSON格式返回，不要包含任何其他内容：
 
 当前摘要：{current}
 新对话：{new_exchange}
@@ -190,11 +200,22 @@ def update_case_summary(session_id: str, new_exchange: str) -> dict:
   "user_claim": "用户诉求，未知则为空字符串"
 }}"""
 
-    response = llm.invoke(prompt)
-    try:
-        text = response.content.strip().strip("```json").strip("```").strip()
-        updated = json.loads(text)
-        save_case_summary(session_id, updated)
-        return updated
-    except Exception:
-        return session["case_summary"]
+        response = llm.invoke(prompt)
+        try:
+            text = response.content.strip().strip("```json").strip("```").strip()
+            updated = json.loads(text)
+            save_case_summary(session_id, updated)
+            status = "ok"
+            return updated
+        except Exception:
+            status = "parse_fallback"
+            return session["case_summary"]
+    finally:
+        duration_ms = (time.perf_counter() - started_at) * 1000
+        trace = request_id or "-"
+        print(
+            f"[PERF] trace={trace} stage=summary "
+            f"duration_ms={duration_ms:.0f} status={status} "
+            f"background={str(background).lower()}",
+            flush=True,
+        )

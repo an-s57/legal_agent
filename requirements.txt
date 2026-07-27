@@ -8,6 +8,7 @@ langgraph
 faiss-cpu
 pdfplumber
 duckduckgo-search
+ddgs
 python-dotenv
 torch
 transformers

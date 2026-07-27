@@ -1,6 +1,8 @@
 # AI 法律助手
 
-基于 **LangGraph + RAG + FastAPI** 的智能法律问答系统。Agent 先通过 Planner 节点判断用户信息是否完整（缺失则追问），信息完备后自主决策调用 RAG 法条检索或联网搜索，整合后给出带来源标注的回答，同时维护多轮会话记忆和案情摘要。
+基于 **LangGraph + RAG + FastAPI** 的智能法律问答系统。Agent 先通过 Planner 节点判断用户信息是否完整（缺失则追问），信息完备后自主决策调用 RAG 法条检索或联网搜索，整合后给出带来源标注的回答；会话历史与案情摘要使用 SQLite 持久化。
+
+对“你好”“谢谢”等简单输入，前端优先走快速回复，避免进入 Planner、LLM 与工具调用；完整回答通过 SSE 逐事件推送，回答结束后再由后台更新案情摘要，避免摘要生成阻塞用户界面。
 
 ## 界面展示
 
@@ -16,8 +18,10 @@
 
 ```mermaid
 flowchart TD
-    A["👤 用户提问"] --> B["FastAPI<br/>POST /legal/chat/stream"]
-    B --> C["加载会话上下文<br/>history + case_summary"]
+    A["👤 用户提问"] --> Q{"简单问候？"}
+    Q -->|"是"| FQ["⚡ 前端快速回复<br/>不进入 Agent 链路"]
+    Q -->|"否"| B["FastAPI<br/>POST /legal/chat/stream"]
+    B --> C["从 SQLite 加载会话上下文<br/>history + case_summary"]
     C --> D["🧠 Planner 节点<br/>信息完整性检查"]
 
     D --> E{"四个维度<br/>是否齐备？"}
@@ -26,14 +30,15 @@ flowchart TD
 
     G --> H{"有 tool_calls？"}
     H -->|"有"| I["🔧 执行工具"]
-    I --> I1["legal_rag_search<br/>📚 FAISS 粗召回 20 条<br/>🎯 Reranker 精排 Top 5"]
+    I --> I1["legal_rag_search<br/>📚 FAISS 粗召回 30 条<br/>🎯 Reranker 精排 Top 5"]
     I --> I2["web_legal_search<br/>🌐 DuckDuckGo 联网搜索"]
     I1 --> G
     I2 --> G
-    H -->|"无 → 输出回答"| J["📤 SSE 流式输出<br/>逐 token 推送前端"]
+    H -->|"无 → 输出回答"| J["📤 SSE 流式输出<br/>token / tool / done 事件"]
 
-    J --> K["💾 更新会话<br/>history + case_summary"]
-    K --> L["✅ 返回完整回答<br/>+ 工具调用链 + 案情摘要"]
+    J --> L["✅ 前端收到 done<br/>结束加载状态"]
+    J --> K["💾 保存本轮对话<br/>history"]
+    K --> M["📝 BackgroundTasks<br/>更新 case_summary"]
 ```
 
 ## 项目结构
@@ -53,8 +58,8 @@ legal_agent/
 ├── rag/
 │   └── retriever.py         # FAISS 检索 + Reranker + 自定义 OllamaEmbeddings
 ├── memory/
-│   └── case_memory.py       # 会话管理 + LLM 案情摘要
-├── evaluation/              # 评测系统（检索质量 + 工具选择）
+│   └── case_memory.py       # SQLite 会话持久化 + LLM 案情摘要
+├── evaluation/              # 检索评测、参数调优与原始结果
 ├── build_vectorstore.py     # 构建向量库（首次运行执行一次）
 ├── legal_pdfs/              # 法律 PDF 源文件
 └── docs/                    # 学习笔记与周报
@@ -69,8 +74,9 @@ legal_agent/
 | 向量库 | FAISS（本地） |
 | Embedding | nomic-embed-text（Ollama 本地服务） |
 | Reranker | BAAI/bge-reranker-base（CrossEncoder） |
-| Web 搜索 | DuckDuckGo |
+| Web 搜索 | DuckDuckGo（当前生产；AnySearch 已完成评测，尚未接入） |
 | 后端 | FastAPI + Uvicorn |
+| 会话持久化 | SQLite |
 | 前端 | React + TypeScript + Tailwind CSS |
 
 ## 快速开始
@@ -100,6 +106,8 @@ GLM_API_KEY=你的智谱API密钥
 ```
 
 ### 3. 启动 Ollama Embedding 服务
+
+确保 Ollama 服务正在运行，并拉取嵌入模型：
 
 ```bash
 # 安装 Ollama 后拉取嵌入模型
@@ -133,6 +141,17 @@ python main.py
 访问 http://localhost:8000
 
 ## API 接口
+
+### POST /legal/chat/stream
+
+前端实际使用的流式问答接口。请求体与 `/legal/chat` 相同，响应类型为 `text/event-stream`。
+
+服务端可能发送以下事件：
+
+- `token`：增量回答文本；
+- `planner_question`：信息不完整时的追问；
+- `tool_start` / `tool_end`：工具调用状态；
+- `done`：本轮输出结束，前端据此关闭加载状态。
 
 ### POST /legal/chat
 
@@ -170,7 +189,7 @@ python main.py
 
 ### Planner 节点：先收集信息，再回答
 
-在传统 ReAct 之前增加 Planner 节点，判断用户输入是否包含四个关键维度（事件描述、时间、损失、诉求）。缺失则生成自然的追问，信息完备后才进入检索+回答流程。使用同一个 LLM 调用完成分析和追问生成，零额外成本。
+在传统 ReAct 之前增加 Planner 节点，判断用户输入是否包含四个关键维度（事件描述、时间、损失、诉求）。缺失则生成自然的追问，信息完备后才进入检索+回答流程。Planner 将信息完整性判断与追问生成合并在同一次调用中，减少不必要的检索与工具调用。
 
 ### 为什么手写 LangGraph StateGraph？
 
@@ -183,11 +202,31 @@ python main.py
 ### 两层记忆机制
 
 - **短期记忆**：保存原始对话历史（`history`），用于上下文连续性
-- **长期记忆**：LLM 增量提取案情摘要（`case_summary`），压缩为结构化 JSON（案件类型/关键事实/用户诉求），注入下一轮对话的 SystemMessage
+- **长期记忆**：LLM 增量提取案情摘要（`case_summary`），压缩为结构化 JSON（案件类型/关键事实/用户诉求）
+- 两类数据均按 `session_id` 保存到 SQLite，在服务重启后可恢复并注入下一轮对话
 
 ### Reranker 二次排序
 
-FAISS 粗召回 20 条后，用 CrossEncoder（`bge-reranker-base`）对 query-doc 对重新打分，取 top 5。比纯 FAISS 的余弦相似度更精准，本地 CPU 可运行，无需额外 API 费用。
+FAISS 粗召回 30 条后，用 CrossEncoder（`bge-reranker-base`）对 query-doc 对重新打分，取 Top-5。当前参数由 50 道人工标注检索题调优得到：在 17 道验证题上，正确来源命中率为 17/17，严格证据命中率为 15/17（88.2%）。
+
+### 性能 Trace 与链路排查
+
+每个请求会生成独立 `trace_id`，在后端终端输出 Planner、每轮 LLM、向量检索、Reranker、工具调用、案情摘要与整体请求的耗时和状态。排查结果表明，完整回答的主要等待来自多次串行远程 LLM 调用与 CPU 上的 Reranker，而不是前端渲染。当前日志仅输出到本地终端；后续可写入结构化 JSONL 或日志平台。
+
+### 联网搜索服务选型（20 题对比）
+
+为避免把“工具选择正确”与“工具执行质量”混为一谈，项目对联网搜索服务进行了独立评测：相同的 20 道法律查询、相同 Top-3 数量、相同查询后缀下，对比新版 DuckDuckGo 接入（`ddgs`）与 AnySearch。
+
+| 服务 | 官方来源命中@3 | 自动通过@3 | 平均耗时 |
+| --- | ---: | ---: | ---: |
+| DuckDuckGo（ddgs） | 9/20（45.0%） | 8/20（40.0%） | 4.24 s |
+| AnySearch | 19/20（95.0%） | 19/20（95.0%） | 1.52 s |
+
+其中，**官方来源命中@3** 指 Top-3 是否至少包含一条预标注的政府、法院、人社或法规数据库链接；**自动通过@3** 则要求同时命中官方来源与核心主题。AnySearch 在该评测中胜出，平均网页搜索耗时约低 **64%**。这是后续迁移的依据，但当前生产工具尚未切换；完整指标定义、原始结果和失败案例见 [evaluation/README.md](./evaluation/README.md)。
+
+## 检索评测与参数选择
+
+使用 33 道开发题选择检索参数，再以 17 道验证题确认。当前线上配置为 **FAISS 粗召回 K=30、Reranker 返回 Top-K=5**；完整的题集边界、指标定义、耗时、原始结果与复现命令见 [evaluation/README.md](./evaluation/README.md)。
 
 ## License
 
