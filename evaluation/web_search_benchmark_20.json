@@ -1,0 +1,182 @@
+[
+  {
+    "id": "statute-01",
+    "category": "精确法条",
+    "question": "中华人民共和国消费者权益保护法第五十五条 欺诈 三倍赔偿 官方",
+    "expected_domains": ["flk.npc.gov.cn", "gov.cn"],
+    "core_term_groups": [["消费者权益保护法"]],
+    "detail_term_groups": [["第五十五条", "第55条", "55条"], ["欺诈", "三倍赔偿"]],
+    "why": "检验精确法条编号和惩罚性赔偿关键词能否定位到权威法规来源。"
+  },
+  {
+    "id": "statute-02",
+    "category": "精确法条",
+    "question": "劳动争议调解仲裁法第二十七条 劳动仲裁申请时效 官方",
+    "expected_domains": ["flk.npc.gov.cn", "gov.cn"],
+    "core_term_groups": [["劳动争议调解仲裁法"]],
+    "detail_term_groups": [["第二十七条", "第27条", "27条"], ["仲裁", "时效"]],
+    "why": "检验劳动争议程序中精确条文的检索能力。"
+  },
+  {
+    "id": "statute-03",
+    "category": "精确法条",
+    "question": "劳动合同法第三十八条 拖欠工资 解除劳动合同 官方",
+    "expected_domains": ["flk.npc.gov.cn", "gov.cn"],
+    "core_term_groups": [["劳动合同法"]],
+    "detail_term_groups": [["第三十八条", "第38条", "38条"], ["拖欠工资", "解除劳动合同"]],
+    "why": "检验“拖欠工资”这类高频事实与对应法条的连接。"
+  },
+  {
+    "id": "statute-04",
+    "category": "精确法条",
+    "question": "食品安全法第一百四十八条 十倍赔偿 官方",
+    "expected_domains": ["flk.npc.gov.cn", "gov.cn"],
+    "core_term_groups": [["食品安全法"]],
+    "detail_term_groups": [["第一百四十八条", "第148条", "148条"], ["十倍赔偿", "十倍"]],
+    "why": "检验较长中文法条编号及赔偿规则的检索。"
+  },
+  {
+    "id": "statute-05",
+    "category": "精确法条",
+    "question": "个人信息保护法第六条 个人信息处理原则 官方",
+    "expected_domains": ["flk.npc.gov.cn", "gov.cn"],
+    "core_term_groups": [["个人信息保护法"]],
+    "detail_term_groups": [["第六条", "第6条", "6条"], ["个人信息处理", "处理原则"]],
+    "why": "检验跨出当前本地知识库范围的权威法规查找能力。"
+  },
+  {
+    "id": "statute-06",
+    "category": "精确法条",
+    "question": "民法典第一千一百六十五条 过错侵权责任 官方",
+    "expected_domains": ["flk.npc.gov.cn", "gov.cn"],
+    "core_term_groups": [["民法典"]],
+    "detail_term_groups": [["第一千一百六十五条", "第1165条", "1165条"], ["过错", "侵权责任"]],
+    "why": "检验长条文编号、法律名称和责任概念的联合检索。"
+  },
+  {
+    "id": "service-01",
+    "category": "官方办事流程",
+    "question": "北京拖欠工资劳动保障监察投诉官方",
+    "expected_domains": ["rsj.beijing.gov.cn", "mohrss.gov.cn", "gov.cn"],
+    "core_term_groups": [["劳动保障监察", "劳动监察", "欠薪"]],
+    "detail_term_groups": [["拖欠工资", "欠薪"], ["投诉", "举报"]],
+    "why": "检验面向北京用户的欠薪投诉官方入口。"
+  },
+  {
+    "id": "service-02",
+    "category": "官方办事流程",
+    "question": "全国根治欠薪线索反映平台官方",
+    "expected_domains": ["mohrss.gov.cn", "gov.cn"],
+    "core_term_groups": [["根治欠薪", "欠薪线索"]],
+    "detail_term_groups": [["线索反映平台", "反映平台"]],
+    "why": "检验全国性人社公共服务入口。"
+  },
+  {
+    "id": "service-03",
+    "category": "官方办事流程",
+    "question": "北京劳动人事争议仲裁申请办理官方",
+    "expected_domains": ["rsj.beijing.gov.cn", "gov.cn"],
+    "core_term_groups": [["劳动人事争议", "劳动争议", "仲裁"]],
+    "detail_term_groups": [["仲裁"], ["申请", "办理"]],
+    "why": "检验地方仲裁办理信息的权威来源覆盖。"
+  },
+  {
+    "id": "service-04",
+    "category": "官方办事流程",
+    "question": "全国12315平台投诉假货流程官方",
+    "expected_domains": ["12315.cn", "samr.gov.cn", "gov.cn"],
+    "core_term_groups": [["12315"]],
+    "detail_term_groups": [["投诉"], ["假货", "假冒", "售假"]],
+    "why": "检验消费投诉平台的官方入口检索。"
+  },
+  {
+    "id": "service-05",
+    "category": "官方办事流程",
+    "question": "北京法律援助申请条件官方",
+    "expected_domains": ["sfj.beijing.gov.cn", "gov.cn"],
+    "core_term_groups": [["法律援助"]],
+    "detail_term_groups": [["申请"], ["条件"]],
+    "why": "检验地方公共法律服务渠道。"
+  },
+  {
+    "id": "service-06",
+    "category": "官方办事流程",
+    "question": "人民法院在线服务劳动争议立案官方",
+    "expected_domains": ["court.gov.cn", "gov.cn"],
+    "core_term_groups": [["人民法院在线服务", "在线服务"]],
+    "detail_term_groups": [["立案"]],
+    "why": "检验司法服务平台及程序信息。"
+  },
+  {
+    "id": "policy-01",
+    "category": "时效性政策",
+    "question": "消费者权益保护法实施条例七天无理由退货官方",
+    "expected_domains": ["gov.cn", "flk.npc.gov.cn"],
+    "core_term_groups": [["消费者权益保护法实施条例"]],
+    "detail_term_groups": [["七天无理由退货", "七日无理由退货"]],
+    "why": "检验较新的消费者规则及文字表述差异。"
+  },
+  {
+    "id": "policy-02",
+    "category": "时效性政策",
+    "question": "网络交易监督管理办法平台经营者责任官方",
+    "expected_domains": ["samr.gov.cn", "gov.cn"],
+    "core_term_groups": [["网络交易监督管理办法"]],
+    "detail_term_groups": [["平台经营者"]],
+    "why": "检验市场监管部门规章的官方来源覆盖。"
+  },
+  {
+    "id": "policy-03",
+    "category": "时效性政策",
+    "question": "最高人民法院审理食品药品纠纷案件适用法律若干问题的规定官方",
+    "expected_domains": ["court.gov.cn", "gov.cn"],
+    "core_term_groups": [["食品药品纠纷"]],
+    "detail_term_groups": [["若干问题的规定", "若干问题"]],
+    "why": "检验司法解释类信息的权威来源。"
+  },
+  {
+    "id": "policy-04",
+    "category": "时效性政策",
+    "question": "2026年北京市最低工资标准官方",
+    "expected_domains": ["rsj.beijing.gov.cn", "gov.cn"],
+    "core_term_groups": [["最低工资"]],
+    "detail_term_groups": [["北京市", "北京"], ["2026"]],
+    "why": "检验带年份、地域限定的时效性政策查询。"
+  },
+  {
+    "id": "colloquial-01",
+    "category": "口语化维权",
+    "question": "买到假鞋商家不理我怎么投诉",
+    "expected_domains": ["12315.cn", "samr.gov.cn", "gov.cn"],
+    "core_term_groups": [["投诉", "举报", "12315"]],
+    "detail_term_groups": [["假冒", "假货", "售假"]],
+    "why": "检验口语化假货维权问题能否回到官方投诉渠道。"
+  },
+  {
+    "id": "colloquial-02",
+    "category": "口语化维权",
+    "question": "老板拖欠工资不给我去哪投诉北京",
+    "expected_domains": ["rsj.beijing.gov.cn", "mohrss.gov.cn", "gov.cn"],
+    "core_term_groups": [["拖欠工资", "欠薪", "劳动保障监察", "劳动监察"]],
+    "detail_term_groups": [["投诉", "举报"]],
+    "why": "检验劳动者自然语言描述与官方维权路径的匹配。"
+  },
+  {
+    "id": "colloquial-03",
+    "category": "口语化维权",
+    "question": "健身房办卡后跑路了怎么办官方",
+    "expected_domains": ["12315.cn", "samr.gov.cn", "gov.cn"],
+    "core_term_groups": [["预付", "预付款", "预付式", "消费者"]],
+    "detail_term_groups": [["健身房"], ["投诉", "维权"]],
+    "why": "检验预付式消费纠纷的口语化检索。"
+  },
+  {
+    "id": "colloquial-04",
+    "category": "口语化维权",
+    "question": "网购手机拆封激活后还能七天无理由退货吗官方",
+    "expected_domains": ["samr.gov.cn", "gov.cn", "flk.npc.gov.cn"],
+    "core_term_groups": [["七天无理由退货", "七日无理由退货"]],
+    "detail_term_groups": [["拆封", "激活"]],
+    "why": "检验复杂消费事实和退货规则关键词的共同覆盖。"
+  }
+]

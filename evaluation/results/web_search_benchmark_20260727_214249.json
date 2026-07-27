@@ -1,0 +1,2211 @@
+{
+  "run_at": "2026-07-27T21:42:49",
+  "questions_path": "D:\\legal_agent\\evaluation\\web_search_benchmark_20.json",
+  "question_count": 20,
+  "top_n": 3,
+  "query_suffix": "法律法规 中国",
+  "providers": [
+    "ddgs",
+    "anysearch"
+  ],
+  "summary": {
+    "ddgs": {
+      "total": 20,
+      "success_count": 20,
+      "success_rate_percent": 100.0,
+      "official_source_hit_count": 9,
+      "official_source_hit_rate_percent": 45.0,
+      "core_topic_hit_count": 16,
+      "core_topic_hit_rate_percent": 80.0,
+      "detail_preview_coverage_percent": 82.5,
+      "automatic_pass_count": 8,
+      "automatic_pass_rate_percent": 40.0,
+      "elapsed_ms": {
+        "avg": 4241.4,
+        "median": 4059.2,
+        "p95": 5427.9
+      }
+    },
+    "anysearch": {
+      "total": 20,
+      "success_count": 20,
+      "success_rate_percent": 100.0,
+      "official_source_hit_count": 19,
+      "official_source_hit_rate_percent": 95.0,
+      "core_topic_hit_count": 20,
+      "core_topic_hit_rate_percent": 100.0,
+      "detail_preview_coverage_percent": 57.5,
+      "automatic_pass_count": 19,
+      "automatic_pass_rate_percent": 95.0,
+      "elapsed_ms": {
+        "avg": 1517.4,
+        "median": 1491.1,
+        "p95": 2210.1
+      }
+    }
+  },
+  "manual_review_candidates": [
+    {
+      "id": "colloquial-02",
+      "question": "老板拖欠工资不给我去哪投诉北京",
+      "reason": "不同服务的自动通过结果不一致",
+      "top_urls": {
+        "ddgs": "https://m.haolvshi.com.cn/ztw/0-72399.html",
+        "anysearch": "https://rsj.beijing.gov.cn/xxgk/gzdt/202108/t20210819_2472135.html"
+      }
+    },
+    {
+      "id": "colloquial-03",
+      "question": "健身房办卡后跑路了怎么办官方",
+      "reason": "不同服务的自动通过结果不一致",
+      "top_urls": {
+        "ddgs": "https://www.dutenews.com/n/article/6830955",
+        "anysearch": "https://www.ahjd.gov.cn/OpennessContent/show/2650251.html"
+      }
+    },
+    {
+      "id": "colloquial-04",
+      "question": "网购手机拆封激活后还能七天无理由退货吗官方",
+      "reason": "不同服务的自动通过结果不一致",
+      "top_urls": {
+        "ddgs": "https://www.dutenews.com/n/article/10563435",
+        "anysearch": "https://www.gov.cn/zhengce/2020-11/03/content_5723721.htm"
+      }
+    },
+    {
+      "id": "policy-01",
+      "question": "消费者权益保护法实施条例七天无理由退货官方",
+      "reason": "不同服务的自动通过结果不一致",
+      "top_urls": {
+        "ddgs": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzbmgz/201701/t20170124_145952.html",
+        "anysearch": "http://xzfg.moj.gov.cn/front/law/detail?LawID=1708"
+      }
+    },
+    {
+      "id": "policy-03",
+      "question": "最高人民法院审理食品药品纠纷案件适用法律若干问题的规定官方",
+      "reason": "不同服务的自动通过结果不一致",
+      "top_urls": {
+        "ddgs": "https://amsdottorato.unibo.it/id/eprint/11763/1/LUAN_ZHIBO_TESI.pdf",
+        "anysearch": "https://www.court.gov.cn/zixun/xiangqing/6042.html"
+      }
+    },
+    {
+      "id": "policy-04",
+      "question": "2026年北京市最低工资标准官方",
+      "reason": "不同服务的自动通过结果不一致",
+      "top_urls": {
+        "ddgs": "https://m.nj.bendibao.com/live/178187.shtm",
+        "anysearch": "https://rsj.beijing.gov.cn/xxgk/2024zcwj/202507/t20250725_4158456.html"
+      }
+    }
+  ],
+  "details": [
+    {
+      "id": "statute-01",
+      "category": "精确法条",
+      "question": "中华人民共和国消费者权益保护法第五十五条 欺诈 三倍赔偿 官方",
+      "query": "中华人民共和国消费者权益保护法第五十五条 欺诈 三倍赔偿 官方 法律法规 中国",
+      "expected_domains": [
+        "flk.npc.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "消费者权益保护法"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "第五十五条",
+          "第55条",
+          "55条"
+        ],
+        [
+          "欺诈",
+          "三倍赔偿"
+        ]
+      ],
+      "why": "检验精确法条编号和惩罚性赔偿关键词能否定位到权威法规来源。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 4185.6,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "虚构“免单”活动，一网店被判构成欺诈，三倍赔偿！_ 新华网江苏频道",
+            "url": "https://js.news.cn/20241120/ed12ea4a0e4746df9c4434d20c492ed7/c.html",
+            "snippet": "等活动，下单前仔细辨别商品的来源、功能、质量及价格波动，警惕网上欺诈与虚假宣传。 如发现商家涉嫌虚假宣传，可依据《中华人民共和国消费者权益保护法》维护自身合法权益。"
+          },
+          {
+            "title": "huichenglawyer.com/pufaku/26925.html",
+            "url": "https://www.huichenglawyer.com/pufaku/26925.html",
+            "snippet": "消费欺诈赔偿标准几倍,消费者权益保护法关于三倍赔偿的规定,消费欺诈立案标准.根据《中华人民共和国消费者权益保护法》第五十五条第一款，经营者提供商品或者服务有欺诈行为的，应当按照消费者的要求增加赔偿其受到的损失，增."
+          },
+          {
+            "title": "m.haolvshi.com.cn/ztw/0-47822.html",
+            "url": "https://m.haolvshi.com.cn/ztw/0-47822.html",
+            "snippet": "汽车经营者欺诈消费者的应予三倍赔偿 经营者欺诈行为的惩罚性赔偿.误解的宣传。” 《消费者权益保护法》第五十五条规定：“经营者提供商品或者服务有欺诈行为的，应当按照消费者的要求增加赔偿其受到的损失，增加赔偿的金额为消费者."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": false
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 974.0,
+        "error": null,
+        "provider_reported_search_time_ms": 100,
+        "results": [
+          {
+            "title": "中华人民共和国消费者权益保护法",
+            "url": "http://scjgj.beijing.gov.cn/cxfw/flfgcxfw/xfzqybhl/202006/t20200618_1928074.html",
+            "snippet": "中华人民共和国消费者权益保护法_北京市市场监督管理局 -- 首页>查询服务>法律法规> 消费者权益保护类 ## 中华人民共和国消费者权益保护法 1993年10月31日第八届全国人民代表大会常务委员会第四次会议通过 根据2009年8月27日第十一届全国人民代表大会常务委员会第十次会议《关于修改部分法律的决定》第一次修正 根据2013年10月25日第十二届全国人民代表大会常务委员会第五次会议《关于修改＜中华人民共和国消费者权益保护法＞的决定》第二次修正 目 录 第一章总 则 第二章消费者的权利 第三章经营者的义务 第四章国家对消费者合法权益的保护 第五章消费者组织 第六章争议的..."
+          },
+          {
+            "title": "《中华人民共和国消费者权益保护法》重点条款解读",
+            "url": "https://xxgk.yczf.gov.cn/xzf/ycsfj/fdzdgknr/fgwj_41996/flfg/202603/t20260316_2330327.shtml",
+            "snippet": "《中华人民共和国消费者权益保护法》重点条款解读 法律法规-阳城县人民政府信息公开 ## 阳城县司法局 搜索位置 标题 全文 匹配度 精准 模糊 排序 发布日期 相关程度 ### 政府信息公开指南 ### 政府信息 公开制度 ### 法定主动 公开内容 ### 政府信息 公开年报 ### 依申请 公开 ### 政府信息公开目录 # 《中华人民共和国消费者权益保护法》重点条款解读 发布日期: 2026-03-16 发布机构: 县司法局 如果内容不能正常显示，请更换浏览器重试 《中华人民共和国消费者权益保护法》于1994年1月1日施行，于2014年3月15日由全国人大重..."
+          },
+          {
+            "title": "中华人民共和国消费者权益保护法",
+            "url": "https://faolex.fao.org/docs/pdf/chn189054.pdf",
+            "snippet": "### 9/16/2019 中华人民共和国消费者权益保护法-综合实体-北京市工商行政管理局 gsj.beijing.gov.cn/ztzl/sbglzt/flfg/jhst/201803/t20180307_1441039.html 1/15 无障碍通道 加入收藏 时间： 2018-03-07 收藏 | | 分享到： 首页 > 专题专栏 > 商标服务 > 法律法规 > 综合实体 中华人民共和国消费者权益保护法 中华人民共和国主席令第7号 （1993年10月31日第八届全国人民代表大会常务委员会第4次会议通过；根据2009年8月27日第十一届全国人民代表大会常务委员会第10次 会议《关于..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "scjgj.beijing.gov.cn",
+            "xxgk.yczf.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            false,
+            false
+          ],
+          "detail_preview_coverage_percent": 0.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "statute-02",
+      "category": "精确法条",
+      "question": "劳动争议调解仲裁法第二十七条 劳动仲裁申请时效 官方",
+      "query": "劳动争议调解仲裁法第二十七条 劳动仲裁申请时效 官方 法律法规 中国",
+      "expected_domains": [
+        "flk.npc.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "劳动争议调解仲裁法"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "第二十七条",
+          "第27条",
+          "27条"
+        ],
+        [
+          "仲裁",
+          "时效"
+        ]
+      ],
+      "why": "检验劳动争议程序中精确条文的检索能力。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 5123.2,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "《最高人民法院关于审理劳动争议案件适用法律问题的解释 ...",
+            "url": "https://www.court.gov.cn/hudong/xiangqing/420002.html",
+            "snippet": "用人单位未依法与劳动者订立书面无固定期限劳动合同，劳动者请求用人单位支付未订立劳动合同第二倍工资的，仲裁时效期间适用劳动争议调解仲裁法第二十七条第一款规定，从用人单位应当订立劳动合同的次日起计算。"
+          },
+          {
+            "title": "中华人民共和国劳动争议调解仲裁法 - 中华人民共和国最高人民法院公报",
+            "url": "http://gongbao.court.gov.cn/Details/997e66171cf55d219c613ec18dc370.html",
+            "snippet": "第二十七条 劳动争议申请仲裁的时效期间为一年。仲裁时效期间从当事人知道或者应当知道其权利被侵害之日起计算。"
+          },
+          {
+            "title": "中华人民共和国劳动争议调解仲裁法-",
+            "url": "https://www.gjxfj.gov.cn/gjxfj/xxgk/fgwj/flfg/webinfo/2016/03/1460585589964384.htm",
+            "snippet": "第二十七条 劳动争议申请仲裁的时效期间为一年。仲裁时效期间从当事人知道或者应当知道其权利被侵害之日起计算。"
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "court.gov.cn",
+            "gjxfj.gov.cn",
+            "gongbao.court.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": true
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1048.1,
+        "error": null,
+        "provider_reported_search_time_ms": 89,
+        "results": [
+          {
+            "title": "中华人民共和国劳动争议调解仲裁法",
+            "url": "https://zmdzy.hncourt.gov.cn/upload/file/20250710/20250710121409_65235.pdf",
+            "snippet": "## 中华人民共和国劳动争议调解仲裁法 文章属性  【制定机关】全国人大常委会  【公布日期】2007.12.29  【文 号】中华人民共和国主席令第八十号  【施行日期】2008.05.01  【效力等级】法律  【时效性】现行有效  【主题分类】仲裁,调解,劳动人事争议 正文 ### 中华人民共和国主席令 （第八十号） 《中华人民共和国劳动争议调解仲裁法》已由中华人民共和国第十届全国人 民代表大会常务委员会第三十一次会议于 2007 年 12 月 29 日通过，现予公布， 自 2008 年 5 月 1 日起施行。 中华人民共和国主席 胡锦涛 200..."
+          },
+          {
+            "title": "中华人民共和国劳动争议调解仲裁法_重庆市人力资源和社会保障局",
+            "url": "https://rlsbj.cq.gov.cn/zwgk_182/fdzdgknr/lzyj/falv/202103/t20210305_8968497.html",
+            "snippet": "中华人民共和国劳动争议调解仲裁法_重庆市人力资源和社会保障局 中国政府网|人力资源社会保障部门户网站|重庆市人民政府网 > 首页|政务公开|渝快办|互动交流|便民服务|专题专栏|数字人社 您当前的位置：首页>政府信息公开>法定主动公开内容>履职依据>法律 | [ 索引号 ] | 1150000000927581XW/2021-00165 | [ 发文字号 ] | | | --- | --- | --- | --- | | [ 主题分类 ] | 劳动就业 | [ 体裁分类 ] | 法律 | | [ 发布机构 ] | 市人力社保局 | [ 有效性 ] | | | [ 成文日期 ] | 2..."
+          },
+          {
+            "title": "中华人民共和国劳动争议调解仲裁法-",
+            "url": "https://www.gjxfj.gov.cn/gjxfj/xxgk/fgwj/flfg/webinfo/2016/03/1460585589964384.htm",
+            "snippet": "中华人民共和国劳动争议调解仲裁法- https://www.gjxfj.gov.cn/gjxfj/index.htm - 首页 - 新闻中心 - 政府信息公开 - 网上信访 - 信访广角 - 互动交流 首页>>政府信息公开>>法规文件>>法律法规 法律法规 ### 中华人民共和国劳动争议调解仲裁法 #### 国家信访局门户网站 www.gjxfj.gov.cn 日期： 2014-05-12 来源： （2007年12月29日第十届全国人民代表大会常务委员会第三十一次会议通过 2007年12月29日中华人民共和国主席令第八十号公布） 目录 第一章 总则 第二章 调解 第三章..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "gjxfj.gov.cn",
+            "rlsbj.cq.gov.cn",
+            "zmdzy.hncourt.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            false,
+            true
+          ],
+          "detail_preview_coverage_percent": 50.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "statute-03",
+      "category": "精确法条",
+      "question": "劳动合同法第三十八条 拖欠工资 解除劳动合同 官方",
+      "query": "劳动合同法第三十八条 拖欠工资 解除劳动合同 官方 法律法规 中国",
+      "expected_domains": [
+        "flk.npc.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "劳动合同法"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "第三十八条",
+          "第38条",
+          "38条"
+        ],
+        [
+          "拖欠工资",
+          "解除劳动合同"
+        ]
+      ],
+      "why": "检验“拖欠工资”这类高频事实与对应法条的连接。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 3913.3,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "劳动保障 监察法律法规 - 深圳市人力资源管理协会",
+            "url": "http://www.szhrma.com/renli888/vip_doc/28979958.html",
+            "snippet": "国家机关、事业单位、社会团体和与其建立劳动关系的劳动者，订立、履行、变更、解除或者终止劳动合同，依照本法执行。 第三条 订立劳动合同，应当遵循合法、公平、平等自愿、 ..."
+          },
+          {
+            "title": "中华人民共和国劳动合同法- 政策法规 - 深圳市地方金融管理局",
+            "url": "https://jr.sz.gov.cn/sjrb/ztzl/xfzl/zcfg/content/post_10586219.html",
+            "snippet": "第四十条有下列情形之一的，用人单位提前三十日以书面形式通知劳动者本人或者额外支付劳动者一个月工资后，可以解除劳动合同: （一）劳动者患病或者非因工负伤，在规定的医疗期 ..."
+          },
+          {
+            "title": "《中华人民共和国劳动法》_允许合法加班和夜班",
+            "url": "https://fgw.sh.gov.cn/ys-laogong-1.5.2.1/20240125/81e81dd50c9c4737b2477bdd8bf30de4.html",
+            "snippet": "如果用人单位违反法律、法规或者劳动合同，工会有权要求重新处理；劳动者申请仲裁或者提起诉讼的，工会应当依法给予支持和帮助。 第三十一条 劳动者解除劳动合同，应当提前三十 ..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "fgw.sh.gov.cn",
+            "jr.sz.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            false,
+            true
+          ],
+          "detail_preview_coverage_percent": 50.0,
+          "automatic_pass_at_n": true
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 425.1,
+        "error": null,
+        "provider_reported_search_time_ms": 96,
+        "results": [
+          {
+            "title": "中华人民共和国劳动合同法",
+            "url": "https://guangdong.chinatax.gov.cn/gdsw/zjfg/2026-05/26/content_6adf2e221b2c4b8a85960ef626a66103.shtml",
+            "snippet": "中华人民共和国劳动合同法 中华人民共和国劳动合同法 发布机构: 全国人民代表大会常务委员会 发文日期: 2012-12-28 有效级别: 有效 补充说明: 2007年6月29日第十届全国人民代表大会常务委员会第二十八次会议通过 根据2012年12月28日第十一届全国人民代表大会常务委员会第三十次会议《关于修改＜中华人民共和国劳动合同法＞的决定》修正 浏览次数： 目 录 第一章 总则 第二章 劳动合同的订立 第三章 劳动合同的履行和变更 第四章 劳动合同的解除和终止 第五章 特别规定 第一节 集体合同 第二节 劳务派遣 第三节 非全日制用工 第六章 监督检查 第七章 ..."
+          },
+          {
+            "title": "中华人民共和国劳动合同法-",
+            "url": "https://www.gjxfj.gov.cn/gjxfj/xxgk/fgwj/flfg/webinfo/2016/03/1460585589931971.htm",
+            "snippet": "中华人民共和国劳动合同法- https://www.gjxfj.gov.cn/gjxfj/index.htm - 首页 - 新闻中心 - 政府信息公开 - 网上信访 - 信访广角 - 互动交流 首页>>政府信息公开>>法规文件>>法律法规 法律法规 ### 中华人民共和国劳动合同法 #### 国家信访局门户网站 www.gjxfj.gov.cn 日期： 2014-05-12 来源： （ 2007年6月29日 第十届全国人民代表大会常务委员会第二十八次会议通过 2007年6月29日中华人民共和国主席令第六十五号公布） 目录 第一章 总则 第二章 劳动合同的订立 第三章 劳..."
+          },
+          {
+            "title": "《中华人民共和国劳动合同法(2012修正)》",
+            "url": "https://www.cnafc.org/cnafc/front/detail.action?id=FB48850E975C4E8E9F79A9B903D4B722",
+            "snippet": "《中华人民共和国劳动合同法(2012修正)》 欢迎访问中国财务公司协会 加入收藏 设为首页 {{memberUsername}} 会员中心 修改密码 退出登录 新闻中心 监管动态 协会动态 金融动态 会员动态 媒体关注 党建引领 党建动态 清廉文化 党规党纪 主题教育 政策法规 国家金融监督管理总局 中国人民银行 国务院国有资产监督管理委员会 中华人民共和国财政部 国家外汇管理局 服务平台 会员管理系统 数据统计系统 科技供应商评价系统 智能合规平台 网络大学 资料中心 会议资料 研究报告 培训资料 《中国财务公司》 在线视频 ..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "gjxfj.gov.cn",
+            "guangdong.chinatax.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            false,
+            false
+          ],
+          "detail_preview_coverage_percent": 0.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "statute-04",
+      "category": "精确法条",
+      "question": "食品安全法第一百四十八条 十倍赔偿 官方",
+      "query": "食品安全法第一百四十八条 十倍赔偿 官方 法律法规 中国",
+      "expected_domains": [
+        "flk.npc.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "食品安全法"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "第一百四十八条",
+          "第148条",
+          "148条"
+        ],
+        [
+          "十倍赔偿",
+          "十倍"
+        ]
+      ],
+      "why": "检验较长中文法条编号及赔偿规则的检索。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 5751.0,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "购买的减肥食品中含有毒成分获十倍赔偿 消费维权典型案例发布 - 21...",
+            "url": "https://www.21jingji.com/article/20260315/herald/c3801c1cc2245aaa2a01b8fc592e5540.html",
+            "snippet": "裁判结果. 审理法院认为，根据《中华人民共和国食品安全法》第一百四十八条第二款规定，经营者经营明知是不符合食品安全标准的食品，消费者有权向经营者要求. 支付价款十倍的赔偿金。"
+          },
+          {
+            "title": "买到含有毒成分减肥食品获十倍赔偿 消费维权典型案例发布_南方网",
+            "url": "https://news.southcn.com/node_7afb0efe26/076a764437.shtml",
+            "snippet": "裁判结果. 审理法院认为，根据《中华人民共和国食品安全法》第一百四十八条第二款规定，经营者经营明知是不符合食品安全标准的食品，消费者有权向经营者要求. 支付价款十倍的赔偿金。"
+          },
+          {
+            "title": "用掉五瓶化妆品后以标签瑕疵索赔“十倍赔偿”还能支持吗？ _ 光明网",
+            "url": "https://topics.gmw.cn/2025-12/21/content_38489760.htm",
+            "snippet": "民法院应予支持。 ”依照《食品安全法》第一百四十八条第二款规定，生产不符合食品安全标准的食品或者经营明知是不符合食品安全标准的食品，消费者除要求赔偿损失外，"
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": false
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 2210.1,
+        "error": null,
+        "provider_reported_search_time_ms": 1280,
+        "results": [
+          {
+            "title": "《中华人民共和国食品安全法》（主席令第21号） - 市场规则标准和监管执法信息",
+            "url": "https://www.nc.gov.cn/scgzbz/scjggzhbz/201904/4a767daf273542da80a202755cda425b.shtml",
+            "snippet": "《中华人民共和国食品安全法》（主席令第21号） - 市场规则标准和监管执法信息 ##  您当前所在位置： 首页市场监管规则和标准 # 《中华人民共和国食品安全法》（主席令第21号） 来源： 浏览量： 字体：大中小 中华人民共和国主席令 第二十一号 《中华人民共和国食品安全法》已由中华人民共和国第十二届全国人民代表大会常务委员会第十四次会议于2015年4月24日修订通过，现将修订后的《中华人民共和国食品安全法》公布，自2015年10月1日起施行。 中华人民共和国主席习近平 2015年4月24日 中华人民共和国食品安全法 目录 第一章 总则 第二章 食品安全风险监测和评..."
+          },
+          {
+            "title": "最高人民法院关于审理食品药品惩罚性赔偿纠纷案件适用法律若干问题的解释【2024-08-21】",
+            "url": "http://lawdb.cncourt.org/show.php?fid=157810&key=%EF%BF%BD%EF%BF%BD%EF%BF%BD%EF%BF%BD",
+            "snippet": "最高人民法院关于审理食品药品惩罚性赔偿纠纷案件适用法律若干问题的解释【2024-08-21】 【发布单位】最高人民法院 【发布文号】法释〔2024〕9号 【发布日期】2024-08-21 【生效日期】2024-08-22 【失效日期】----------- 【所属类别】国家法律法规 【文件来源】最高人民法院《最高人民法院关于审理食品药品惩罚性赔偿纠纷案件适用法律若干问题的解释》已于2024年3月18日经最高人民法院审判委员会第1918次会议通过，现予公布，自2024年8月22日起施行。 最高人民法院 2024年8月21日 法释〔2024〕9号 最高人民法院 关于审理食品药品惩罚性赔偿..."
+          },
+          {
+            "title": "法答网精选答问（第二十八批）——食品药品惩罚性赔偿专题",
+            "url": "https://www.court.gov.cn/zixun/xiangqing/478831.html",
+            "snippet": "法答网精选答问（第二十八批）——食品药品惩罚性赔偿专题 - 中华人民共和国最高人民法院 - [中文版] [English] 所在位置：首页> 最高人民法院新闻 法答网精选答问（第二十八批）——食品药品惩罚性赔偿专题 - 来源：人民法院报 - 发布时间：2025-10-16 08:38:32 问题1：“知假买假”者小额、多次购买不符合食品安全标准的食品，并针对不同经营者主张惩罚性赔偿的，赔偿金额应当如何认定？ 答疑意见：实践中，有的“知假买假”者故意在各地寻找超过保质期等不符合食品安全标准的食品，购买金额不超过10元，然后针对不同经营者在各地法院起诉请求返还货款并承担1000元的惩罚..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "court.gov.cn",
+            "nc.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            false,
+            false
+          ],
+          "detail_preview_coverage_percent": 0.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "statute-05",
+      "category": "精确法条",
+      "question": "个人信息保护法第六条 个人信息处理原则 官方",
+      "query": "个人信息保护法第六条 个人信息处理原则 官方 法律法规 中国",
+      "expected_domains": [
+        "flk.npc.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "个人信息保护法"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "第六条",
+          "第6条",
+          "6条"
+        ],
+        [
+          "个人信息处理",
+          "处理原则"
+        ]
+      ],
+      "why": "检验跨出当前本地知识库范围的权威法规查找能力。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 3627.4,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "个人信息保护｜爱信（上海）贸易有限公司",
+            "url": "https://www.aisin-sh.com/privacy/",
+            "snippet": "个人信息保护方针. 爱信（上海）贸易有限公司（以下称为“本公司”）在业务所涉及的顾客、相关交易方、本公司员工等个人信息的处理上，遵循个人信息保护的相关法律法规及其他."
+          },
+          {
+            "title": "帮助与反馈个人信息保护政策-16.60.20-格式转换.pdf资源-CSDN下载",
+            "url": "https://download.csdn.net/download/2606_95225795/92702152",
+            "snippet": "为遵守相关法律法规，应用可能需要收集一些必要的个人信息。对于信息的存储，有的信息仅在本地设备保存和处理，不上传至服务器，从而不受个人信息保护政策的约束。 用户需要确保所提供的他人信息已经得到其授权，必要时还要获得其单独同意。"
+          },
+          {
+            "title": "标题",
+            "url": "https://www.davinci.idv.tw/file/39/1629320860/【達文西法律事務所】中華人民共和國個人信息保護法（草案）.pdf",
+            "snippet": "第一条 为了保护个人信息权益,规范个人信息处理活动, 保障个人信息依法有序自由流动,促进个人信息合理利用,制定 本法。 第二条 自然人的个人信息受法律保护,任何组织、个人不 得侵害自然人的个人信息权益。"
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            false
+          ],
+          "core_topic_coverage_percent": 0.0,
+          "core_topic_hit_at_n": false,
+          "detail_term_group_matches": [
+            false,
+            true
+          ],
+          "detail_preview_coverage_percent": 50.0,
+          "automatic_pass_at_n": false
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1436.7,
+        "error": null,
+        "provider_reported_search_time_ms": 1159,
+        "results": [
+          {
+            "title": "中华人民共和国个人信息保护法",
+            "url": "https://www.cac.gov.cn/2021-08/20/c_1631050028355286.htm",
+            "snippet": "中华人民共和国个人信息保护法_中央网络安全和信息化委员会办公室 # 中华人民共和国个人信息保护法 2021年08月20日 21:21 来源： 中国人大网 中华人民共和国个人信息保护法 （2021年8月20日第十三届全国人民代表大会常务委员会第三十次会议通过） 目 录 第一章 总 则 第二章 个人信息处理规则 第一节 一般规定 第二节 敏感个人信息的处理规则 第三节 国家机关处理个人信息的特别规定 第三章 个人信息跨境提供的规则 第四章 个人在个人信息处理活动中的权利 第五章 个人信息处理者的义务 第六章 履行个人信息保护职责的部门 第七章 法律责任 第八章 附 ..."
+          },
+          {
+            "title": "中华人民共和国个人信息保护法（全文）",
+            "url": "https://hljzx.gov.cn/contents/219/8684.html",
+            "snippet": "中华人民共和国个人信息保护法（全文） 中华人民共和国个人信息保护法（全文） 日期:2024-09-07 | 预览次数: $(function(){ $.ajax({ type: \"POST\", url: \"/api/stl/actions/hits\", contentType: \"application/json\", data: JSON.stringify({ \"siteId\": 1, \"channelId\": 219, \"contentId\": 8684, \"autoIncrease\": true }), dataType: \"json\", success: function (res....."
+          },
+          {
+            "title": "中华人民共和国个人信息保护法（全文） - 湖南省工业和信息化厅",
+            "url": "http://gxt.hunan.gov.cn/gxt/syzt/fzxcxx/fzxcflfg/202204/t20220414_22736701.html",
+            "snippet": "中华人民共和国个人信息保护法（全文） - 湖南省工业和信息化厅 # 站内搜索 - 网站首页 - 政府信息公开 - 办事服务 - 机关党建 - 互动交流 - 专题专栏 首页>首页专题>法治宣传学习>国家法律法规 ### 中华人民共和国个人信息保护法（全文） 湖南省工业和信息化厅 gxt.hunan.gov.cn 时间：2022年04月14日 16:03 【字体： 大 中 小】 中华人民共和国个人信息保护法 （2021年8月20日第十三届全国人民代表大会常务委员会第三十次会议通过） 目录 第一章 总则 第二章 个人信息处理规则 第一节 一般规定 第二节 敏感个人信息的处理规则..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "cac.gov.cn",
+            "gxt.hunan.gov.cn",
+            "hljzx.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            false,
+            true
+          ],
+          "detail_preview_coverage_percent": 50.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "statute-06",
+      "category": "精确法条",
+      "question": "民法典第一千一百六十五条 过错侵权责任 官方",
+      "query": "民法典第一千一百六十五条 过错侵权责任 官方 法律法规 中国",
+      "expected_domains": [
+        "flk.npc.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "民法典"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "第一千一百六十五条",
+          "第1165条",
+          "1165条"
+        ],
+        [
+          "过错",
+          "侵权责任"
+        ]
+      ],
+      "why": "检验长条文编号、法律名称和责任概念的联合检索。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 4986.5,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "中华人民共和国民法典",
+            "url": "https://www.moj.gov.cn/pub/sfbgw/zwgkztzl/2025nianzhuanti/2025mfdxcy/2025mfdxcy_mfdql/202505/t20250507_518708.html",
+            "snippet": "May 7, 2025 ... 第二十一条不能辨认自己行为的成年人为无民事行为能力人，由其法定代理人代理实施民事法律行为。 八周岁以上的未成年人不能辨认自己行为的，适用前款规定。"
+          },
+          {
+            "title": "中华人民共和国民法典【7】 - 中国共产党新闻网",
+            "url": "http://cpc.people.com.cn/n1/2020/0602/c419242-31731828-7.html",
+            "snippet": "Jun 2, 2020 ... 第一千一百六十五条 行为人因过错侵害他人民事权益造成损害的，应当承担侵权责任。 依照法律规定推定行为人有过错，其不能证明自己没有过错的，应当承担侵权 ..."
+          },
+          {
+            "title": "最高法民一庭负责 人就民法典侵权责任编司法解释（一）答记者问",
+            "url": "https://ipc.court.gov.cn/zh-cn/news/view-3484.html",
+            "snippet": "Sep 26, 2024 ... 侵权责任是侵害民事权益应当承担的法律后果，承担侵权责任也是制裁违法、救济权益、保障人权的重要手段。民法典施行后，侵权责任法同时废止，侵权责任在民法 ..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "ipc.court.gov.cn",
+            "moj.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": true
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 2024.2,
+        "error": null,
+        "provider_reported_search_time_ms": 1142,
+        "results": [
+          {
+            "title": "中华人民共和国民法典",
+            "url": "https://www.moj.gov.cn/pub/sfbgw/zwgkztzl/2025nianzhuanti/2025mfdxcy/2025mfdxcy_mfdql/202505/t20250507_518708.html",
+            "snippet": "中华人民共和国民法典 中华人民共和国司法部 - 首页 - 机构设置 - - 机构职能 - 部领导介绍 - 驻司法部纪检监察组 - 机关厅局 - 直属单位 - 全面依法治国 - - 机构简介 - 决策部署 - 法治政府建设 - 法治调研 - 法治督察 - 政府信息公开 - 政务服务 - - 办事指南 - 表格下载 - 律师查找 - 公证办理 - 法考服务 - 法律援助 - 人民调解 - 司法鉴定 - 仲裁服务 - 司法行政案例库 - 司法部政务服务平台 - 立法意见征集 - - 立法意见征集 - 进入征集系统 - 互动交流 - - 网民留言 - 投诉举报 - 网上信访 https://ww..."
+          },
+          {
+            "title": "《中华人民共和国民法典》 第七编侵权责任",
+            "url": "https://www.spp.gov.cn/spp/ssmfdyflvdtpgz/202008/t20200831_478419.shtml",
+            "snippet": "《中华人民共和国民法典》第七编 侵权责任_中华人民共和国最高人民检察院 《中华人民共和国民法典》第七编 侵权责任 时间：2020-08-31 作者： 来源：新华网 第七编 侵权责任 第一章 一般规定 第一千一百六十四条 本编调整因侵害民事权益产生的民事关系。 第一千一百六十五条 行为人因过错侵害他人民事权益造成损害的，应当承担侵权责任。 依照法律规定推定行为人有过错，其不能证明自己没有过错的，应当承担侵权责任。 第一千一百六十六条 行为人造成他人民事权益损害，不论行为人有无过错，法律规定应当承担侵权责任的，依照其规定。 第一千一百六十七条 侵权行为危及他人人身、财产安全的，被..."
+          },
+          {
+            "title": "中华人民共和国民法典（续）",
+            "url": "http://gongbao.court.gov.cn/Details/7f184078694d811fb3314f6af9accf.html",
+            "snippet": "中华人民共和国民法典（续） - 中华人民共和国最高人民法院公报 - 主办：最高人民法院办公厅主管：最高人民法院 - 总编辑：邓修明 副总编辑：林文学 海伟 中华人民共和国最高人民法院 版权所有"
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "gongbao.court.gov.cn",
+            "moj.gov.cn",
+            "spp.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "service-01",
+      "category": "官方办事流程",
+      "question": "北京拖欠工资劳动保障监察投诉官方",
+      "query": "北京拖欠工资劳动保障监察投诉官方 法律法规 中国",
+      "expected_domains": [
+        "rsj.beijing.gov.cn",
+        "mohrss.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "劳动保障监察",
+          "劳动监察",
+          "欠薪"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "拖欠工资",
+          "欠薪"
+        ],
+        [
+          "投诉",
+          "举报"
+        ]
+      ],
+      "why": "检验面向北京用户的欠薪投诉官方入口。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 5427.9,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "北京攻关27个民生难题过半已见成效",
+            "url": "https://m.bjnews.com.cn/detail/162371633614409.html",
+            "snippet": "北京市劳动保障监察总队副总队长邹鹏介绍，为保障农民工工资按时足额发放，北京市集中出台了一批文件，明确制度落实量化目标，农民工工资专用账."
+          },
+          {
+            "title": "北京当地劳动监察地址-今日头条",
+            "url": "https://www.toutiao.com/topic/7518166525804464137/",
+            "snippet": "资讯. 北京劳动监察走进161个工地.劳动保障监察受理投诉指南。 您的投诉举报范围:1、用人单位非法招用未满十六周岁未成年人的;11、其他违反劳动保障法律、法规、规章的行为。"
+          },
+          {
+            "title": "m.imlaw.cn/ask-details/954746",
+            "url": "https://m.imlaw.cn/ask-details/954746/",
+            "snippet": "会将问题转派给当地劳动监察部门。 向劳动监察大队投诉：携带身份证、考勤记录和工资发放记录等证据材料，前往北京沙河高教园所在地的人力资源和社会保障局，找到劳动监察大队，填写《. 欠薪投诉登记表》。"
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": false
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1960.0,
+        "error": null,
+        "provider_reported_search_time_ms": 1064,
+        "results": [
+          {
+            "title": "投诉举报",
+            "url": "http://fuwu.rsj.beijing.gov.cn/bjdkhy/ewm/bjjc/tsjb",
+            "snippet": "首页标题"
+          },
+          {
+            "title": "劳动者遭遇欠薪 维权有4种投诉举报渠道_\n北京市人力资源和社会保障局_政务公开_工作动态",
+            "url": "https://rsj.beijing.gov.cn/xxgk/gzdt/202108/t20210819_2472135.html",
+            "snippet": "劳动者遭遇欠薪 维权有4种投诉举报渠道_ 北京市人力资源和社会保障局_政务公开_工作动态 Title 我在听，请说话(10s) 抱歉，没听清，请再说一遍吧 本网站 > 一网通查 > 咨询热线：010-12333 周一至周日全天24小时服务 搜索结果： 包含以下全部的关键词 包含以下的完整关键词 包含以下任意一个关键词 不包含以下关键词 文档格式： 全部格式 WORD PPT EXCEL PDF TXT ZIP 时间范围： 全部时间 一年内 一月内 一周内 自定义 从 至 排序方式： 按相关度排序 按时间排序 搜索位置： 任何地方 仅标题 请至少填写一个包含的关键词..."
+          },
+          {
+            "title": "北京市工资支付规定_规章_首都之窗_北京市人民政府门户网站",
+            "url": "https://www.beijing.gov.cn/gongkai/zfxxgk/zc/gz/202112/t20211223_2570952.html",
+            "snippet": "北京市工资支付规定_规章_首都之窗_北京市人民政府门户网站 打印 # 北京市工资支付规定 (2003年12月22日北京市人民政府第142号令公布 根据2007年11月23日北京市人民政府第200号令修改) 第一章 总则 第一条 为规范工资支付行为，维护劳动者的合法权益，根据《中华人民共和国劳动法》及有关法律、法规的规定，结合本市实际情况，制定本规定。 第二条 本规定适用于本市行政区域内的企业、个体工商户以及民办非企业单位(以下统称用人单位)和与之形成劳动关系的劳动者。 本市国家机关、事业单位、社会团体和与之建立劳动合同关系的劳动者，依照本规定执行。 第三条 政府根据本市社会经济..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "beijing.gov.cn",
+            "fuwu.rsj.beijing.gov.cn",
+            "rsj.beijing.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "service-02",
+      "category": "官方办事流程",
+      "question": "全国根治欠薪线索反映平台官方",
+      "query": "全国根治欠薪线索反映平台官方 法律法规 中国",
+      "expected_domains": [
+        "mohrss.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "根治欠薪",
+          "欠薪线索"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "线索反映平台",
+          "反映平台"
+        ]
+      ],
+      "why": "检验全国性人社公共服务入口。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 2913.5,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "多措并举守护好劳动者“钱袋子”",
+            "url": "http://ll.anhuinews.com/llwz/202503/t20250326_8350345.shtml",
+            "snippet": "Mar 26, 2025 ... 三是完善工资支付信用等配套制度，构建信用评价体系。依托根治欠薪信息监管系统，建立用人单位信用等级评价制度，实行分类监管。 注重协同履职，强化法律法规 ..."
+          },
+          {
+            "title": "拖欠工资最全处理攻略",
+            "url": "http://www.kaifu.gov.cn/jdhy/hygq/gztq/202311/t20231122_11295451.html",
+            "snippet": "Nov 17, 2023 ... 3．通过登录【全国根治欠薪线索平台】反映欠薪情况。 当地劳动保障监察部门. 到当地劳动保障监察部门投诉；根据《 ..."
+          },
+          {
+            "title": "拖欠农民工工资可以在哪里投诉？ - 澎湃新闻",
+            "url": "https://www.thepaper.cn/newsDetail_forward_15347353",
+            "snippet": "Nov 14, 2021 ... 农民工对涉及本人的欠薪问题，可通过“全国根治欠薪线索反映平台”小程序、或关注人力资源社会保障部门官方微信公众号，随时随地提交欠薪线索，平台收到线索后 ..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "kaifu.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": true
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1491.1,
+        "error": null,
+        "provider_reported_search_time_ms": 1213,
+        "results": [
+          {
+            "title": "被拖欠工资了？来这个全国平台反映！ - 国务院客户端",
+            "url": "https://app.www.gov.cn/govdata/gov/202112/25/480029/article.html",
+            "snippet": "被拖欠工资了？来这个全国平台反映！ # 被拖欠工资了？来这个全国平台反映！ 国务院客户端 2021-12-25 全国根治拖欠农民工工资工作暨农民工工作电视电话会议12月24日在京召开。李克强总理作出重要批示。批示指出：要拿出更有效举措坚决解决农民工工资拖欠中的突出问题，决不允许拖欠农民工工资这笔辛苦钱，恶意拖欠的要依法依规从严惩处。 国务院根治拖欠农民工工资工作领导小组办公室开通的 全国根治欠薪线索反映平台 已在国务院客户端小程序正式上线。 农民工如果被拖欠工资， 扫描下方葵花码， 即可反映欠薪线索。 ## 具体操作步骤 1 实名登录后，点击红框示意位置， 开始反映线..."
+          },
+          {
+            "title": "国务院办公厅关于全面治理拖欠农民工工资问题的意见_国务院文件_中国政府网",
+            "url": "https://www.gov.cn/zhengce/zhengceku/2016-01/19/content_5034320.htm",
+            "snippet": "国务院办公厅关于全面治理拖欠农民工工资问题的意见_国务院文件_中国政府网 - 退出 - 个人中心 EN https://www.gov.cn/ 网站无障碍开关 -- 2016-01-19 16:46:00 首页>政策>国务院政策文件库> 国务院文件 字号：默认 大 超大 | 打印 收藏 留言 | | 索 引 号： | 000014349/2016-00007 | 主题分类： | 农业、林业、水利\\农业、畜牧业、渔业 | | --- | --- | --- | --- | | 发文机关： | 国务院办公厅 | 成文日期： | 2016年01月17日 | | 标 题： | 国..."
+          },
+          {
+            "title": "关于印发《“全国根治欠薪线索反映平台”欠薪线索分类办理实施方案》的通知-天门市人民政府",
+            "url": "https://www.tianmen.gov.cn/zwgk/bmhxzxxgkml/bm/srlzyhshbzj/zfxxgk/fdzdgknr/gysjjs/jy/ld/202311/t20231106_4928708.shtml",
+            "snippet": "关于印发《“全国根治欠薪线索反映平台”欠薪线索分类办理实施方案》的通知-天门市人民政府 搜索 - 网站首页 - 政府信息公开 - 政务服务 - 机构简介 - 互动交流 索引号 MB1A08302/2023-29735 分类 监察 发布机构 天门市人力资源和社会保障局 发文日期 2023年01月05日 名称 关于印发《“全国根治欠薪线索反映平台”欠薪线索分类办理实施方案》的通知 文号 效力状态 有效 发布日期 2023年01月05日 ## 关于印发《“全国根治欠薪线索反映平台”欠薪线索分类办理实施方案》的通知 分享至 来源：天门市人力资源和社会保障局 各..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "app.www.gov.cn",
+            "gov.cn",
+            "tianmen.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "service-03",
+      "category": "官方办事流程",
+      "question": "北京劳动人事争议仲裁申请办理官方",
+      "query": "北京劳动人事争议仲裁申请办理官方 法律法规 中国",
+      "expected_domains": [
+        "rsj.beijing.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "劳动人事争议",
+          "劳动争议",
+          "仲裁"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "仲裁"
+        ],
+        [
+          "申请",
+          "办理"
+        ]
+      ],
+      "why": "检验地方仲裁办理信息的权威来源覆盖。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 3914.3,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "Supreme People's Court Monitor | A blog discussing China's highest ...",
+            "url": "https://supremepeoplescourtmonitor.com/",
+            "snippet": "It was reported that the Supreme People's Court as a next step, would conduct research on the Arbitration Law and other legislation (下一步开展仲裁法、外国国家 ..."
+          },
+          {
+            "title": "涉外法律文书格式汇编 - 广州市律师协会",
+            "url": "https://static-www.gzlawyer.org/file/upload/20210713/file/20210713071839_88d88124247f4d90ba48e91346a1c91e.pdf",
+            "snippet": "... 仲裁时. 效内向甲方所在地有管辖权的劳动争议仲裁委员会申请仲裁。对仲裁裁决不服的，可在法定期限. 内向甲方所在地人民法院提起诉讼。 Any dispute arising from ..."
+          },
+          {
+            "title": "快评《最高人民法院关于审理劳动争议案件适用法律问题的解释（二 ...",
+            "url": "https://www.lexology.com/library/detail.aspx?g=fa2b20a4-fec9-45e2-b26c-62d98f7cbb03",
+            "snippet": "Dec 12, 2023 ... 2023年12月12日，最高人民法院就《最高人民法院关于审理劳动争议案件适用法律问题的解释（二）（征求意见稿）》（以下简称“《意见稿》”）向社会公…"
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": false
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1299.4,
+        "error": null,
+        "provider_reported_search_time_ms": 1037,
+        "results": [
+          {
+            "title": "申请仲裁",
+            "url": "https://fuwu.rsj.beijing.gov.cn/zhrs/api4/arbitration/html/fsq/fsq_ydxz",
+            "snippet": "申请仲裁 本网站 > 一网通查 > 热搜词：调解仲裁 我要仲裁 提出反申请 返回首页 | 退出登录 ## 在线申请劳动人事争议仲裁须知 一、受理条件 1.申请人使用本平台申请仲裁，应符合《中华人民共和国劳动争议调解仲裁法》及《劳动人事争议仲裁办案规则》（人社部令第33号）规定的劳动人事争议受案范围、有明确的仲裁请求和事实理由；申请人是与本案有直接利害关系的自然人、法人或者其他组织，有明确的被申请人；申请材料齐全。 2.申请人使用本平台申请仲裁的，劳动合同履行地与用人单位所在地至少有一个地址位于北京市内，并符合我市劳动人事争议仲裁管辖规定，具体详见《关于调整我市劳动人事争议仲裁案..."
+          },
+          {
+            "title": "中华人民共和国劳动争议调解仲裁法_其他文件_首都之窗_北京市人民政府门户网站",
+            "url": "http://www.beijing.gov.cn/zhengce/zhengcefagui/qtwj/201912/t20191219_1307906.html",
+            "snippet": "中华人民共和国劳动争议调解仲裁法_其他文件_首都之窗_北京市人民政府门户网站 政务公开政策公开政策文件其他文件 1. [有效性] 2. [发布日期] 2007-12-29 3. [发文机构] 全国人民代表大会常务委员会 4. [发文字号] 〔〕号 # 中华人民共和国劳动争议调解仲裁法 收藏取消收藏字号：大中小 -- 中华人民共和国主席令 八十号 《中华人民共和国劳动争议调解仲裁法》已由中华人民共和国第十届全国人民代表大会常务委员会第三十一次会议于2007年12月29日通过，现予公布，自2008年5月1日起施行。 中华人民共和国主席 胡锦涛 2007年12月29日 中华人民..."
+          },
+          {
+            "title": "劳动人事争议仲裁申请 - 政务服务- 北京市人民政府",
+            "url": "https://banshi.beijing.gov.cn/pubtask/task/1/110000000000/1f742ee9-db1e-46f0-b009-0a71220d2f08.html?locationCode=110000000000",
+            "snippet": "劳动人事争议仲裁申请 2 20 111100006883506060 北京市人力资源和社会保障局 劳动人事争议仲裁申请 1111000068835060602002014302002 0 1f742ee9-db1e-46f0-b009-0a71220d2f08 5d93dbf6-3548-4190-a83f-d98865fe84ed 2^3 20 市人力资源社会保障局 110000000000 北京市人力资源和社会保障局 北京市人力资源和社会保障局来访接待大厅:法定工作日: 上午: 09:00 - 11:00; 下午: 13:00 - 16:30; 北京市人力资..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "banshi.beijing.gov.cn",
+            "beijing.gov.cn",
+            "fuwu.rsj.beijing.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "service-04",
+      "category": "官方办事流程",
+      "question": "全国12315平台投诉假货流程官方",
+      "query": "全国12315平台投诉假货流程官方 法律法规 中国",
+      "expected_domains": [
+        "12315.cn",
+        "samr.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "12315"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "投诉"
+        ],
+        [
+          "假货",
+          "假冒",
+          "售假"
+        ]
+      ],
+      "why": "检验消费投诉平台的官方入口检索。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 4258.6,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "国家市场监督管理总局令（第121号） 市场监督管理投诉举报处理办法__2...",
+            "url": "https://www.gov.cn/gongbao/2026/issue_12686/202604/content_7066102.html",
+            "snippet": "为了规范市场监督管理投诉举报处理工作，保护自然人、法人或者其他组织合法权益，根据《中华人民共和国消费者权益保护法》、《中华人民共和国消费者权益保护法实施条例》等法律、行政法规，制定本办法。"
+          },
+          {
+            "title": "我买到假货怎么向市场监督管理局投诉呢",
+            "url": "https://ailegal.baidu.com/legalarticle/qadetail?id=f72ce1b6f0b435250725",
+            "snippet": "13 hours ago · 登录全国12315平台：该平台提供了在线投诉的渠道，消费者可登录后提交投诉信息，包括购买假货的详细情况、证据材料等，并跟踪处理进度。 现场投诉：直接前往当地市场监督管理局的办公地点，携带相关证据材料，如购物发票、假货实物等，进行现场投诉。"
+          },
+          {
+            "title": "网上买假货怎么12315投诉 - ailegal.baidu.com",
+            "url": "https://ailegal.baidu.com/legalarticle/qadetail?id=06c724e6ed19b5260103",
+            "snippet": "13 hours ago · **若在网上买到假货，12315投诉流程如下**： 1.**收集证据**：保留订单信息、产品照片、检测报告、沟通记录等，确保证据真实完整。 2.**向消费者协会投诉**：通过全国12315平台或热线电话投诉，附上详尽信息及证据材料，消协会进行调解。"
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": true
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1529.5,
+        "error": null,
+        "provider_reported_search_time_ms": 1284,
+        "results": [
+          {
+            "title": "市场监督管理投诉举报处理办法",
+            "url": "https://www.bj315.org/flfg/202601/t20260112_50177.shtml",
+            "snippet": "市场监督管理投诉举报处理办法 - 消费在北京 - 法律法规 - 理论研究 - 消费教育 - 消费维权 - 消费调查 - 比较与选择 - 社会聚焦 - 消费要闻 - 首页 - 本站搜索： 您现在的位置：首页>法律法规 市场监督管理投诉举报处理办法 | 发布时间：2026-01-12 信息来源：市场监管总局 | 复制网址 | 打印 | 小中大 | | --- | --- | --- | --- | 摘要： 市场监督管理投诉举报处理办法 (2025年12月30日国家市场监督管理总局令第121号公布 自2026年4月15日起施行) 第一条 为了规范市场监督管理投诉举报处理工作，保护自..."
+          },
+          {
+            "title": "如何在全国12315平台上进行消费投诉？",
+            "url": "https://www.beijing.gov.cn/fuwu/bmfw/bmjy/202504/t20250409_4060597.html",
+            "snippet": "如何在全国12315平台上进行消费投诉？_便民经验_首都之窗_北京市人民政府门户网站 政务服务>便民服务>便民经验 # 如何在全国12315平台上进行消费投诉？ 日期：2025-04-09 10:56 来源：北京市市场监督管理局 分享： 微信图片_2026-01-30_095356_391 https://play.shipin.beijing.gov.cn/vod/60857749/sdzccpk/bmfw/2025/04/22/4F859C8F3C7D4d32833689E4813407971.mp4 - 微信图片_2026-01-30_095356_391 ## 如何在全..."
+          },
+          {
+            "title": "市场监管总局修订发布《市场监督管理投诉举报处理办法》",
+            "url": "https://scjg.sjz.gov.cn/columns/beb1122f-cbef-4515-b7f7-eb0d2c7c1c86/202601/13/194b08fc-2e78-4adb-8456-13b917ce86a8.html",
+            "snippet": "市场监管总局修订发布《市场监督管理投诉举报处理办法》 无障碍适老模式 - 重点领域信息公开 - 政府信息公开 - 投诉举报 - 法律法规 - 机构职能 - 公示公告 - 新闻动态 搜索 当前位置：首页新闻动态系统新闻 市场监管总局修订发布《市场监督管理投诉举报处理办法》 发布时间：2026-01-13 来源：办公室信息发布 【字体：大 中 小 】打印 市场监管总局修订发布《市场监督管理投诉举报处理办法》 为适应市场监管新形势新要求、提升投诉举报处理质效、更好保护消费者和经营者合法权益，近日，市场监管总局修订发布规章第121号令《市场监督管理投诉举报处理办法》（以下简称《办法》..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "beijing.gov.cn",
+            "scjg.sjz.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            false
+          ],
+          "detail_preview_coverage_percent": 50.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "service-05",
+      "category": "官方办事流程",
+      "question": "北京法律援助申请条件官方",
+      "query": "北京法律援助申请条件官方 法律法规 中国",
+      "expected_domains": [
+        "sfj.beijing.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "法律援助"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "申请"
+        ],
+        [
+          "条件"
+        ]
+      ],
+      "why": "检验地方公共法律服务渠道。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 3820.1,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "法律援助申请条件 - Beijing",
+            "url": "https://sfj.beijing.gov.cn/sfj/sfdt/jssp/326128968/index.html",
+            "snippet": "26年前，北京市司法局率先在全国设立法律援助中心法律援助基金会，目前，北京市法律援助中心 已承办案件5万余件! 申请法律援助需符合什么条件？ 26年来，北京市法律援助中心秉持为民服务理念，积极推动法律援助工作， 从\"应援尽援\"向\"应援优援\"发展， 服务方式由单一律师免费诉讼 ..."
+          },
+          {
+            "title": "北京市法律援助条例_地方性法规_北京市人民代表大会常务委员会",
+            "url": "https://www.bjrd.gov.cn/rdzl/dfxfgk/dfxfg/202101/t20210106_2200107.html",
+            "snippet": "(2008年12月19日北京市第十三届人民代表大会常务委员会第八次会议通过) 目 录 第一章 总则 第二章 法律援助范围 第三章 法律援助申请和审查 第四章 法律援助实施 第五章 法律责任 第六章 附则 第一章 总则 第一条 为了保障经济困难或者符合法定条件的公民获得必要的法律服务，规范法律援助行为 ..."
+          },
+          {
+            "title": "北京市法律援助条例_地方性法规_首都之窗_北京市人民政府门户网站",
+            "url": "https://www.beijing.gov.cn/zhengce/dfxfg/200901/t20090112_566709.html",
+            "snippet": "(2008年12月19日北京市第十三届人民代表大会常务委员会第八次会议通过) 目 录 第一章 总则 第二章 法律援助范围 第三章 法律援助申请和审查 第四章 法律援助实施 第五章 法律责任 第六章 附则 第一章 总则 第一条 为了保障经济困难或者符合法定条件的公民获得必要的法律服务，规范法律援助行为 ..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "beijing.gov.cn",
+            "bjrd.gov.cn",
+            "sfj.beijing.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": true
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1389.7,
+        "error": null,
+        "provider_reported_search_time_ms": 1100,
+        "results": [
+          {
+            "title": "法律援助申请条件",
+            "url": "https://sfj.beijing.gov.cn/sfj/sfdt/jssp/326128968/index.html",
+            "snippet": "法律援助申请条件 本站查询 一网通查 我在听，请说话(10s) 抱歉，没听清，请再说一遍吧 本站查询 一网通查 我在听，请说话(10s) 抱歉，没听清，请再说一遍吧 # 法律援助申请条件 分享： 26年前，北京市司法局率先在全国设立法律援助中心法律援助基金会，目前，北京市法律援助中心已承办案件5万余件！申请法律援助需符合什么条件？ 26年来，北京市法律援助中心秉持为民服务理念，积极推动法律援助工作，从“应援尽援”向“应援优援”发展，服务方式由单一律师免费诉讼代理，向案件代理、刑事辩护，现场、热线、网络法律咨询拓展，市法援中心已承办案件5万余件，为受援人挽回经济损失5亿多元。..."
+          },
+          {
+            "title": "北京市法律援助条例_地方性法规",
+            "url": "https://www.bjrd.gov.cn/rdzl/dfxfgk/dfxfg/202101/t20210106_2200107.html",
+            "snippet": "北京市法律援助条例_地方性法规_北京市人民代表大会常务委员会 首页>人大资料>地方性法规库> 地方性法规 # 北京市法律援助条例 颁布日期：2008-12-29 施行日期：2009-03-01 分享到： (2008年12月19日北京市第十三届人民代表大会常务委员会第八次会议通过) 目 录 第一章 总则 第二章 法律援助范围 第三章 法律援助申请和审查 第四章 法律援助实施 第五章 法律责任 第六章 附则 第一章 总则 第一条 为了保障经济困难或者符合法定条件的公民获得必要的法律服务，规范法律援助行为，促进法律援助事业发展，根据国务院《法律援助条例》和有关法律、行政法..."
+          },
+          {
+            "title": "北京法律援助条例",
+            "url": "https://sfj.beijing.gov.cn/sfj/sfdt/fzxc74/387282/index.html",
+            "snippet": "北京法律援助条例 访问我的专属空间智能问答 简体移动版无障碍--无障碍 本站查询 一网通查 我在听，请说话(10s) 抱歉，没听清，请再说一遍吧 政务资讯 司法行政要闻业务动态普法与依法治理队伍建设热点转载专题专栏 政务公开 司法局介绍规划计划财务公开通知公告人事公告业务数据诚信记录政策文件政策解读 网上办事 办事指南办事统计表格下载查询服务结果公示复议指南 政民互动 在线访谈民意调查互动交流 - 政务服务 - 首页 信息订阅 适老版 本站查询 一网通查 我在听，请说话(10s) 抱歉，没听清，请再说一遍吧 信息订阅 政务资讯 司法行政要闻 业务动..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "bjrd.gov.cn",
+            "sfj.beijing.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "service-06",
+      "category": "官方办事流程",
+      "question": "人民法院在线服务劳动争议立案官方",
+      "query": "人民法院在线服务劳动争议立案官方 法律法规 中国",
+      "expected_domains": [
+        "court.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "人民法院在线服务",
+          "在线服务"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "立案"
+        ]
+      ],
+      "why": "检验司法服务平台及程序信息。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 3475.6,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "国家法律法规数据库",
+            "url": "https://flk.npc.gov.cn/",
+            "snippet": "国家法律法规数据库提供全面的中国法律法规信息，方便用户查询和了解相关法律内容。"
+          },
+          {
+            "title": "人民法院在线服务",
+            "url": "https://zxfw.court.gov.cn/zxfw/index.html",
+            "snippet": "浙江省 搜索案号 扫一扫 登录 帮助 在线立案 我的案件 文书送达 在线交费 在线阅卷 在线庭审 申诉信访 债权申报 在线保全 执行悬赏 全部功能 人民法院案例库 裁判文书公开 审判流程公开 执行信息公开 庭审公开"
+          },
+          {
+            "title": "最高人民法院关于审理劳动争议案件适用法律问题的解释（一） - 中华人民共和国最高人民法院",
+            "url": "https://www.court.gov.cn/zixun/xiangqing/282121.html",
+            "snippet": "《最高人民法院关于审理劳动争议案件适用法律问题的解释（一）》已于2020年12月25日由最高人民法院审判委员会第1825次会议通过，现予公布，自2021年1月1日起施行。 最高人民法院 2020年12月29日 法释〔2020〕26号 最高人民法院 关于审理劳动争议案件适用法律问题的解释（一） （2020年12月25日最高 ..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "court.gov.cn",
+            "flk.npc.gov.cn",
+            "zxfw.court.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": true
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1095.6,
+        "error": null,
+        "provider_reported_search_time_ms": 822,
+        "results": [
+          {
+            "title": "最高人民法院关于审理劳动争议案件适用法律问题的解释（一）",
+            "url": "https://www.court.gov.cn/fabu/xiangqing/282121.html",
+            "snippet": "权威发布 - 中华人民共和国最高人民法院 https://www.court.gov.cn/fabu/xiangqing/282121.html - [中文版] [English] 所在位置：首页>权威发布> 司法解释 最高人民法院关于审理劳动争议案件适用法律问题的解释（一） - 来源：最高人民法院 - 发布时间：2020-12-30 21:29:28 《最高人民法院关于审理劳动争议案件适用法律问题的解释（一）》已于2020年12月25日由最高人民法院审判委员会第1825次会议通过，现予公布，自2021年1月1日起施行。 最高人民法院 2020年12月29日 法释〔2020〕..."
+          },
+          {
+            "title": "人民法院在线服务网操作手册",
+            "url": "http://ssfw.hncourt.gov.cn/u/cms/www/202412/27101149cctj.pdf",
+            "snippet": "1 / 41 ## 人民法院在线服务网操作手册 2024 年 12 月 人民法院在线服务网操作手册 ### 目 录 1 引言 ... 4 1.1 编写目的 ... 4 1.2 术语定义 ... 4 1.3 参考资料 ... 4 2 配置说明 ... 5 2.1 硬件环境 ... 5 2.2 软件环境 ... 5 2.3 插件安装 ... 5 3 系统操作 ... 6 3.1 统一帐号管理 ... 6 3.1.1 个人帐号注册 ... 6 3.1.2 法人帐号注册 ... 7 3.1.3 律师帐号注册 ... 9 3.2 系统登录 ... 12 3.1.4 个..."
+          },
+          {
+            "title": "办事服务 - 中华人民共和国最高人民法院",
+            "url": "https://www.court.gov.cn/fuwu/xiangqing/346471.html",
+            "snippet": "办事服务 - 中华人民共和国最高人民法院 - [中文版] [English] 所在位置：首页>办事服务> 通知(司法文件) 人民法院在线运行规则 - 来源：最高人民法院 - 发布时间：2022-02-22 11:08:37 法发〔2022〕8号 最高人民法院 关于印发《人民法院在线运行规则》的通知 各省、自治区、直辖市高级人民法院，解放军军事法院，新疆维吾尔自治区高级人民法院生产建设兵团分院： 《人民法院在线运行规则》已于2021年12月30日经最高人民法院审判委员会第1861次会议通过，现予以印发，自2022年3月1日起施行。 最高人民法院 2022年1月26日 人民..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "court.gov.cn",
+            "ssfw.hncourt.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            false
+          ],
+          "detail_preview_coverage_percent": 0.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "policy-01",
+      "category": "时效性政策",
+      "question": "消费者权益保护法实施条例七天无理由退货官方",
+      "query": "消费者权益保护法实施条例七天无理由退货官方 法律法规 中国",
+      "expected_domains": [
+        "gov.cn",
+        "flk.npc.gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "消费者权益保护法实施条例"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "七天无理由退货",
+          "七日无理由退货"
+        ]
+      ],
+      "why": "检验较新的消费者规则及文字表述差异。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 3797.6,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "网络购买商品七日无理由退货暂行办法 - 中华人民共和国司法部",
+            "url": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzbmgz/201701/t20170124_145952.html",
+            "snippet": "Jan 24, 2017 ... 第二条消费者为生活消费需要通过网络购买商品，自收到商品之日起七日内依照《消费者权益保护法》第二十五条规定退货的，适用本办法。 第三条网络商品销售者 ..."
+          },
+          {
+            "title": "拆封就不能退”？别再被商家忽悠了！七日无理由退货真相在这里",
+            "url": "https://scjgj.beijing.gov.cn/zwxx/scjgdt/202605/t20260506_4636434.html",
+            "snippet": "May 6, 2026 ... 实际上，《中华人民共和国消费者权益保护法》第二十五条规定，自收到商品七日内可无理由退货。《网络购买商品七日无理由退货暂行办法》第十条规定，七日期间 ..."
+          },
+          {
+            "title": "滥用“七天无理由退货”规则，谁为不诚信买单？ - 新华网",
+            "url": "http://www.news.cn/fortune/20240716/4f832ed5569140278c04bc72a1fcf969/c.html",
+            "snippet": "Jul 16, 2024 ... 依据消费者权益保护法，除特殊商品外，经营者采用网络、电视、电话、邮购等方式销售商品，消费者有权自收到商品之日起七日内退货，且无需说明理由。然而，有的 ..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "moj.gov.cn",
+            "scjgj.beijing.gov.cn"
+          ],
+          "core_term_group_matches": [
+            false
+          ],
+          "core_topic_coverage_percent": 0.0,
+          "core_topic_hit_at_n": false,
+          "detail_term_group_matches": [
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": false
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1433.7,
+        "error": null,
+        "provider_reported_search_time_ms": 1163,
+        "results": [
+          {
+            "title": "国家行政法规库",
+            "url": "http://xzfg.moj.gov.cn/front/law/detail?LawID=1708",
+            "snippet": "国家行政法规库 首页 首页> 正文阅读 下载Word 下载PDF 扫码下载 中华人民共和国消费者权益保护法实施条例 历史沿革 收起 暂无历史沿革 中华人民共和国消费者权益保护法实施条例 (2024年2月23日国务院第26次常务会议通过 2024年3月15日中华人民共和国国务院令第778号公布 自2024年7月1日起施行) ## 第一章 总 则 第一条 根据《中华人民共和国消费者权益保护法》(以下简称消费者权益保护法)等法律，制定本条例。 第二条 消费者权益保护工作坚持中国共产党的领导，坚持以人民为中心，遵循合法、公平、高效的原则。 第三条 国家加大消费者合法权益保..."
+          },
+          {
+            "title": "中华人民共和国消费者权益保护法实施条例（中华人民共和国国务院令 ...",
+            "url": "https://www.mee.gov.cn/zcwj/gwywj/202403/t20240320_1068830.shtml",
+            "snippet": "中华人民共和国消费者权益保护法实施条例（中华人民共和国国务院令 第778号） # 中华人民共和国消费者权益保护法实施条例（中华人民共和国国务院令 第778号） 发布时间：2024-03-20来源：中国政府网字号：[大][中][小] 中华人民共和国国务院令 第778号 《中华人民共和国消费者权益保护法实施条例》已经2024年2月23日国务院第26次常务会议通过，现予公布，自2024年7月1日起施行。 总理 李强 2024年3月15日 中华人民共和国消费者权益保护法实施条例 第一章 总 则 第一条 根据《中华人民共和国消费者权益保护法》（以下简称消费者权益保护法）等法律，制定本..."
+          },
+          {
+            "title": "中华人民共和国消费者权益保护法实施条例",
+            "url": "https://www.jyg.gov.cn/scjgj/zwxxgk/zc/bmwj/art/2024/art_aeb35a3e5eb541e8af123395e7a0fdb5.html",
+            "snippet": "中华人民共和国消费者权益保护法实施条例 首页 >>政府信息公开 >>政策 >>部门文件 中华人民共和国消费者权益保护法实施条例 发布日期：2024-07-03 11:12 浏览次数： 次 信息来源：中华人民共和国国务院 ## 中华人民共和国消费者权益保护法实施条例 中华人民共和国国务院令 第778号 《中华人民共和国消费者权益保护法实施条例》已经2024年2月23日国务院第26次常务会议通过，现予公布，自2024年7月1日起施行。 总理 李强 2024年3月15日 中华人民共和国消费者权益保护法实施条例 第一章 总 则 第一条 根据《中华人民共和国消费者权益保护法》（以..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "jyg.gov.cn",
+            "mee.gov.cn",
+            "xzfg.moj.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            false
+          ],
+          "detail_preview_coverage_percent": 0.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "policy-02",
+      "category": "时效性政策",
+      "question": "网络交易监督管理办法平台经营者责任官方",
+      "query": "网络交易监督管理办法平台经营者责任官方 法律法规 中国",
+      "expected_domains": [
+        "samr.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "网络交易监督管理办法"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "平台经营者"
+        ]
+      ],
+      "why": "检验市场监管部门规章的官方来源覆盖。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 4052.8,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "网络交易监督管理办法",
+            "url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2025/art_4b47c79b8d994a42bba4835997688faa.html",
+            "snippet": "网络交易监督管理办法 (2021年3月15日国家市场监督管理总局令第37号公布 根据2025年3月18日国家市场监督管理总局令第101号修正) 第一章 总 则 第一条 为了规范网络交易活动，维护网络交易秩序，保障网络交易各方主体合法权益，促进数字经济持续健康发展，根据有关法律、行政法规，制定本办法 ..."
+          },
+          {
+            "title": "网络交易平台规则监督管理办法 - 国家市场监督管理总局",
+            "url": "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/fgs/art/2026/art_85b474fc5a08494bb60ca6a280b98d7d.html",
+            "snippet": "网络交易平台规则监督管理办法 （2025年12月18日国家市场监督管理总局、国家互联网信息办公室令第116号公布 自2026年2月1日起施行） 第一章 总 则 第一条 为了规范网络交易平台规则（以下简称平台规则）的制定、修改和执行，维护网络交易秩序，保护网络交易各方主体合法权益，促进平台经济健康 ..."
+          },
+          {
+            "title": "网络交易监督管理办法_国务院部门文件_中国政府网",
+            "url": "https://www.gov.cn/zhengce/zhengceku/2021-03/16/content_5593226.htm",
+            "snippet": "网络交易监督管理办法（2021年3月15日国家市场监督管理总局令第37号公布） 第一章 总 则 第一条 为了规范网络交易活动，维护网络交易秩序，保障网络交易各方主体合法权益，促进数字经济持续健康发展，根据有关法律、行政法规，制定本办法。"
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "gov.cn",
+            "samr.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            false
+          ],
+          "detail_preview_coverage_percent": 0.0,
+          "automatic_pass_at_n": true
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 3233.3,
+        "error": null,
+        "provider_reported_search_time_ms": 2966,
+        "results": [
+          {
+            "title": "国家市场监督管理总局令（第37号）　　网络交易监督管理办法__2021年第12号国务院公报_中国政府网",
+            "url": "https://www.gov.cn/gongbao/content/2021/content_5602020.htm",
+            "snippet": "国家市场监督管理总局令（第37号） 网络交易监督管理办法__2021年第12号国务院公报_中国政府网 https://www.gov.cn/ 字号：默认 大 超大 | 打印 | 国家市场监督管理总局令 第 37 号 《网络交易监督管理办法》已经2021年3月3日国家市场监督管理总局第3次局务会议审议通过，现予公布，自2021年5月1日起施行。 局 长 张 工 2021年3月15日 网络交易监督管理办法 (2021年3月15日国家市场监督管理总局令第37号公布) 第一章 总 则 第一条 为了规范网络交易活动，维护网络交易秩序，保障网络交易各方主体合法权益，促进数字经济持续健..."
+          },
+          {
+            "title": "全球法规网-中国商务法规",
+            "url": "https://policy.mofcom.gov.cn/claw/clawContent.shtml?id=88726",
+            "snippet": "全球法规网-中国商务法规 中国商务法规 ## 网络交易监督管理办法 ### 【信息来源： 市场监管总局网站 】 | 【发布部门】市场监督管理总局 | 【发布文号】国家市场监督管理总局令第37号 | | --- | --- | | 【效力级别】部门规章 | 【时效状态】 现行有效 | | 【发布日期】 2021-03-15 | 【实施日期】 2021-05-01 | | 【法律话题】 电子商务 | 【产业领域】 公共管理 | 网络交易监督管理办法 （2021年3月15日国家市场监督管理总局令第37号公布） 第一章 总 则 第一条 为了规范网络交易活动，维护网络交易秩序，保障网络交..."
+          },
+          {
+            "title": "市场监管总局关于推动网络交易平台企业落实合规管理主体责任的指导意见_国务院部门文件_中国政府网",
+            "url": "https://www.gov.cn/zhengce/zhengceku/202503/content_7013671.htm",
+            "snippet": "市场监管总局关于推动网络交易平台企业落实合规管理主体责任的指导意见_国务院部门文件_中国政府网 - 退出 - 个人中心 EN https://www.gov.cn/ 网站无障碍开关 -- 首页>政策>国务院政策文件库>国务院部门文件 字号：默认 大 超大 | 打印 收藏 留言 | | -- | 标 题： | 市场监管总局关于推动网络交易平台企业落实合规管理主体责任的指导意见 | 发文机关： | 市场监管总局 | | --- | --- | --- | --- | --- | | 发文字号： | 国市监网监发〔2025〕18号 | 来 源： | 市场监管总局网站 | | 主题..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "gov.cn",
+            "policy.mofcom.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            false
+          ],
+          "detail_preview_coverage_percent": 0.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "policy-03",
+      "category": "时效性政策",
+      "question": "最高人民法院审理食品药品纠纷案件适用法律若干问题的规定官方",
+      "query": "最高人民法院审理食品药品纠纷案件适用法律若干问题的规定官方 法律法规 中国",
+      "expected_domains": [
+        "court.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "食品药品纠纷"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "若干问题的规定",
+          "若干问题"
+        ]
+      ],
+      "why": "检验司法解释类信息的权威来源。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 5403.5,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "DOTTORATO DI RICERCA IN DIRITTO EUROPEO",
+            "url": "https://amsdottorato.unibo.it/id/eprint/11763/1/LUAN_ZHIBO_TESI.pdf",
+            "snippet": "... 《最高人民法院关于审理网络消费纠纷案件适用法律若干问. 题的规定（一）》的理解与适用, Zuigao renmin fayuan guanyu Shenli wangluo xiaofei jiufen anjian shiyong falyu."
+          },
+          {
+            "title": "THE CHINA BUSINESS AND SOCIAL SUSTAINABILITY CHECK",
+            "url": "https://www.humanrights.dk/files/media/dokumenter/tools/the_china_business_and_social_sustainability_check_dihr_uk_july_2009.pdf",
+            "snippet": "最高人民法院关于审理劳动争议案件适用. 法律若干问题的解释. 27. Company. Products and. Consumer. Protection. Opinions of the Supreme People's Court on Certain ..."
+          },
+          {
+            "title": "安杰世泽知识产权专刊（2025 年3-4 月合刊） - Lexology",
+            "url": "https://www.lexology.com/library/detail.aspx?g=b8120b3c-37bc-48ce-a515-0b5d8469b0cb",
+            "snippet": "May 19, 2025 ... 2025 年03月19日，国务院发布国令第801号，《国务院关于涉外知识产权纠纷处理的规定》，自2025年5月1日起施行。《规定》共18条，主要包括以下内容。…"
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            false
+          ],
+          "core_topic_coverage_percent": 0.0,
+          "core_topic_hit_at_n": false,
+          "detail_term_group_matches": [
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": false
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1643.5,
+        "error": null,
+        "provider_reported_search_time_ms": 779,
+        "results": [
+          {
+            "title": "审理食品药品纠纷案件适用法律若干问题的规定",
+            "url": "https://www.court.gov.cn/zixun/xiangqing/6042.html",
+            "snippet": "最高人民法院关于审理食品药品纠纷案件适用法律若干问题的规定 - 中华人民共和国最高人民法院 - [中文版] [English] - 关注： - 登录邮箱系统 - 首页 - 学习新时代 - 机构设置 - 法院资讯 - 权威发布 - 公报 - 审判业务 - 法院建设 - 办事服务 - 公众互动 - 巡回法庭 - 关于我们 所在位置：首页>法院资讯> 司法解释 最高人民法院关于审理食品药品纠纷案件适用法律若干问题的规定 - 来源：最高人民法院 - 发布时间：2014-01-13 22:26:00 - 字号： 小 大 - 打印本页 《最高人民法院关于审理食品药品纠纷案件适..."
+          },
+          {
+            "title": "最高人民法院关于审理食品药品纠纷案件适用法律若干问题的规定",
+            "url": "https://www.samr.gov.cn/zfjcj/tzgg/art/2023/art_eba18455bd6c4e3faa855cebe85c5bfc.html",
+            "snippet": "最高人民法院关于审理食品药品纠纷案件适用法律若干问题的规定 - 法律法规及政策文件 - 首页 - 你的位置: 发布时间：2020-12-23 15:36 - 最高人民法院关于审理食品药品纠纷案件适用法律若干问题的规定 最高人民法院关于审理食品药品纠纷案件适用法律若干问题的规定 （2013年12月9日最高人民法院审判委员会第1599次会议通过，根据2020年12月23日最高人民法院审判委员会第1823次会议通过的《最高人民法院关于修改〈最高人民法院关于在民事审判工作中适用《中华人民共和国工会法》若干问题的解释〉等二十七件民事类司法解释的决定》和2021年11月15日最高人民法院审判委员..."
+          },
+          {
+            "title": "关于审理食品药品纠纷案件适用法律",
+            "url": "http://gongbao.court.gov.cn/Details/aa23d3772afce33a0b44e082fdb71a.html",
+            "snippet": "最高人民法院关于审理食品药品纠纷案件适用法律若干问题的规定 - 中华人民共和国最高人民法院公报 - 主办：最高人民法院办公厅主管：最高人民法院 - 总编辑：邓修明 副总编辑：林文学 海伟 - 首 页 - 公报介绍 - 公报过刊 - 读者留言 - 订购 首页>司法解释 法律声明|联系我们|使用帮助 中华人民共和国最高人民法院 版权所有"
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "court.gov.cn",
+            "gongbao.court.gov.cn",
+            "samr.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "policy-04",
+      "category": "时效性政策",
+      "question": "2026年北京市最低工资标准官方",
+      "query": "2026年北京市最低工资标准官方 法律法规 中国",
+      "expected_domains": [
+        "rsj.beijing.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "最低工资"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "北京市",
+          "北京"
+        ],
+        [
+          "2026"
+        ]
+      ],
+      "why": "检验带年份、地域限定的时效性政策查询。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 4901.1,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "2026年南京市最低工资标准是多少？ - 南京本地宝",
+            "url": "https://m.nj.bendibao.com/live/178187.shtm",
+            "snippet": "2026年1月1日起调整南京市最低工资标准，现就有关事项通知如下： 一、月最低工资标准调整为2660元。 二、非全日制用工小时最低工资标准调整为25元。 关于最低工资标准的概念."
+          },
+          {
+            "title": "m.haolvshi.com.cn/ztw/0-100503.html",
+            "url": "https://m.haolvshi.com.cn/ztw/0-100503.html",
+            "snippet": "北京最低工资标准企退养老金等上调，领取北京标准的养老金需要什么条件？ 时间：2021-06-23 来源：法律投稿."
+          },
+          {
+            "title": "真实中国 | 给平行世界开个虫洞",
+            "url": "https://hetechtechina.wordpress.com/",
+            "snippet": "来源：長風基金會Fair Winds Foundation. 2026年6月27日.出处：中国气功科学研究会记录；官方揭批材料；Palmer（2007）."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": false
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1657.3,
+        "error": null,
+        "provider_reported_search_time_ms": 839,
+        "results": [
+          {
+            "title": "关于调整北京市2025年最低工资标准的通知_\n北京市人力资源和社会保障局_政务公开_政策文件",
+            "url": "https://rsj.beijing.gov.cn/xxgk/2024zcwj/202507/t20250725_4158456.html",
+            "snippet": "关于调整北京市2025年最低工资标准的通知_ 北京市人力资源和社会保障局_政务公开_政策文件 Title 我在听，请说话(10s) 抱歉，没听清，请再说一遍吧 本网站 > 一网通查 > 咨询热线：010-12333 周一至周日全天24小时服务 搜索结果： 包含以下全部的关键词 包含以下的完整关键词 包含以下任意一个关键词 不包含以下关键词 文档格式： 全部格式 WORD PPT EXCEL PDF TXT ZIP 时间范围： 全部时间 一年内 一月内 一周内 自定义 从 至 排序方式： 按相关度排序 按时间排序 搜索位置： 任何地方 仅标题 请至少填写一个包含的关..."
+          },
+          {
+            "title": "北京市最低工资标准（2025年度）",
+            "url": "https://www.beijing.gov.cn/fwcj/jiage/jiuyefuwu1/65c1ebac11a82834a8639643.html",
+            "snippet": "就业服务_北京市人民政府门户网站 返回栏目首页 实用价格和缴费标准查询 # 北京市最低工资标准（2025年度） 一、我市最低工资标准 | 最低工资标准 | | --- | | 每小时 | 每月 | | 不低于14.6元 | 不低于2540元 | 备注：下列项目不作为最低工资标准的组成部分，用人单位应按规定另行支付： 1.劳动者在中班、夜班、高温、低温、井下、有毒有害等特殊工作环境、条件下的津贴； 2.劳动者应得的加班、加点工资； 3.劳动者个人应缴纳的各项社会保险费和住房公积金； 4.根据国家和本市规定不计入最低工资标准的其它收入。 二、非全日制从业人员小时..."
+          },
+          {
+            "title": "解读 问答《关于调整北京市2025年最低工资标准的通知》_\n北京市人力资源和社会保障局_政务公开_政策解读",
+            "url": "https://rsj.beijing.gov.cn/xxgk/2024zcjd/202508/t20250801_4164868.html",
+            "snippet": "解读 问答《关于调整北京市2025年最低工资标准的通知》_ 北京市人力资源和社会保障局_政务公开_政策解读 Title 我在听，请说话(10s) 抱歉，没听清，请再说一遍吧 本网站 > 一网通查 > 咨询热线：010-12333 周一至周日全天24小时服务 搜索结果： 包含以下全部的关键词 包含以下的完整关键词 包含以下任意一个关键词 不包含以下关键词 文档格式： 全部格式 WORD PPT EXCEL PDF TXT ZIP 时间范围： 全部时间 一年内 一月内 一周内 自定义 从 至 排序方式： 按相关度排序 按时间排序 搜索位置： 任何地方 仅标题 请至少填..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "beijing.gov.cn",
+            "rsj.beijing.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            false
+          ],
+          "detail_preview_coverage_percent": 50.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "colloquial-01",
+      "category": "口语化维权",
+      "question": "买到假鞋商家不理我怎么投诉",
+      "query": "买到假鞋商家不理我怎么投诉 法律法规 中国",
+      "expected_domains": [
+        "12315.cn",
+        "samr.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "投诉",
+          "举报",
+          "12315"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "假冒",
+          "假货",
+          "售假"
+        ]
+      ],
+      "why": "检验口语化假货维权问题能否回到官方投诉渠道。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 3755.0,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "Untitled",
+            "url": "https://library.calvin.edu/az/databases?q=Rekubit+Exchange+B1+Reviews",
+            "snippet": ""
+          },
+          {
+            "title": "Google Translate",
+            "url": "https://translate.google.co.th/?hl=en&tab=rT&sl=zh-CN&tl=th&op=translate",
+            "snippet": "Google's service, offered free of charge, instantly translates words, phrases, and web pages between English and over 100 other languages."
+          },
+          {
+            "title": "Untitled",
+            "url": "https://rule.taobao.com/detail-5507.htm?spm=a2177.12575716.0.0.6f7b17eas4bMWM",
+            "snippet": ""
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            false
+          ],
+          "core_topic_coverage_percent": 0.0,
+          "core_topic_hit_at_n": false,
+          "detail_term_group_matches": [
+            false
+          ],
+          "detail_preview_coverage_percent": 0.0,
+          "automatic_pass_at_n": false
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1621.8,
+        "error": null,
+        "provider_reported_search_time_ms": 1357,
+        "results": [
+          {
+            "title": "买到假鞋怎么办？手把手教你维权索要赔偿 - 知乎",
+            "url": "https://zhuanlan.zhihu.com/p/26072699720",
+            "snippet": "⚠️ 注意：若商家宣称“支持专柜验货”，但专柜拒绝验货，可要求商家承担鉴定费用（已有法院判例支持）。 ... 话术模板： “您好，我在XX平台购买的XX商品（订单号XXX），经XX平台鉴定为假货（附报告）。根据《消法》第55条，您需承担退一赔三责任（共XXX元）。请于3日内回复解决方案，否则我将向平台投诉并申请法律介入。”"
+          },
+          {
+            "title": "假冒品牌要怎么投诉他,买家投诉假冒品牌成功如...",
+            "url": "https://www.huichenglawyer.com/pufaku/30321.html",
+            "snippet": "综上所述，处理买家投诉假冒品牌的问题需要严谨的调查和核实过程，并根据相关法律法规采取适当的处理措施。同时，为了预防类似问题的再次发生，还需要加强后续的改进工作。"
+          },
+          {
+            "title": "买鞋如何维权 - 维权攻略|法临网",
+            "url": "https://www.imlaw.cn/wqdetail/9840/",
+            "snippet": "买鞋过程中常见的维权问题包括质量瑕疵、假货、尺码不符、商家拒绝退换货等。维权需以法律为依据，核心步骤为保留证据、协商沟通、向平台或监管部门投诉，必要时通过仲裁或诉讼解决。涉及假货等欺诈行为可主张“退一赔三”，质量问题可要求退货退款，造成人身损害还可索赔医疗费等。消费者应熟悉《消费者权益保护法》等相关规定，主动维护合法权益。"
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": false
+        }
+      }
+    },
+    {
+      "id": "colloquial-02",
+      "category": "口语化维权",
+      "question": "老板拖欠工资不给我去哪投诉北京",
+      "query": "老板拖欠工资不给我去哪投诉北京 法律法规 中国",
+      "expected_domains": [
+        "rsj.beijing.gov.cn",
+        "mohrss.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "拖欠工资",
+          "欠薪",
+          "劳动保障监察",
+          "劳动监察"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "投诉",
+          "举报"
+        ]
+      ],
+      "why": "检验劳动者自然语言描述与官方维权路径的匹配。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 3009.2,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "在北京自由职业者，被长期拖欠工资，怎样应对？ -好律师网",
+            "url": "https://m.haolvshi.com.cn/ztw/0-72399.html",
+            "snippet": "在北京自由职业者，被长期拖欠工资，怎样应对？点评： 被拖欠工资时最好是采取以下措施： 1、为节省时间跟精力，建议可以先试试直接找老板协商处理。 2、一般是找劳动监察部门，投诉后，由其责令老板及时支付工资。"
+          },
+          {
+            "title": "碰到老板拖欠员工工资怎么办-法律知识｜律图",
+            "url": "https://www.64365.com/zs/6183312.aspx",
+            "snippet": "导读：遇到老板拖欠工资，可按协商、向劳动监察部门投诉、申请劳动仲裁、向法院起诉等步骤维权，期间要注意收集保留证据。"
+          },
+          {
+            "title": "到期不发工资怎么办-今日头条",
+            "url": "https://www.toutiao.com/topic/7516719112593295411/",
+            "snippet": "辞职后,公司不给工资怎么办？ 辞职后，用人单位拖欠工资怎么办？老板拖欠工资，能报警吗？"
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": false
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1587.2,
+        "error": null,
+        "provider_reported_search_time_ms": 1311,
+        "results": [
+          {
+            "title": "劳动者遭遇欠薪 维权有4种投诉举报渠道_\n北京市人力资源和社会保障局_政务公开_工作动态",
+            "url": "https://rsj.beijing.gov.cn/xxgk/gzdt/202108/t20210819_2472135.html",
+            "snippet": "劳动者遭遇欠薪 维权有4种投诉举报渠道_ 北京市人力资源和社会保障局_政务公开_工作动态 Title 我在听，请说话(10s) 抱歉，没听清，请再说一遍吧 本网站 > 一网通查 > 咨询热线：010-12333 周一至周日全天24小时服务 搜索结果： 包含以下全部的关键词 包含以下的完整关键词 包含以下任意一个关键词 不包含以下关键词 文档格式： 全部格式 WORD PPT EXCEL PDF TXT ZIP 时间范围： 全部时间 一年内 一月内 一周内 自定义 从 至 排序方式： 按相关度排序 按时间排序 搜索位置： 任何地方 仅标题 请至少填写一个包含的关键词..."
+          },
+          {
+            "title": "北京市工资支付规定_规章_首都之窗_北京市人民政府门户网站",
+            "url": "https://www.beijing.gov.cn/gongkai/zfxxgk/zc/gz/202112/t20211223_2570952.html",
+            "snippet": "北京市工资支付规定_规章_首都之窗_北京市人民政府门户网站 打印 # 北京市工资支付规定 (2003年12月22日北京市人民政府第142号令公布 根据2007年11月23日北京市人民政府第200号令修改) 第一章 总则 第一条 为规范工资支付行为，维护劳动者的合法权益，根据《中华人民共和国劳动法》及有关法律、法规的规定，结合本市实际情况，制定本规定。 第二条 本规定适用于本市行政区域内的企业、个体工商户以及民办非企业单位(以下统称用人单位)和与之形成劳动关系的劳动者。 本市国家机关、事业单位、社会团体和与之建立劳动合同关系的劳动者，依照本规定执行。 第三条 政府根据本市社会经济..."
+          },
+          {
+            "title": "关于印发《京津冀地区拖欠劳动者工资异地投诉办法（试行）》的通知_\n北京市人力资源和社会保障局_政务公开_政策文件",
+            "url": "https://rsj.beijing.gov.cn/xxgk/2024zcwj/202406/t20240617_3716732.html",
+            "snippet": "关于印发《京津冀地区拖欠劳动者工资异地投诉办法（试行）》的通知_ 北京市人力资源和社会保障局_政务公开_政策文件 Title 我在听，请说话(10s) 抱歉，没听清，请再说一遍吧 本网站 > 一网通查 > 咨询热线：010-12333 周一至周日全天24小时服务 搜索结果： 包含以下全部的关键词 包含以下的完整关键词 包含以下任意一个关键词 不包含以下关键词 文档格式： 全部格式 WORD PPT EXCEL PDF TXT ZIP 时间范围： 全部时间 一年内 一月内 一周内 自定义 从 至 排序方式： 按相关度排序 按时间排序 搜索位置： 任何地方 仅标题 请..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "beijing.gov.cn",
+            "rsj.beijing.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "colloquial-03",
+      "category": "口语化维权",
+      "question": "健身房办卡后跑路了怎么办官方",
+      "query": "健身房办卡后跑路了怎么办官方 法律法规 中国",
+      "expected_domains": [
+        "12315.cn",
+        "samr.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "预付",
+          "预付款",
+          "预付式",
+          "消费者"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "健身房"
+        ],
+        [
+          "投诉",
+          "维权"
+        ]
+      ],
+      "why": "检验预付式消费纠纷的口语化检索。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 4453.5,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "健身房收百万会员费后“关门跑路”，怎么办？ 法官支招",
+            "url": "https://www.dutenews.com/n/article/6830955",
+            "snippet": "随着人们生活水平的提高，越来越多的人为了健康选择到健身房办卡消费。 但是，有一些健身房在收取会员费、私教费后悄悄“关门跑路”，导致会员健身不成反被骗。"
+          },
+          {
+            "title": "36kr.com/p/2809635121613319",
+            "url": "https://36kr.com/p/2809635121613319",
+            "snippet": "提供商品或者服务应当明码标价等。 拟规定经营者卷款跑路等欺诈行为，将承担惩罚性赔偿责任. 现实生活中，健身房、理发店经营者失联跑路，卷走消费者大额预付费的恶意违约事件时有发生，成为消费者心中的痛点。"
+          },
+          {
+            "title": "偷拍、性暗示 健身房的1.5万亿生意究竟是什么_无忧资讯",
+            "url": "https://info.51.ca/articles/1047198",
+            "snippet": "2020年国人在健身上花掉了1.5万亿元，每个开健身房的老板都说不赚钱，那这些钱还能蒸发了不成？ 在高度矛盾下，只能得出一个结论，有人在撒谎，企图蒙混过关。 01. 健身房早就不是健身的净土了。"
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            false
+          ],
+          "detail_preview_coverage_percent": 50.0,
+          "automatic_pass_at_n": false
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1031.7,
+        "error": null,
+        "provider_reported_search_time_ms": 785,
+        "results": [
+          {
+            "title": "【以案释法】健身房跑路，该咋办？-旌德县人民政府",
+            "url": "https://www.ahjd.gov.cn/OpennessContent/show/2650251.html",
+            "snippet": "【以案释法】健身房跑路，该咋办？-旌德县人民政府 旌德县司法局 | 索引号： | 11341730003260617B/202302-00040 | 组配分类： | 上级政策解读 | | --- | --- | --- | --- | | 发布机构： | 旌德县司法局 | 主题分类： | 综合政务 | | 名称： | 【以案释法】健身房跑路，该咋办？ | 文号： | 无 | | 生成日期： | 2023-02-10 | 发布日期： | 2023-02-10 | | 索引号： | 11341730003260617B/202302-00040 | | --- | --- | | 组配分类：..."
+          },
+          {
+            "title": "办卡后商家跑路? 关于预付式消费最高法发布司法解释 5月1日起施行_腾讯新闻",
+            "url": "https://news.qq.com/rain/a/20250315A018CL00",
+            "snippet": "办卡后商家跑路? 关于预付式消费最高法发布司法解释 5月1日起施行_腾讯新闻 # 办卡后商家跑路? 关于预付式消费最高法发布司法解释 5月1日起施行 近年来，健身房、美容美发店、教育培训机构等预付式消费领域频现纠纷。 最高人民法院3月14日举行新闻发布会，发布《最高人民法院关于审理预付式消费民事纠纷案件适用法律若干问题的解释》及涉预付式消费典型案例，并回答记者提问。 据介绍，《最高人民法院关于审理预付式消费民事纠纷案件适用法律若干问题的解释》(以下简称《解释》)已于2024年11月18日由最高人民法院审判委员会第1932次会议审议通过，将自2025年5月1日起施行。 《解释》共27条..."
+          },
+          {
+            "title": "健身房跑路，我的钱还能要回来吗？",
+            "url": "http://www.sdcourt.gov.cn/dyzy/372897/372899/32139769/index.html",
+            "snippet": "健身房跑路，我的钱还能要回来吗？ -- - 沟通交流 - 廉政建设 - 司法改革 - 破产公开 - 财务公开 - 信访工作 - 党建工作 - 庭审直播 --! - 诉讼服务 - 审判执行 - 司法公开 --! - 数据公开 - 执行公开 - 审判公开 - 审务公开 - 新闻中心 - 法院介绍 - 网站首页 您当前所在位置：首页>审判执行业务>经验交流 健身房跑路，我的钱还能要回来吗？ 作者： 发布时间： 2025年01月03日 屈女士收到了一条来自破产管理人的消息：“健身房欠你的钱已到账，请查收！” “没想到钱真能全部要回来！”屈女士激动万分。 一年前，屈女士如常去自己办卡的健..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "ahjd.gov.cn",
+            "sdcourt.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true,
+            false
+          ],
+          "detail_preview_coverage_percent": 50.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "colloquial-04",
+      "category": "口语化维权",
+      "question": "网购手机拆封激活后还能七天无理由退货吗官方",
+      "query": "网购手机拆封激活后还能七天无理由退货吗官方 法律法规 中国",
+      "expected_domains": [
+        "samr.gov.cn",
+        "gov.cn",
+        "flk.npc.gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "七天无理由退货",
+          "七日无理由退货"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "拆封",
+          "激活"
+        ]
+      ],
+      "why": "检验复杂消费事实和退货规则关键词的共同覆盖。",
+      "ddgs": {
+        "success": true,
+        "elapsed_ms": 4059.2,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "1.3万元网购手机拆封查验后能否“七天无理由退货”？ 龙岗法院判了",
+            "url": "https://www.dutenews.com/n/article/10563435",
+            "snippet": "消费者网购了一部手机，拆封查验后要求商家“七天无理由退货”被拒。消费者网购退货时须符合“商品应当完好”的退货标准，若因退货事宜与商家发生纠纷，可运用法律维护自己的合法权益。"
+          },
+          {
+            "title": "手机属于电子产品快递可以退吗-今日头条",
+            "url": "https://www.toutiao.com/topic/7550904601051105326/",
+            "snippet": "手机激活后也可以7天无理由退货，你需要这样做图片.电子产品已拆封，还能申请“七天无理由退货”吗？ 丨涉民生典型案例展评图片."
+          },
+          {
+            "title": "static.nfnews.com/content/202604/02/c12303936.html",
+            "url": "https://static.nfnews.com/content/202604/02/c12303936.html",
+            "snippet": "1.3万元网购手机拆封查验后能否“七天无理由退货”？ 法院判了. 南方+. 消费者网购了一部手机，拆封查验后要求商家“七天无理由退货”被拒。"
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": false
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1255.1,
+        "error": null,
+        "provider_reported_search_time_ms": 968,
+        "results": [
+          {
+            "title": "网络购买商品七日无理由退货暂行办法_国家市场监督管理总局_中国政府网",
+            "url": "https://www.gov.cn/zhengce/2020-11/03/content_5723721.htm",
+            "snippet": "网络购买商品七日无理由退货暂行办法_国家市场监督管理总局_中国政府网 网络购买商品七日无理由退货暂行办法__中国政府网 https://www.gov.cn/ 来源： 市场监管总局网站 【字体：大 中 小】视频下载打印 网络购买商品七日无理由退货暂行办法 （2017年1月6日国家工商行政管理总局令第90号公布 自2017年3月15日起施行） 第一章 总 则 第一条 为保障《消费者权益保护法》七日无理由退货规定的实施，保护消费者合法权益，促进电子商务健康发展，根据《消费者权益保护法》等相关法律、行政法规，制定本办法。 第二条 消费者为生活消费需要通过网络购买商品，自收到商品之日起..."
+          },
+          {
+            "title": "拆封就不能退”？别再被商家忽悠了！七日无理由退货真相在这里_北京市市场监督管理局",
+            "url": "https://scjgj.beijing.gov.cn/zwxx/scjgdt/202605/t20260506_4636434.html",
+            "snippet": "拆封就不能退”？别再被商家忽悠了！七日无理由退货真相在这里_北京市市场监督管理局 首页>政务公开> 市场监管动态 ## 拆封就不能退”？别再被商家忽悠了！七日无理由退货真相在这里 网络购买商品七日无理由退货，是法律赋予消费者采用网络、电视、电话、邮购等方式购买商品的“后悔权”，它既不是商家口中的“这不能退、那不能退”，也不是消费者理解的“怎么都能退”。本期我们结合真实案例，厘清网络购买商品七日无理由退货的法定边界与实操要点，帮您依法维权、避开消费陷阱。 常见争议焦点 1.拆封问题 案例：近日，市民王先生在网购平台购买了某品牌吹风机，收到货后拆开包装检查，因对外观不满意申请七日无理由..."
+          },
+          {
+            "title": "网络购买商品七日无理由退货暂行办法_国务院部门文件_中国政府网",
+            "url": "https://www.gov.cn/zhengce/zhengceku/2020-11/03/content_5557118.htm",
+            "snippet": "网络购买商品七日无理由退货暂行办法_国务院部门文件_中国政府网 https://www.gov.cn/ 字号：默认 大 超大 | 打印 收藏 留言 | | 标 题： | 网络购买商品七日无理由退货暂行办法 | 发文机关： | 市场监管总局 | | --- | --- | --- | --- | | 发文字号： | | 来 源： | 市场监管总局网站 | | 主题分类： | 市场监管、安全生产监管\\其他 | 公文种类： | 命令（令） | | 成文日期： | 2020年11月03日 | 网络购买商品七日无理由退货暂行办法 （2017年1月6日国家工商行政管理总局令第90号公布 根据..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "gov.cn",
+            "scjgj.beijing.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            true
+          ],
+          "detail_preview_coverage_percent": 100.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    }
+  ]
+}

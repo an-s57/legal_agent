@@ -1,0 +1,195 @@
+{
+  "run_at": "2026-07-27T21:30:48",
+  "questions_path": "D:\\legal_agent\\evaluation\\web_search_benchmark_20.json",
+  "question_count": 3,
+  "top_n": 3,
+  "query_suffix": null,
+  "providers": [
+    "duckduckgo"
+  ],
+  "summary": {
+    "duckduckgo": {
+      "total": 3,
+      "success_count": 1,
+      "success_rate_percent": 33.3,
+      "official_source_hit_count": 0,
+      "official_source_hit_rate_percent": 0.0,
+      "core_topic_hit_count": 0,
+      "core_topic_hit_rate_percent": 0.0,
+      "detail_preview_coverage_percent": 0.0,
+      "automatic_pass_count": 0,
+      "automatic_pass_rate_percent": 0.0,
+      "elapsed_ms": {
+        "avg": 2951.8,
+        "median": 3225.3,
+        "p95": 4179.0
+      }
+    }
+  },
+  "manual_review_candidates": [],
+  "details": [
+    {
+      "id": "statute-01",
+      "category": "精确法条",
+      "question": "中华人民共和国消费者权益保护法第五十五条 欺诈 三倍赔偿 官方",
+      "query": "中华人民共和国消费者权益保护法第五十五条 欺诈 三倍赔偿 官方",
+      "expected_domains": [
+        "flk.npc.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "消费者权益保护法"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "第五十五条",
+          "第55条",
+          "55条"
+        ],
+        [
+          "欺诈",
+          "三倍赔偿"
+        ]
+      ],
+      "why": "检验精确法条编号和惩罚性赔偿关键词能否定位到权威法规来源。",
+      "duckduckgo": {
+        "success": true,
+        "elapsed_ms": 3225.3,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "Cafe&kitchen Flora",
+            "url": "https://cafe-kitchen-flora.my.canva.site/",
+            "snippet": "千葉県を中心に活動している、こだわりワンプレートランチとフレッシュジュースのフードトラックです。 よろしくお願いしま …"
+          },
+          {
+            "title": "cafe fleur （カフェ フルール） - 芦花公園/カフェ | 食べログ",
+            "url": "https://tabelog.com/tokyo/A1318/A131809/13297628/",
+            "snippet": "cafe fleur/カフェ フルール (芦花公園/カフェ)の店舗情報は食べログでチェック！ 口コミや評価、写真など、ユーザーによるリ …"
+          },
+          {
+            "title": "Cafe FLO - 豊洲（カフェ） - 食べログ",
+            "url": "https://tabelog.com/tokyo/A1313/A131307/13305762/",
+            "snippet": "Cafe FLO (豊洲/カフェ)の店舗情報は食べログでチェック！ 【禁煙】口コミや評価、写真など、ユーザーによるリアルな情報が満載 …"
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            false
+          ],
+          "core_topic_coverage_percent": 0.0,
+          "core_topic_hit_at_n": false,
+          "detail_term_group_matches": [
+            false,
+            false
+          ],
+          "detail_preview_coverage_percent": 0.0,
+          "automatic_pass_at_n": false
+        }
+      }
+    },
+    {
+      "id": "statute-02",
+      "category": "精确法条",
+      "question": "劳动争议调解仲裁法第二十七条 劳动仲裁申请时效 官方",
+      "query": "劳动争议调解仲裁法第二十七条 劳动仲裁申请时效 官方",
+      "expected_domains": [
+        "flk.npc.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "劳动争议调解仲裁法"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "第二十七条",
+          "第27条",
+          "27条"
+        ],
+        [
+          "仲裁",
+          "时效"
+        ]
+      ],
+      "why": "检验劳动争议程序中精确条文的检索能力。",
+      "duckduckgo": {
+        "success": false,
+        "elapsed_ms": 4179.0,
+        "error": "empty_result",
+        "provider_reported_search_time_ms": null,
+        "results": [],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            false
+          ],
+          "core_topic_coverage_percent": 0.0,
+          "core_topic_hit_at_n": false,
+          "detail_term_group_matches": [
+            false,
+            false
+          ],
+          "detail_preview_coverage_percent": 0.0,
+          "automatic_pass_at_n": false
+        }
+      }
+    },
+    {
+      "id": "statute-03",
+      "category": "精确法条",
+      "question": "劳动合同法第三十八条 拖欠工资 解除劳动合同 官方",
+      "query": "劳动合同法第三十八条 拖欠工资 解除劳动合同 官方",
+      "expected_domains": [
+        "flk.npc.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "劳动合同法"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "第三十八条",
+          "第38条",
+          "38条"
+        ],
+        [
+          "拖欠工资",
+          "解除劳动合同"
+        ]
+      ],
+      "why": "检验“拖欠工资”这类高频事实与对应法条的连接。",
+      "duckduckgo": {
+        "success": false,
+        "elapsed_ms": 1451.2,
+        "error": "empty_result",
+        "provider_reported_search_time_ms": null,
+        "results": [],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            false
+          ],
+          "core_topic_coverage_percent": 0.0,
+          "core_topic_hit_at_n": false,
+          "detail_term_group_matches": [
+            false,
+            false
+          ],
+          "detail_preview_coverage_percent": 0.0,
+          "automatic_pass_at_n": false
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,361 @@
+{
+  "run_at": "2026-07-27T21:28:22",
+  "questions_path": "D:\\legal_agent\\evaluation\\web_search_benchmark_20.json",
+  "question_count": 3,
+  "top_n": 3,
+  "query_suffix": "法律法规 中国",
+  "providers": [
+    "duckduckgo",
+    "anysearch"
+  ],
+  "summary": {
+    "duckduckgo": {
+      "total": 3,
+      "success_count": 1,
+      "success_rate_percent": 33.3,
+      "official_source_hit_count": 0,
+      "official_source_hit_rate_percent": 0.0,
+      "core_topic_hit_count": 0,
+      "core_topic_hit_rate_percent": 0.0,
+      "detail_preview_coverage_percent": 0.0,
+      "automatic_pass_count": 0,
+      "automatic_pass_rate_percent": 0.0,
+      "elapsed_ms": {
+        "avg": 1557.8,
+        "median": 1594.5,
+        "p95": 1744.5
+      }
+    },
+    "anysearch": {
+      "total": 3,
+      "success_count": 3,
+      "success_rate_percent": 100.0,
+      "official_source_hit_count": 3,
+      "official_source_hit_rate_percent": 100.0,
+      "core_topic_hit_count": 3,
+      "core_topic_hit_rate_percent": 100.0,
+      "detail_preview_coverage_percent": 33.3,
+      "automatic_pass_count": 3,
+      "automatic_pass_rate_percent": 100.0,
+      "elapsed_ms": {
+        "avg": 823.3,
+        "median": 520.3,
+        "p95": 1468.7
+      }
+    }
+  },
+  "manual_review_candidates": [
+    {
+      "id": "statute-01",
+      "question": "中华人民共和国消费者权益保护法第五十五条 欺诈 三倍赔偿 官方",
+      "reason": "一方自动通过、另一方未通过",
+      "duckduckgo_top_url": "https://www.wish.com/",
+      "anysearch_top_url": "https://fw.scjgj.sh.gov.cn/alc/law/11/1/20240117133417.html"
+    },
+    {
+      "id": "statute-02",
+      "question": "劳动争议调解仲裁法第二十七条 劳动仲裁申请时效 官方",
+      "reason": "一方自动通过、另一方未通过",
+      "duckduckgo_top_url": "",
+      "anysearch_top_url": "https://zmdzy.hncourt.gov.cn/upload/file/20250710/20250710121409_65235.pdf"
+    },
+    {
+      "id": "statute-03",
+      "question": "劳动合同法第三十八条 拖欠工资 解除劳动合同 官方",
+      "reason": "一方自动通过、另一方未通过",
+      "duckduckgo_top_url": "",
+      "anysearch_top_url": "https://guangdong.chinatax.gov.cn/gdsw/zjfg/2026-05/26/content_6adf2e221b2c4b8a85960ef626a66103.shtml"
+    }
+  ],
+  "details": [
+    {
+      "id": "statute-01",
+      "category": "精确法条",
+      "question": "中华人民共和国消费者权益保护法第五十五条 欺诈 三倍赔偿 官方",
+      "query": "中华人民共和国消费者权益保护法第五十五条 欺诈 三倍赔偿 官方 法律法规 中国",
+      "expected_domains": [
+        "flk.npc.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "消费者权益保护法"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "第五十五条",
+          "第55条",
+          "55条"
+        ],
+        [
+          "欺诈",
+          "三倍赔偿"
+        ]
+      ],
+      "why": "检验精确法条编号和惩罚性赔偿关键词能否定位到权威法规来源。",
+      "duckduckgo": {
+        "success": true,
+        "elapsed_ms": 1334.3,
+        "error": null,
+        "provider_reported_search_time_ms": null,
+        "results": [
+          {
+            "title": "Wish | Shop and Save",
+            "url": "https://www.wish.com/",
+            "snippet": "Discover affordable items for your home and life needs. Enjoy our money back guarantee, frequent discounts, flat rate shipping …"
+          },
+          {
+            "title": "Cheap Fashion, Top Quality. On Sale Now. | Wish",
+            "url": "https://www.wish.com/~/fashion",
+            "snippet": "Buy Fashion at Deep Discounts. Direct from Manufacturer Pricing. Satisfaction Guaranteed. We have Bags and Purses, Cute and …"
+          },
+          {
+            "title": "Wish for Merchants",
+            "url": "https://merchant.wish.com/login",
+            "snippet": "Log in to Wish for Merchants to manage your store and access tools for selling and growing your business."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            false
+          ],
+          "core_topic_coverage_percent": 0.0,
+          "core_topic_hit_at_n": false,
+          "detail_term_group_matches": [
+            false,
+            false
+          ],
+          "detail_preview_coverage_percent": 0.0,
+          "automatic_pass_at_n": false
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 1468.7,
+        "error": null,
+        "provider_reported_search_time_ms": 93,
+        "results": [
+          {
+            "title": "中华人民共和国消费者权益保护法",
+            "url": "https://fw.scjgj.sh.gov.cn/alc/law/11/1/20240117133417.html",
+            "snippet": "中华人民共和国消费者权益保护法 | 【法规分类号】11 【标题】中华人民共和国消费者权益保护法 【时效性】有效 【颁布单位】全国人民代表大会常务委员会 【颁布日期】2013-10-25 【实施日期】 【失效日期】 【内容分类】综合 【文号】11 【题注】 【正文】 第一条 为保护消费者的合法权益，维护社会经济秩序，促进社会主义市场经济健康发展，制定本法。 第二条 消费者为生活消费需要购买、使用商品或者接受服务，其权益受本法保护；本法未作规定的，受其他有关法律、法规保护。 第三条 经营者为消费者提供其生产、销售的商品或者提供服务，应当遵守本法；本法未作规定的，应当遵守其他有关法律、法规。 第四...."
+          },
+          {
+            "title": "中华人民共和国消费者权益保护法实施条例 - 国家行政法规库",
+            "url": "http://xzfg.moj.gov.cn/front/law/detail?LawID=1708",
+            "snippet": "国家行政法规库 首页 首页> 正文阅读 下载Word 下载PDF 扫码下载 中华人民共和国消费者权益保护法实施条例 历史沿革 收起 暂无历史沿革 中华人民共和国消费者权益保护法实施条例 (2024年2月23日国务院第26次常务会议通过 2024年3月15日中华人民共和国国务院令第778号公布 自2024年7月1日起施行) ## 第一章 总 则 第一条 根据《中华人民共和国消费者权益保护法》(以下简称消费者权益保护法)等法律，制定本条例。 第二条 消费者权益保护工作坚持中国共产党的领导，坚持以人民为中心，遵循合法、公平、高效的原则。 第三条 国家加大消费者合法权益保..."
+          },
+          {
+            "title": "欺诈消费者行为处罚办法_中国人大网",
+            "url": "http://www.npc.gov.cn/npc/c1773/c1848/c21114/c21170/c21174/201905/t20190521_178721.html",
+            "snippet": "欺诈消费者行为处罚办法_中国人大网 当前位置：首页>专题集锦>立法>消费者权益保护法修正案草案>相关资料 # 欺诈消费者行为处罚办法 ### 国家工商行政管理局令第50号 来源： 浏览字号： 大 中 小 2013年04月18日 16:31 《欺诈消费者行为处罚办法》已经国家工商行政管理局局务会议审议通过，现予发布，自1996年3月15日起施行。 一九九六年三月十五日 第一条 为制止经营者提供商品或者服务中的欺诈消费者行为，保护消费者的合法权益，根据《中华人民共和国消费者权益保护法》的有关规定，制定本办法。 第二条 本办法所称欺诈消费者行为，是指经营者在提供商品（以下所称商品包括..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "fw.scjgj.sh.gov.cn",
+            "npc.gov.cn",
+            "xzfg.moj.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            false,
+            true
+          ],
+          "detail_preview_coverage_percent": 50.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "statute-02",
+      "category": "精确法条",
+      "question": "劳动争议调解仲裁法第二十七条 劳动仲裁申请时效 官方",
+      "query": "劳动争议调解仲裁法第二十七条 劳动仲裁申请时效 官方 法律法规 中国",
+      "expected_domains": [
+        "flk.npc.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "劳动争议调解仲裁法"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "第二十七条",
+          "第27条",
+          "27条"
+        ],
+        [
+          "仲裁",
+          "时效"
+        ]
+      ],
+      "why": "检验劳动争议程序中精确条文的检索能力。",
+      "duckduckgo": {
+        "success": false,
+        "elapsed_ms": 1594.5,
+        "error": "empty_result",
+        "provider_reported_search_time_ms": null,
+        "results": [],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            false
+          ],
+          "core_topic_coverage_percent": 0.0,
+          "core_topic_hit_at_n": false,
+          "detail_term_group_matches": [
+            false,
+            false
+          ],
+          "detail_preview_coverage_percent": 0.0,
+          "automatic_pass_at_n": false
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 520.3,
+        "error": null,
+        "provider_reported_search_time_ms": 100,
+        "results": [
+          {
+            "title": "中华人民共和国劳动争议调解仲裁法",
+            "url": "https://zmdzy.hncourt.gov.cn/upload/file/20250710/20250710121409_65235.pdf",
+            "snippet": "## 中华人民共和国劳动争议调解仲裁法 文章属性  【制定机关】全国人大常委会  【公布日期】2007.12.29  【文 号】中华人民共和国主席令第八十号  【施行日期】2008.05.01  【效力等级】法律  【时效性】现行有效  【主题分类】仲裁,调解,劳动人事争议 正文 ### 中华人民共和国主席令 （第八十号） 《中华人民共和国劳动争议调解仲裁法》已由中华人民共和国第十届全国人 民代表大会常务委员会第三十一次会议于 2007 年 12 月 29 日通过，现予公布， 自 2008 年 5 月 1 日起施行。 中华人民共和国主席 胡锦涛 200..."
+          },
+          {
+            "title": "中华人民共和国劳动争议调解仲裁法_重庆市人力资源和社会保障局",
+            "url": "https://rlsbj.cq.gov.cn/zwgk_182/fdzdgknr/lzyj/falv/202103/t20210305_8968497.html",
+            "snippet": "中华人民共和国劳动争议调解仲裁法_重庆市人力资源和社会保障局 中国政府网|人力资源社会保障部门户网站|重庆市人民政府网 > 首页|政务公开|渝快办|互动交流|便民服务|专题专栏|数字人社 您当前的位置：首页>政府信息公开>法定主动公开内容>履职依据>法律 | [ 索引号 ] | 1150000000927581XW/2021-00165 | [ 发文字号 ] | | | --- | --- | --- | --- | | [ 主题分类 ] | 劳动就业 | [ 体裁分类 ] | 法律 | | [ 发布机构 ] | 市人力社保局 | [ 有效性 ] | | | [ 成文日期 ] | 2..."
+          },
+          {
+            "title": "中华人民共和国劳动争议调解仲裁法-",
+            "url": "https://www.gjxfj.gov.cn/gjxfj/fgwj/flfg/webinfo/2014/05/1601761496835395.htm",
+            "snippet": "中华人民共和国劳动争议调解仲裁法- https://www.gjxfj.gov.cn/gjxfj/index.htm - 首页 - 新闻中心 - 政府信息公开 - 网上信访 - 信访广角 - 互动交流 首页>>法规文件>>法律法规 法律法规 | 索引号 | GJXFJ-0000-2014-00063 | 发布机构 | | --- | --- | --- | | 名称 | 中华人民共和国劳动争议调解仲裁法 | | 生效日期 | 文号 | | 废止日期 | 分类 | 法律法规 | | 效力 | SELECTPLEASE | ### 中华人民共和国劳动争议调解仲裁法 #### 国家信访..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "gjxfj.gov.cn",
+            "rlsbj.cq.gov.cn",
+            "zmdzy.hncourt.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            false,
+            true
+          ],
+          "detail_preview_coverage_percent": 50.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    },
+    {
+      "id": "statute-03",
+      "category": "精确法条",
+      "question": "劳动合同法第三十八条 拖欠工资 解除劳动合同 官方",
+      "query": "劳动合同法第三十八条 拖欠工资 解除劳动合同 官方 法律法规 中国",
+      "expected_domains": [
+        "flk.npc.gov.cn",
+        "gov.cn"
+      ],
+      "core_term_groups": [
+        [
+          "劳动合同法"
+        ]
+      ],
+      "detail_term_groups": [
+        [
+          "第三十八条",
+          "第38条",
+          "38条"
+        ],
+        [
+          "拖欠工资",
+          "解除劳动合同"
+        ]
+      ],
+      "why": "检验“拖欠工资”这类高频事实与对应法条的连接。",
+      "duckduckgo": {
+        "success": false,
+        "elapsed_ms": 1744.5,
+        "error": "empty_result",
+        "provider_reported_search_time_ms": null,
+        "results": [],
+        "metrics": {
+          "official_source_hit_at_n": false,
+          "matched_official_domains": [],
+          "core_term_group_matches": [
+            false
+          ],
+          "core_topic_coverage_percent": 0.0,
+          "core_topic_hit_at_n": false,
+          "detail_term_group_matches": [
+            false,
+            false
+          ],
+          "detail_preview_coverage_percent": 0.0,
+          "automatic_pass_at_n": false
+        }
+      },
+      "anysearch": {
+        "success": true,
+        "elapsed_ms": 481.0,
+        "error": null,
+        "provider_reported_search_time_ms": 93,
+        "results": [
+          {
+            "title": "中华人民共和国劳动合同法",
+            "url": "https://guangdong.chinatax.gov.cn/gdsw/zjfg/2026-05/26/content_6adf2e221b2c4b8a85960ef626a66103.shtml",
+            "snippet": "中华人民共和国劳动合同法 中华人民共和国劳动合同法 发布机构: 全国人民代表大会常务委员会 发文日期: 2012-12-28 有效级别: 有效 补充说明: 2007年6月29日第十届全国人民代表大会常务委员会第二十八次会议通过 根据2012年12月28日第十一届全国人民代表大会常务委员会第三十次会议《关于修改＜中华人民共和国劳动合同法＞的决定》修正 浏览次数： 目 录 第一章 总则 第二章 劳动合同的订立 第三章 劳动合同的履行和变更 第四章 劳动合同的解除和终止 第五章 特别规定 第一节 集体合同 第二节 劳务派遣 第三节 非全日制用工 第六章 监督检查 第七章 ..."
+          },
+          {
+            "title": "中华人民共和国劳动合同法",
+            "url": "https://sfj.beijing.gov.cn/sfj/sfdt/fzxc74/387096/index.html",
+            "snippet": "中华人民共和国劳动合同法 访问我的专属空间智能问答 本站查询 一网通查 我在听，请说话(10s) 抱歉，没听清，请再说一遍吧 政务资讯 司法行政要闻业务动态普法与依法治理队伍建设热点转载专题专栏 政务公开 司法局介绍规划计划财务公开通知公告人事公告业务数据诚信记录政策文件政策解读 网上办事 办事指南办事统计表格下载查询服务结果公示复议指南 政民互动 在线访谈民意调查互动交流 - 首页 - 政务服务 信息订阅 适老版 https://sfj.beijing.gov.cn/sfj/sfdt/fzxc74/387096/index.html 本站查询 一网通查 我在..."
+          },
+          {
+            "title": "中华人民共和国劳动合同法-",
+            "url": "https://www.gjxfj.gov.cn/gjxfj/xxgk/fgwj/flfg/webinfo/2016/03/1460585589931971.htm",
+            "snippet": "中华人民共和国劳动合同法- https://www.gjxfj.gov.cn/gjxfj/index.htm - 首页 - 新闻中心 - 政府信息公开 - 网上信访 - 信访广角 - 互动交流 首页>>政府信息公开>>法规文件>>法律法规 法律法规 ### 中华人民共和国劳动合同法 #### 国家信访局门户网站 www.gjxfj.gov.cn 日期： 2014-05-12 来源： （ 2007年6月29日 第十届全国人民代表大会常务委员会第二十八次会议通过 2007年6月29日中华人民共和国主席令第六十五号公布） 目录 第一章 总则 第二章 劳动合同的订立 第三章 劳..."
+          }
+        ],
+        "metrics": {
+          "official_source_hit_at_n": true,
+          "matched_official_domains": [
+            "gjxfj.gov.cn",
+            "guangdong.chinatax.gov.cn",
+            "sfj.beijing.gov.cn"
+          ],
+          "core_term_group_matches": [
+            true
+          ],
+          "core_topic_coverage_percent": 100.0,
+          "core_topic_hit_at_n": true,
+          "detail_term_group_matches": [
+            false,
+            false
+          ],
+          "detail_preview_coverage_percent": 0.0,
+          "automatic_pass_at_n": true
+        }
+      }
+    }
+  ]
+}
