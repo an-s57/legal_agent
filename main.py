@@ -1,5 +1,8 @@
 """FastAPI 入口 — AI 法律助手"""
+import asyncio
 import json
+import time
+import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -61,6 +64,12 @@ def get_quick_reply(message: str):
 
 @app.post("/legal/chat")
 async def legal_chat(req: ChatRequest):
+    request_id = uuid.uuid4().hex[:8]
+    request_started_at = time.perf_counter()
+    print(
+        f"[PERF] trace={request_id} stage=request status=start route=chat",
+        flush=True,
+    )
     session = get_session(req.session_id)
 
     history = []
@@ -74,15 +83,31 @@ async def legal_chat(req: ChatRequest):
         else ""
     )
 
-    result = await run_legal_agent(req.message, history, case_summary)
+    result = await run_legal_agent(
+        req.message,
+        history,
+        case_summary,
+        request_id=request_id,
+    )
     answer = result["output"]
 
     save_exchange(req.session_id, req.message, answer)
 
     exchange = f"用户：{req.message}\n助手：{answer}"
-    updated_summary = update_case_summary(req.session_id, exchange)
+    updated_summary = update_case_summary(
+        req.session_id,
+        exchange,
+        request_id=request_id,
+    )
 
     tools_used = [step[0] for step in result.get("intermediate_steps", [])]
+
+    duration_ms = (time.perf_counter() - request_started_at) * 1000
+    print(
+        f"[PERF] trace={request_id} stage=request_total "
+        f"duration_ms={duration_ms:.0f} status=ok route=chat",
+        flush=True,
+    )
 
     return {
         "answer": answer,
@@ -94,10 +119,23 @@ async def legal_chat(req: ChatRequest):
 
 @app.post("/legal/chat/stream")
 async def legal_chat_stream(req: ChatRequest,background_tasks:BackgroundTasks):
+    request_id = uuid.uuid4().hex[:8]
+    request_started_at = time.perf_counter()
+    print(
+        f"[PERF] trace={request_id} stage=request status=start route=stream",
+        flush=True,
+    )
     session = get_session(req.session_id)
     quick_reply=get_quick_reply(req.message)
     if quick_reply:
         save_exchange(req.session_id, req.message, quick_reply)
+
+        duration_ms = (time.perf_counter() - request_started_at) * 1000
+        print(
+            f"[PERF] trace={request_id} stage=request_total "
+            f"duration_ms={duration_ms:.0f} status=ok route=quick_reply",
+            flush=True,
+        )
 
         async def quick_reply_generator():#异步生成器对象
             token_event={"type":"token","text":quick_reply}
@@ -123,10 +161,15 @@ async def legal_chat_stream(req: ChatRequest,background_tasks:BackgroundTasks):
         else ""
     )
 
-    async def event_generator():
+    async def _event_generator_body():
         full_answer=""
 
-        async for event in run_legal_agent_stream(req.message,history,case_summary):
+        async for event in run_legal_agent_stream(
+            req.message,
+            history,
+            case_summary,
+            request_id=request_id,
+        ):
             yield f"data: {json.dumps(event,ensure_ascii=False)}\n\n"
 
             if event["type"] in ("token","planner_question"):
@@ -137,8 +180,35 @@ async def legal_chat_stream(req: ChatRequest,background_tasks:BackgroundTasks):
             exchange=f"用户:{req.message}\n助手:{full_answer}"
             background_tasks.add_task(
                 update_case_summary,
-                req.session_id,exchange
+                req.session_id,
+                exchange,
+                request_id,
+                True,
                 )
+
+    async def event_generator():
+        status = "error"
+        error_type = ""
+
+        try:
+            async for payload in _event_generator_body():
+                yield payload
+            status = "ok"
+        except (asyncio.CancelledError, GeneratorExit):
+            status = "cancelled"
+            raise
+        except Exception as exc:
+            error_type = type(exc).__name__
+            raise
+        finally:
+            duration_ms = (time.perf_counter() - request_started_at) * 1000
+            error_suffix = f" error_type={error_type}" if error_type else ""
+            print(
+                f"[PERF] trace={request_id} stage=request_total "
+                f"duration_ms={duration_ms:.0f} status={status} route=stream"
+                f"{error_suffix}",
+                flush=True,
+            )
     return StreamingResponse(
         event_generator(),
         media_type="text/event-stream",

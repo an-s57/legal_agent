@@ -1,5 +1,6 @@
 """FAISS 向量库 — 自定义 Ollama 嵌入 + 法律文档检索"""
 import os
+import time
 os.environ['TRANSFORMERS_OFFLINE'] = '1'#不检查更新
 os.environ['HF_HUB_OFFLINE'] = '1'#不联网下载
 import torch
@@ -148,11 +149,28 @@ def add_legal_documents(pdf_folder:str):
 
 def retrieve_legal_docs(query: str, k: int = 20, top_k: int = 5) -> list[str]:
     """对外暴露的检索接口，返回字符串列表"""
+    #向量库加载用时
+    load_start=time.perf_counter()
     faiss_db = _get_faiss_db()
+    load_ms=(time.perf_counter()-load_start)*1000
+    print(f"[PERF] vectorstore_load={load_ms:.0f}ms",flush=True)
+    #转向量和FAISS粗召回用时
+    search_start=time.perf_counter()
     docs = faiss_db.similarity_search(query, k=k)
+    search_ms=(time.perf_counter()-search_start)*1000
+    print(f"[PERF] vector_search={search_ms:.0f}ms k={k}",flush=True)
+    #rerank用时
+    rerank_time=time.perf_counter()
     try:
         docs=_rerank(query,docs,top_k=top_k)
+        rerank_ms=(time.perf_counter()-rerank_time)*1000
+        print(f"[PERF] rerank={rerank_ms:.0f}ms "
+              f"top_k={top_k} fallback=False",flush=True)
     except Exception as e:
+        rerank_ms=(time.perf_counter()-rerank_time)*1000
+        print(f"[PERF] rerank={rerank_ms:.0f}ms "
+              f"fallback=True error_type={type(e).__name__}",
+              flush=True)
         print(f"Rerank 失败，使用 FAISS 原始结果: {e}")
         docs=docs[:top_k]
 
