@@ -138,7 +138,10 @@ _compiled_graph = create_legal_agent()
 
 
 async def run_legal_agent(
-    user_input: str, chat_history: list, case_summary: str = ""
+    user_input: str,
+    chat_history: list,
+    case_summary: str = "",
+    request_id: str = "",
 ) -> dict:
     messages = list(chat_history)
     messages.insert(0, SystemMessage(content=SYSTEM_PROMPT))
@@ -168,7 +171,10 @@ async def run_legal_agent(
 
 
 async def run_legal_agent_stream(
-    user_input: str, chat_history: list, case_summary: str = ""
+    user_input: str,
+    chat_history: list,
+    case_summary: str = "",
+    request_id: str = "",
 ):
     """流式版本 — 逐 token yield，格式 {"type": "token"|"planner_question"|"tool_start"|"tool_end"|"done", ...}"""
     messages = list(chat_history)
