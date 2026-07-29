@@ -22,6 +22,14 @@ legal_pdfs/
 # IDE
 .vscode/
 .idea/
+.claude/
+_resume_render_review/
+
+# 本地交付物与个人简历
+deliverables/
+简历_*.docx
+学习路线_后端与Agent.md
+~$*.docx
 
 # 临时测试文件
 result*.txt

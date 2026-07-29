@@ -1,4 +1,4 @@
-"""会话管理 — 内存会话字典 + LLM 案情摘要"""
+"""会话管理 — SQLite 会话/消息持久化 + LLM 增量案情摘要。"""
 import json
 import os
 import sqlite3

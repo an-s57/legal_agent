@@ -1,4 +1,4 @@
-"""比较当前 DuckDuckGo 接入、新版 ddgs 与 AnySearch 的法律网页搜索结果。
+"""比较历史 DuckDuckGo 接入、新版 ddgs 与 AnySearch 的法律网页搜索结果。
 
 这是独立评测脚本：不调用 FastAPI、LangGraph、LLM、FAISS 或 Reranker，
 也不会修改线上 Agent 的 web_legal_search 工具。
@@ -21,7 +21,7 @@ import httpx
 from dotenv import load_dotenv
 
 try:
-    # 保持与当前生产工具一致，评测的是现有 DuckDuckGo 接入的实际表现。
+    # 历史旧接入基线，用于判断旧 Python 包与新版 ddgs 的差异。
     from duckduckgo_search import DDGS as LegacyDDGS
 except ImportError as exc:  # pragma: no cover - 给第一次运行时更清晰的提示
     raise SystemExit(
@@ -29,7 +29,7 @@ except ImportError as exc:  # pragma: no cover - 给第一次运行时更清晰�
     ) from exc
 
 try:
-    # 仅用于评测的新接入；线上 tools/legal_tools.py 暂不使用它。
+    # 评测新版 ddgs；线上 tools/legal_tools.py 将其作为 AnySearch 的失败兜底。
     from ddgs import DDGS as ModernDDGS
 except ImportError as exc:  # pragma: no cover - 给第一次运行时更清晰的提示
     raise SystemExit(
@@ -52,7 +52,7 @@ DEFAULT_PROVIDERS = tuple(PROVIDER_LABELS)
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="比较当前 DuckDuckGo 接入、新版 ddgs 与 AnySearch 的法律网页搜索质量和耗时。"
+        description="比较历史 DuckDuckGo 接入、新版 ddgs 与 AnySearch 的法律网页搜索质量和耗时。"
     )
     parser.add_argument(
         "--questions",
@@ -64,7 +64,7 @@ def parse_args() -> argparse.Namespace:
         "--top-n",
         type=int,
         default=3,
-        help="每个服务保留的结果数，默认 3；与当前 DuckDuckGo 工具一致。",
+        help="每个服务保留的结果数，默认 3。",
     )
     parser.add_argument(
         "--timeout",
@@ -217,7 +217,7 @@ def evaluate_results(question: dict[str, Any], results: list[dict[str, str]]) ->
 
 
 def search_duckduckgo(query: str, top_n: int, timeout: float) -> dict[str, Any]:
-    """调用与线上工具相同的旧 DuckDuckGo 接入，并统一结果字段。"""
+    """调用历史旧 DuckDuckGo 接入基线，并统一结果字段。"""
     start = time.perf_counter()
     try:
         # 旧包会发出已改名提示；报告中的“旧接入”标签仍保留这一基线的含义。
@@ -252,7 +252,7 @@ def search_duckduckgo(query: str, top_n: int, timeout: float) -> dict[str, Any]:
 
 
 def search_ddgs(query: str, top_n: int, timeout: float) -> dict[str, Any]:
-    """调用新版 ddgs；只用于独立评测，不改变生产 Agent。"""
+    """调用新版 ddgs；线上将其作为 AnySearch 的失败兜底。"""
     start = time.perf_counter()
     try:
         with ModernDDGS(timeout=timeout) as ddgs:
@@ -479,7 +479,7 @@ def build_markdown_report(run: dict[str, Any]) -> str:
         "",
         "## 结论填写模板",
         "",
-        "先根据自动通过率、失败率和 P95 耗时选出候选服务；再查看上表中少量分歧题。`duckduckgo-search` 仅作为当前生产接入基线；若新版 ddgs 仍无明显改善，而 AnySearch 显著更稳定，再考虑替换生产联网工具。",
+        "先根据自动通过率、失败率和 P95 耗时选出候选服务；再查看上表中少量分歧题。当前生产策略为 AnySearch 主搜索、ddgs 失败兜底；`duckduckgo-search` 仅保留为历史基线。若服务、题集或网络环境变化，应重新评测后再调整该策略。",
         "",
     ])
     return "\n".join(lines)

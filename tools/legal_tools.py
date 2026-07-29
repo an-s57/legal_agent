@@ -25,7 +25,7 @@ def legal_rag_search(query: str) -> str:
         return "法律文档库中未找到相关内容"
     return "\n\n---\n\n".join(results)
 
-# AnySearch 接入准备：当前 web_legal_search 仍使用 DuckDuckGo，尚未切换线上行为。
+# 联网搜索策略：AnySearch 主搜索；缺少密钥、请求异常或结果异常时回退到 ddgs。
 def _request_anysearch_payload(query: str) -> object:
     """调用 AnySearch，返回未经解析的 JSON payload。"""
     api_key = os.getenv("ANYSEARCH_API_KEY")

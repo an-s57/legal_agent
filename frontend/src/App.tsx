@@ -1,10 +1,15 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import Background from './components/Background'
 import Sidebar from './components/Sidebar'
 import ChatArea, { type Message } from './components/ChatArea'
 import InputBox from './components/InputBox'
 
 const WELCOME = '你好，我是 AI 法律助手。请描述你遇到的法律问题，我会先了解案情再为你查找相关法条。'
+const ACTIVE_SESSION_STORAGE_KEY = 'lexagent_active_session_id'
+
+function createSessionId(): string {
+  return `session-${crypto.randomUUID()}`
+}
 
 /**
  * 仅处理不会影响案情判断的纯闲聊，避免“你好”也进入 Planner + Agent 链路。
@@ -40,14 +45,81 @@ interface SessionInfo {
   time: number
 }
 
+interface PersistedTurn {
+  human: string
+  ai: string
+}
+
+interface PersistedSessionResponse {
+  history: PersistedTurn[]
+  case_summary: Record<string, string>
+}
+
 export default function App() {
-  const [sessionId, setSessionId] = useState(() => 'session-' + Date.now())
+  const [sessionId, setSessionId] = useState(
+    () => localStorage.getItem(ACTIVE_SESSION_STORAGE_KEY) || createSessionId(),
+  )
   const [messages, setMessages] = useState<Message[]>([
     { role: 'bot', content: WELCOME },
   ])
   const [isTyping, setIsTyping] = useState(false)
   const [caseSummary, setCaseSummary] = useState<Record<string, string>>({})
   const [sessions, setSessions] = useState<SessionInfo[]>([])
+  // 防止刷新恢复请求在用户已经开始新操作后，迟到并覆盖当前界面。
+  const restoreVersionRef = useRef(0)
+
+  // 记住当前会话 ID；刷新后由后端 SQLite 恢复这一个会话的历史。
+  useEffect(() => {
+    localStorage.setItem(ACTIVE_SESSION_STORAGE_KEY, sessionId)
+  }, [sessionId])
+
+  useEffect(() => {
+    let cancelled = false
+    const restoreVersion = ++restoreVersionRef.current
+
+    const restoreActiveSession = async () => {
+      try {
+        const res = await fetch(`/legal/session/${encodeURIComponent(sessionId)}`)
+        if (!res.ok) return
+
+        const saved = await res.json() as PersistedSessionResponse
+        if (
+          cancelled
+          || restoreVersion !== restoreVersionRef.current
+          || !Array.isArray(saved.history)
+          || saved.history.length === 0
+        ) return
+
+        const restoredMessages: Message[] = [
+          { role: 'bot', content: WELCOME },
+          ...saved.history.flatMap(turn => [
+            { role: 'user' as const, content: turn.human },
+            { role: 'bot' as const, content: turn.ai },
+          ]),
+        ]
+        const restoredSummary = saved.case_summary || {}
+        const firstUserMessage = saved.history[0]?.human || '历史会话'
+
+        setMessages(restoredMessages)
+        setCaseSummary(restoredSummary)
+        setSessions(prev => [
+          {
+            id: sessionId,
+            messages: restoredMessages,
+            caseSummary: restoredSummary,
+            preview: firstUserMessage.slice(0, 30),
+            time: Date.now(),
+          },
+          ...prev.filter(session => session.id !== sessionId),
+        ])
+      } catch {
+        // 后端暂不可用时保留新会话的欢迎语，避免页面初始化失败。
+      }
+    }
+
+    void restoreActiveSession()
+    return () => { cancelled = true }
+  }, [sessionId])
 
   // 保存当前会话到 sessions 列表
   const saveCurrentSession = useCallback((sid: string, msgs: Message[], summary: Record<string, string>) => {
@@ -67,15 +139,17 @@ export default function App() {
   }, [])
 
   const handleNewSession = useCallback(() => {
+    restoreVersionRef.current += 1
     // 保存当前会话
     saveCurrentSession(sessionId, messages, caseSummary)
-    const newId = 'session-' + Date.now()
+    const newId = createSessionId()
     setSessionId(newId)
     setMessages([{ role: 'bot', content: WELCOME }])
     setCaseSummary({})
   }, [sessionId, messages, caseSummary, saveCurrentSession])
 
   const handleSelectSession = useCallback((id: string) => {
+    restoreVersionRef.current += 1
     // 保存当前会话
     saveCurrentSession(sessionId, messages, caseSummary)
     // 切换到选中的会话
@@ -88,6 +162,7 @@ export default function App() {
   }, [sessionId, messages, caseSummary, saveCurrentSession, sessions])
 
   const handleSend = useCallback(async (msg: string) => {
+    restoreVersionRef.current += 1
     const userMsg: Message = { role: 'user', content: msg }
 
     // 纯问候/闲聊由前端立即响应，不请求后端，也不写入服务端案情摘要。

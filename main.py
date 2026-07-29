@@ -28,9 +28,17 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="AI Legal Assistant", version="1.0.0", lifespan=lifespan)
 
+# 当前项目用于本地演示；只允许本机网页访问 API。
+LOCAL_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=LOCAL_ORIGINS,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -225,6 +233,12 @@ async def get_session_info(session_id: str):
 @app.get("/", response_class=HTMLResponse)
 async def index():
     index_html = FRONTEND_DIST / "index.html"
+    if not index_html.exists():
+        return HTMLResponse(
+            "<h2>前端尚未构建</h2>"
+            "<p>请在项目根目录执行：<code>cd frontend && npm install && npm run build</code></p>",
+            status_code=503,
+        )
     return HTMLResponse(index_html.read_text(encoding="utf-8"))
 
 
@@ -236,4 +250,4 @@ async def health():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

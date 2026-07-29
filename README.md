@@ -1,6 +1,6 @@
 # AI 法律助手
 
-基于 **LangGraph + RAG + FastAPI** 的智能法律问答系统。Agent 先通过 Planner 节点判断用户信息是否完整（缺失则追问），信息完备后自主决策调用 RAG 法条检索或联网搜索，整合后给出带来源标注的回答；会话历史与案情摘要使用 SQLite 持久化。
+基于 **LangGraph + RAG + FastAPI** 的智能法律问答系统。Agent 先通过 Planner 节点判断用户信息是否完整（缺失则追问），信息完备后自主决策调用 RAG 法条检索或联网搜索，整合后给出带来源标注的回答；会话历史与案情摘要使用 SQLite 持久化。前端会在浏览器本地保存当前 `session_id`，刷新页面后恢复该会话。
 
 对“你好”“谢谢”等简单输入，前端优先走快速回复，避免进入 Planner、LLM 与工具调用；完整回答通过 SSE 逐事件推送，回答结束后再由后台更新案情摘要，避免摘要生成阻塞用户界面。
 
@@ -31,7 +31,7 @@ flowchart TD
     G --> H{"有 tool_calls？"}
     H -->|"有"| I["🔧 执行工具"]
     I --> I1["legal_rag_search<br/>📚 FAISS 粗召回 30 条<br/>🎯 Reranker 精排 Top 5"]
-    I --> I2["web_legal_search<br/>🌐 DuckDuckGo 联网搜索"]
+    I --> I2["web_legal_search<br/>🌐 AnySearch 主搜索<br/>ddgs 失败兜底"]
     I1 --> G
     I2 --> G
     H -->|"无 → 输出回答"| J["📤 SSE 流式输出<br/>token / tool / done 事件"]
@@ -74,7 +74,7 @@ legal_agent/
 | 向量库 | FAISS（本地） |
 | Embedding | nomic-embed-text（Ollama 本地服务） |
 | Reranker | BAAI/bge-reranker-base（CrossEncoder） |
-| Web 搜索 | DuckDuckGo（当前生产；AnySearch 已完成评测，尚未接入） |
+| Web 搜索 | AnySearch（主搜索）+ ddgs（失败兜底） |
 | 后端 | FastAPI + Uvicorn |
 | 会话持久化 | SQLite |
 | 前端 | React + TypeScript + Tailwind CSS |
@@ -99,10 +99,18 @@ pip install -r requirements.txt
 
 ### 2. 配置
 
-在项目根目录创建 `.env` 文件：
+先复制示例配置，再在项目根目录填写 `.env`：
+
+```powershell
+Copy-Item .env.example .env
+```
+
+`.env` 内容：
 
 ```
 GLM_API_KEY=你的智谱API密钥
+# 联网搜索主服务；未配置或调用失败时会自动尝试 ddgs 兜底
+ANYSEARCH_API_KEY=你的AnySearch密钥
 ```
 
 ### 3. 启动 Ollama Embedding 服务
@@ -122,11 +130,11 @@ ollama pull nomic-embed-text
 python build_vectorstore.py
 ```
 
-### 5. 构建前端（可选，首次需要）
+### 5. 构建前端（首次运行或前端代码变化后必须执行）
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm run build      # 生成 dist/
 cd ..
 ```
@@ -139,6 +147,18 @@ python main.py
 ```
 
 访问 http://localhost:8000
+
+### 7. 运行基础回归测试
+
+该测试只验证 SQLite 会话的保存与恢复，不调用 Ollama、GLM 或联网搜索：
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+### 使用边界
+
+本项目用于学习和本地演示，不构成法律意见。当前版本没有用户登录与会话归属校验，虽然默认只监听本机地址，仍不应直接部署到公网或录入真实敏感案情。
 
 ## API 接口
 
@@ -211,7 +231,7 @@ FAISS 粗召回 30 条后，用 CrossEncoder（`bge-reranker-base`）对 query-d
 
 ### 性能 Trace 与链路排查
 
-每个请求会生成独立 `trace_id`，在后端终端输出 Planner、每轮 LLM、向量检索、Reranker、工具调用、案情摘要与整体请求的耗时和状态。排查结果表明，完整回答的主要等待来自多次串行远程 LLM 调用与 CPU 上的 Reranker，而不是前端渲染。当前日志仅输出到本地终端；后续可写入结构化 JSONL 或日志平台。
+每个请求会生成独立 `trace_id`。当前后端终端已记录 `vectorstore_load`、`vector_search`、`rerank`、联网搜索服务及耗时、请求总耗时等信息；其中 CPU 上的 Reranker 通常是已记录链路中最显著的耗时项。Planner 与每轮 LLM 的独立耗时尚未打点，因此不能仅凭总耗时把等待全部归因给某个模型；下一步会补齐这两个阶段及首 token 时间（TTFT）的日志。当前日志仅输出到本地终端，后续可写入结构化 JSONL 或日志平台。
 
 ### 联网搜索服务选型（20 题对比）
 
@@ -222,7 +242,7 @@ FAISS 粗召回 30 条后，用 CrossEncoder（`bge-reranker-base`）对 query-d
 | DuckDuckGo（ddgs） | 9/20（45.0%） | 8/20（40.0%） | 4.24 s |
 | AnySearch | 19/20（95.0%） | 19/20（95.0%） | 1.52 s |
 
-其中，**官方来源命中@3** 指 Top-3 是否至少包含一条预标注的政府、法院、人社或法规数据库链接；**自动通过@3** 则要求同时命中官方来源与核心主题。AnySearch 在该评测中胜出，平均网页搜索耗时约低 **64%**。这是后续迁移的依据，但当前生产工具尚未切换；完整指标定义、原始结果和失败案例见 [evaluation/README.md](./evaluation/README.md)。
+其中，**官方来源命中@3** 指 Top-3 是否至少包含一条预标注的政府、法院、人社或法规数据库链接；**自动通过@3** 则要求同时命中官方来源与核心主题。AnySearch 在该评测中胜出，平均网页搜索耗时约低 **64%**，因此现已作为当前演示版本的主搜索；调用异常、缺少密钥或返回异常时自动回退到 `ddgs`。已完成主服务直连、强制回退和 UI SSE 链路验证。完整指标定义、原始结果和已知失败案例见 [evaluation/README.md](./evaluation/README.md)。
 
 ## 检索评测与参数选择
 
@@ -230,4 +250,4 @@ FAISS 粗召回 30 条后，用 CrossEncoder（`bge-reranker-base`）对 query-d
 
 ## License
 
-MIT
+MIT。详见 [LICENSE](./LICENSE)。
