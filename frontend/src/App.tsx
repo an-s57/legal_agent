@@ -60,7 +60,7 @@ export default function App() {
     () => localStorage.getItem(ACTIVE_SESSION_STORAGE_KEY) || createSessionId(),
   )
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'bot', content: WELCOME },
+    { id: crypto.randomUUID(), role: 'bot', content: WELCOME },
   ])
   const [isTyping, setIsTyping] = useState(false)
   const [caseSummary, setCaseSummary] = useState<Record<string, string>>({})
@@ -91,10 +91,10 @@ export default function App() {
         ) return
 
         const restoredMessages: Message[] = [
-          { role: 'bot', content: WELCOME },
+          { id: crypto.randomUUID(), role: 'bot', content: WELCOME },
           ...saved.history.flatMap(turn => [
-            { role: 'user' as const, content: turn.human },
-            { role: 'bot' as const, content: turn.ai },
+            { id: crypto.randomUUID(), role: 'user' as const, content: turn.human },
+            { id: crypto.randomUUID(), role: 'bot' as const, content: turn.ai },
           ]),
         ]
         const restoredSummary = saved.case_summary || {}
@@ -144,7 +144,7 @@ export default function App() {
     saveCurrentSession(sessionId, messages, caseSummary)
     const newId = createSessionId()
     setSessionId(newId)
-    setMessages([{ role: 'bot', content: WELCOME }])
+    setMessages([{ id: crypto.randomUUID(), role: 'bot', content: WELCOME }])
     setCaseSummary({})
   }, [sessionId, messages, caseSummary, saveCurrentSession])
 
@@ -163,12 +163,12 @@ export default function App() {
 
   const handleSend = useCallback(async (msg: string) => {
     restoreVersionRef.current += 1
-    const userMsg: Message = { role: 'user', content: msg }
+    const userMsg: Message = { id: crypto.randomUUID(), role: 'user', content: msg }
 
     // 纯问候/闲聊由前端立即响应，不请求后端，也不写入服务端案情摘要。
     const quickReply = getQuickReply(msg)
     if (quickReply) {
-      const botMsg: Message = { role: 'bot', content: quickReply }
+      const botMsg: Message = { id: crypto.randomUUID(), role: 'bot', content: quickReply }
       const newMessages: Message[] = [...messages, userMsg, botMsg]
       setMessages(newMessages)
       saveCurrentSession(sessionId, newMessages, caseSummary)
@@ -178,6 +178,7 @@ export default function App() {
     setMessages(prev => [...prev, userMsg])
     setIsTyping(true)
 
+    const botId = crypto.randomUUID()
     let botContent = ''
     let toolsUsed: string[] = []
     let botAdded = false
@@ -213,7 +214,7 @@ export default function App() {
               if (event.type === 'token') {
                 botContent += event.text
                 if (!botAdded) {
-                  setMessages(prev => [...prev, { role: 'bot', content: botContent }])
+                  setMessages(prev => [...prev, { id: botId, role: 'bot', content: botContent }])
                   botAdded = true
                 } else {
                   setMessages(prev => {
@@ -224,7 +225,7 @@ export default function App() {
                 }
               } else if (event.type === 'planner_question') {
                 botContent = event.text
-                setMessages(prev => [...prev, { role: 'bot', content: event.text }])
+                setMessages(prev => [...prev, { id: botId, role: 'bot', content: event.text }])
                 botAdded = true
               } else if (event.type === 'tool_start') {
                 toolsUsed.push(event.name)
@@ -240,7 +241,7 @@ export default function App() {
       }
 
       // Stream complete — attach tools to final message and save session
-      const botMsg: Message = { role: 'bot', content: botContent, tools: toolsUsed }
+      const botMsg: Message = { id: botId, role: 'bot', content: botContent, tools: toolsUsed }
       const newMessages: Message[] = [...messages, userMsg, botMsg]
 
       setMessages(prev => {
@@ -255,6 +256,7 @@ export default function App() {
 
     } catch (err) {
       setMessages(prev => [...prev, {
+        id: crypto.randomUUID(),
         role: 'bot',
         content: '请求失败，请确认服务器已启动。',
       }])

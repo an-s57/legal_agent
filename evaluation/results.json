@@ -1,264 +1,532 @@
 {
-  "timestamp": "2026-07-15T10:13:30.012702",
-  "retrieval": {
-    "total": 17,
-    "hit": 14,
-    "accuracy": 82.4,
+  "timestamp": "2026-07-31T21:40:43.535045",
+  "tool_selection": {
+    "total": 25,
+    "correct": 21,
+    "accuracy": 84.0,
+    "rag_accuracy": 94.1,
+    "web_accuracy": 62.5,
+    "avg_response_time": 46.75,
     "details": [
       {
         "id": "q01",
         "question": "买到假货怎么索赔？",
-        "expected_sources": [
-          "中华人民共和国消费者权益保护法(2013修正).pdf"
-        ],
-        "actual_sources": [
-          "中华人民共和国产品质量法_20181229.pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "中华人民共和国产品质量法_20181229.pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
-        ],
-        "hit": true
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "买到假货怎么索赔？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "根据检索到的法律条文，为您详细解答买到假货的赔偿标准和操作步骤：\n\n---\n\n## 📋 一、赔偿标准\n\n### 1️⃣ 一般商品（非食品类）\n\n根据**《消费者权益保护法》第五十五条**规定：\n\n> \"经营者提供商品或者服务有欺诈行为的，应当按照消费者的要求增加赔偿其受到的损失，增加赔偿的金额为消费者购买商品的价款或者接受服务的费用的**三倍**；增加赔偿的金额不足**五百元**的，为五百元。\"\n",
+            "elapsed": 44.87
+          }
+        ]
       },
       {
         "id": "q02",
         "question": "商家拒绝七天无理由退货怎么办？",
-        "expected_sources": [
-          "中华人民共和国消费者权益保护法(2013修正).pdf"
-        ],
-        "actual_sources": [
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "中华人民共和国广告法_20210429.pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
-        ],
-        "hit": true
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "商家拒绝七天无理由退货怎么办？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "",
+            "elapsed": 40.88
+          }
+        ]
       },
       {
         "id": "q03",
         "question": "什么是霸王条款？哪些格式条款无效？",
-        "expected_sources": [
-          "中华人民共和国消费者权益保护法(2013修正).pdf"
-        ],
-        "actual_sources": [
-          "中华人民共和国广告法_20210429.pdf",
-          "中华人民共和国广告法_20210429.pdf",
-          "中华人民共和国反不正当竞争法_20250627.pdf",
-          "中华人民共和国反不正当竞争法_20250627.pdf",
-          "中华人民共和国产品质量法_20181229.pdf"
-        ],
-        "hit": false
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "什么是霸王条款？哪些格式条款无效？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "根据检索到的法律条文，为您解答：\n\n---\n\n## 一、什么是霸王条款？\n\n**\"霸王条款\"**并非法律术语，是民间对**不公平、不合理的格式条款**的通俗称呼。\n\n**格式条款**是指经营者为了重复使用而预先拟定，并在订立合同时未与消费者协商的条款。通常出现在：\n\n- 格式合同\n- 通知、声明\n- 店堂告示\n- 网络服务协议\n- 等形式中\n\n---\n\n## 二、哪些格式条款无效？\n\n根据**《中",
+            "elapsed": 45.72
+          }
+        ]
       },
       {
         "id": "q04",
         "question": "商家虚假宣传，消费者可以要求什么赔偿？",
-        "expected_sources": [
-          "中华人民共和国消费者权益保护法(2013修正).pdf"
-        ],
-        "actual_sources": [
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "中华人民共和国反不正当竞争法_20250627.pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
-        ],
-        "hit": true
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "商家虚假宣传，消费者可以要求什么赔偿？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "根据检索到的法律条文，商家虚假宣传，消费者可以要求以下赔偿：\n\n---\n\n## 一、基本赔偿（所有情形均可主张）\n\n### 1️⃣ 退货、退款、换货、修理等\n根据《消费者权益保护法》**第五十二条**：\n> 经营者提供商品或者服务，造成消费者财产损害的，应当依照法律规定或者当事人约定承担**修理、重作、更换、退货、补足商品数量、退还货款和服务费用或者赔偿损失**等民事责任。\n\n### 2️⃣ 直接",
+            "elapsed": 61.91
+          }
+        ]
       },
       {
         "id": "q05",
         "question": "消费者有哪些基本权利？",
-        "expected_sources": [
-          "中华人民共和国消费者权益保护法(2013修正).pdf"
-        ],
-        "actual_sources": [
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "中华人民共和国产品质量法_20181229.pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "中华人民共和国广告法_20210429.pdf"
-        ],
-        "hit": true
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "消费者有哪些基本权利？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "根据《中华人民共和国消费者权益保护法》规定，消费者享有以下七项基本权利：\n\n---\n\n## 1. 安全保障权（第七条）\n消费者在购买、使用商品和接受服务时享有人身、财产安全不受损害的权利。消费者有权要求经营者提供的商品和服务，符合保障人身、财产安全的要求。\n\n## 2. 知情权（第八条）\n消费者享有知悉其购买、使用的商品或者接受的服务的真实情况的权利。消费者有权根据商品或者服务的不同情况，要求经营",
+            "elapsed": 23.53
+          }
+        ]
       },
       {
         "id": "q06",
         "question": "预付卡消费后商家跑路了怎么办？",
-        "expected_sources": [
-          "中华人民共和国消费者权益保护法(2013修正).pdf"
-        ],
-        "actual_sources": [
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "中华人民共和国反不正当竞争法_20250627.pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "中华人民共和国反不正当竞争法_20250627.pdf"
-        ],
-        "hit": true
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": false,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "error",
+            "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Read timed out. (read timeout=180)",
+            "elapsed": 180.01
+          }
+        ]
       },
       {
         "id": "q07",
         "question": "发生消费纠纷，可以通过哪些途径解决？",
-        "expected_sources": [
-          "中华人民共和国消费者权益保护法(2013修正).pdf"
-        ],
-        "actual_sources": [
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "中华人民共和国产品质量法_20181229.pdf",
-          "中华人民共和国食品安全法_20250912.pdf",
-          "中华人民共和国广告法_20210429.pdf",
-          "中华人民共和国产品质量法_20181229.pdf"
-        ],
-        "hit": true
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "发生消费纠纷，可以通过哪些途径解决？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "根据《中华人民共和国消费者权益保护法》（2013修正）第三十九条规定，**消费者和经营者发生消费者权益争议的，可以通过下列途径解决**：\n\n---\n\n### 一、与经营者协商和解\n这是最直接、最经济的方式。消费者可以与经营者沟通，说明问题并提出合理诉求，双方通过协商达成和解协议。\n\n### 二、请求消费者协会或者依法成立的其他调解组织调解\n- 向当地**消费者协会**申请调解\n- 也可向其他依法成",
+            "elapsed": 68.89
+          }
+        ]
+      },
+      {
+        "id": "q08",
+        "question": "2026年有什么新的消费者保护法规？",
+        "category": "联网搜索",
+        "expected_tool": "web_legal_search",
+        "correct": false,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "2026年有什么新的消费者保护法规？",
+            "expected_tool": "web_legal_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": false,
+            "answer": "根据法律文档检索结果，**没有检索到2026年即将生效的消费者保护新法规**。\n\n## 📋 检索结果说明\n\n本次检索到的内容均为**现行法律法规**：\n\n| 检索到的法律 | 生效时间 | 说明 |\n|-------------|---------|------|\n| 《中华人民共和国消费者权益保护法》 | 2013年修正版 | 现行有效的消费者保护基本法 |\n| 《中华人民共和国产品质量法》 |",
+            "elapsed": 25.36
+          }
+        ]
+      },
+      {
+        "id": "q09",
+        "question": "2025年有没有关于直播带货的最新规定？",
+        "category": "联网搜索",
+        "expected_tool": "web_legal_search",
+        "correct": false,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "2025年有没有关于直播带货的最新规定？",
+            "expected_tool": "web_legal_search",
+            "actual_tools": [],
+            "correct": false,
+            "answer": "根据检索结果，**2025年确实出台了关于直播带货的最新规定**，主要内容如下：\n\n## 一、2025年新出台的规定\n\n### 1. 《北京市直播带货合规指引》（2025年2月发布）\n\n| 要素 | 内容 |\n|------|------|\n| **发布单位** | 北京市市场监督管理局 |\n| **制定目的** | 督促和引导直播带货各方参与主体合规经营，保障消费者合法权益，推动行业有序竞争创新",
+            "elapsed": 20.58
+          }
+        ]
+      },
+      {
+        "id": "q10",
+        "question": "消费者权益保护法最近有什么修订？",
+        "category": "联网搜索",
+        "expected_tool": "web_legal_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "消费者权益保护法最近有什么修订？",
+            "expected_tool": "web_legal_search",
+            "actual_tools": [
+              "web_legal_search",
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "## 消费者权益保护法修订情况\n\n根据检索结果，为您梳理如下：\n\n---\n\n### 一、《消费者权益保护法》本体\n\n**最近一次修订：2013年修正**\n\n检索显示，现行《中华人民共和国消费者权益保护法》的修正历史如下：\n\n| 修订时间 | 修订内容 | 状态 |\n|---------|---------|------|\n| 1993年10月31日 | 第八届全国人大常委会第四次会议通过 | 首次",
+            "elapsed": 30.94
+          }
+        ]
       },
       {
         "id": "q11",
         "question": "销售的产品存在缺陷造成人身伤害，消费者该怎么追偿？",
-        "expected_sources": [
-          "中华人民共和国产品质量法_20181229.pdf"
-        ],
-        "actual_sources": [
-          "中华人民共和国产品质量法_20181229.pdf",
-          "中华人民共和国产品质量法_20181229.pdf",
-          "中华人民共和国产品质量法_20181229.pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "中华人民共和国产品质量法_20181229.pdf"
-        ],
-        "hit": true
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "销售的产品存在缺陷造成人身伤害，消费者该怎么追偿？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "",
+            "elapsed": 22.88
+          }
+        ]
       },
       {
         "id": "q12",
         "question": "产品质量不合格，商家需要承担什么责任？什么是产品三包？",
-        "expected_sources": [
-          "中华人民共和国产品质量法_20181229.pdf"
-        ],
-        "actual_sources": [
-          "中华人民共和国产品质量法_20181229.pdf",
-          "中华人民共和国产品质量法_20181229.pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "中华人民共和国产品质量法_20181229.pdf"
-        ],
-        "hit": true
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "产品质量不合格，商家需要承担什么责任？什么是产品三包？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "根据检索到的法律条文，我为您详细解答如下：\n\n---\n\n## 一、产品质量不合格，商家需要承担的责任\n\n### 1️⃣ **民事责任：修理、更换、退货**\n\n根据**《消费者权益保护法》第二十四条**规定：\n- 经营者提供的商品不符合质量要求的，消费者可以依照国家规定、当事人约定退货，或者要求经营者履行**更换、修理**等义务\n- 没有国家规定和当事人约定的，消费者可以自收到商品之日起**七日内退",
+            "elapsed": 77.98
+          }
+        ]
       },
       {
         "id": "q13",
         "question": "商家搞虚假宣传贬低竞争对手，算什么违法行为？",
-        "expected_sources": [
-          "中华人民共和国反不正当竞争法_20250627.pdf"
-        ],
-        "actual_sources": [
-          "中华人民共和国反不正当竞争法_20250627.pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "中华人民共和国反不正当竞争法_20250627.pdf",
-          "中华人民共和国反不正当竞争法_20250627.pdf"
-        ],
-        "hit": true
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "商家搞虚假宣传贬低竞争对手，算什么违法行为？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "以下内容基于已检索到的法律条文原文进行整理和解答，来源均标注于相应引用处。\n\n一、行为性质：属于不正当竞争行为\n- 虚假宣传：《中华人民共和国反不正当竞争法》第九条规定：“经营者不得对其商品的性能、功能、质量、销售状况、用户评价、曾获荣誉等作虚假或者引人误解的商业宣传，欺骗、误导消费者和其他经营者。经营者不得通过组织虚假交易、虚假评价等方式帮助其他经营者进行虚假或者引人误解的商业宣传。”（来源：中",
+            "elapsed": 58.89
+          }
+        ]
       },
       {
         "id": "q14",
         "question": "什么是不正当竞争行为？有哪些常见类型？",
-        "expected_sources": [
-          "中华人民共和国反不正当竞争法_20250627.pdf"
-        ],
-        "actual_sources": [
-          "中华人民共和国反不正当竞争法_20250627.pdf",
-          "中华人民共和国反不正当竞争法_20250627.pdf",
-          "中华人民共和国反不正当竞争法_20250627.pdf",
-          "中华人民共和国反不正当竞争法_20250627.pdf",
-          "中华人民共和国广告法_20210429.pdf"
-        ],
-        "hit": true
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "什么是不正当竞争行为？有哪些常见类型？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "## 不正当竞争行为的定义\n\n根据《中华人民共和国反不正当竞争法》第二条规定：\n\n> **不正当竞争行为**，是指经营者在生产经营活动中，违反本法规定，扰乱市场竞争秩序，损害其他经营者或者消费者的合法权益的行为。\n\n> **来源**：《中华人民共和国反不正当竞争法》第二条\n\n---\n\n## 常见的不正当竞争行为类型\n\n### 一、混淆行为（第七条）\n\n经营者不得实施下列混淆行为，引人误认为是他人商",
+            "elapsed": 46.28
+          }
+        ]
       },
       {
         "id": "q15",
         "question": "广告中使用绝对化用语比如国家级最高级，是否违法？",
-        "expected_sources": [
-          "中华人民共和国广告法_20210429.pdf"
-        ],
-        "actual_sources": [
-          "中华人民共和国广告法_20210429.pdf",
-          "中华人民共和国广告法_20210429.pdf",
-          "中华人民共和国产品质量法_20181229.pdf",
-          "中华人民共和国广告法_20210429.pdf",
-          "中华人民共和国广告法_20210429.pdf"
-        ],
-        "hit": true
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "广告中使用绝对化用语比如国家级最高级，是否违法？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "根据《中华人民共和国广告法》的规定，**在广告中使用\"国家级\"、\"最高级\"、\"最佳\"等绝对化用语是违法的**。\n\n## 一、法律依据\n\n**《中华人民共和国广告法》第九条第三项**明确规定：\n> 广告不得有下列情形：（三）使用\"国家级\"、\"最高级\"、\"最佳\"等用语；\n\n**来源：** 《中华人民共和国广告法》第九条\n\n## 二、违法性质\n\n这是**强制性禁止条款**，属于绝对禁止的情形。无论广告内",
+            "elapsed": 42.71
+          }
+        ]
       },
       {
         "id": "q16",
         "question": "保健食品广告能宣称有治疗效果吗？有什么限制？",
-        "expected_sources": [
-          "中华人民共和国广告法_20210429.pdf"
-        ],
-        "actual_sources": [
-          "中华人民共和国广告法_20210429.pdf",
-          "中华人民共和国食品安全法_20250912.pdf",
-          "中华人民共和国食品安全法_20250912.pdf",
-          "中华人民共和国广告法_20210429.pdf",
-          "中华人民共和国广告法_20210429.pdf"
-        ],
-        "hit": true
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "保健食品广告能宣称有治疗效果吗？有什么限制？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "根据检索到的法律条文，我来详细解答您的问题：\n\n---\n\n## **一、保健食品广告绝对不能宣称有治疗效果**\n\n这是法律的**明确禁止**规定：\n\n> **《广告法》第十八条**：保健食品广告不得涉及疾病预防、治疗功能。\n\n> **《广告法》第十七条**：除医疗、药品、医疗器械广告外，禁止其他任何广告涉及疾病治疗功能，并不得使用医疗用语或者易使推销的商品与药品、医疗器械相混淆的用语。\n\n> **",
+            "elapsed": 28.85
+          }
+        ]
       },
       {
         "id": "q17",
         "question": "电商平台对平台内商家售假是否需要承担连带责任？",
-        "expected_sources": [
-          "中华人民共和国电子商务法_20180831.pdf"
-        ],
-        "actual_sources": [
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "中华人民共和国反不正当竞争法_20250627.pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "中华人民共和国反不正当竞争法_20250627.pdf",
-          "中华人民共和国反不正当竞争法_20250627.pdf"
-        ],
-        "hit": false
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "电商平台对平台内商家售假是否需要承担连带责任？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "根据检索到的法条原文，现就电商平台对平台内商家售假的责任问题作如下解答：\n\n## 一、核心法条依据\n\n**《中华人民共和国消费者权益保护法》第四十五条明确规定：**\n\n> 网络交易平台提供者**明知或者应知**销售者或者服务者利用其平台侵害消费者合法权益，**未采取必要措施**的，依法与该销售者或者服务者承担**连带责任**。\n\n同时，该条还规定：\n> **网络交易平台提供者不能提供经营者的真实名",
+            "elapsed": 34.58
+          }
+        ]
       },
       {
         "id": "q18",
         "question": "电商商家可以自己刷单刷好评吗？法律怎么规定的？",
-        "expected_sources": [
-          "中华人民共和国电子商务法_20180831.pdf"
-        ],
-        "actual_sources": [
-          "中华人民共和国反不正当竞争法_20250627.pdf",
-          "中华人民共和国反不正当竞争法_20250627.pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
-          "中华人民共和国反不正当竞争法_20250627.pdf"
-        ],
-        "hit": false
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "电商商家可以自己刷单刷好评吗？法律怎么规定的？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "## 法律明确规定：电商商家不得刷单刷好评\n\n根据《中华人民共和国反不正当竞争法（2025年修订版）》的相关规定，电商商家刷单刷好评属于违法行为，法律明令禁止。\n\n---\n\n### 📜 具体法律条文\n\n**第九条**【来源：中华人民共和国反不正当竞争法_20250627.pdf】：\n\n> 经营者不得对其商品的性能、功能、质量、**销售状况、用户评价、曾获荣誉等作虚假或者引人误解的商业宣传**，欺骗",
+            "elapsed": 25.92
+          }
+        ]
       },
       {
         "id": "q19",
         "question": "买到不符合食品安全标准的食品，可以要求多少赔偿？",
-        "expected_sources": [
-          "中华人民共和国食品安全法_20250912.pdf"
-        ],
-        "actual_sources": [
-          "中华人民共和国食品安全法_20250912.pdf",
-          "中华人民共和国食品安全法_20250912.pdf",
-          "中华人民共和国食品安全法_20250912.pdf",
-          "中华人民共和国食品安全法_20250912.pdf",
-          "中华人民共和国食品安全法_20250912.pdf"
-        ],
-        "hit": true
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "买到不符合食品安全标准的食品，可以要求多少赔偿？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "根据《中华人民共和国食品安全法》第一百四十八条的规定，买到不符合食品安全标准的食品，您可以获得以下赔偿：\n\n---\n\n## 💰 赔偿标准\n\n### 1. 实际损失赔偿\n消费者因不符合食品安全标准的食品受到损害的，可以向**经营者**或**生产者**要求赔偿损失。生产经营者应当实行**首负责任制**，先行赔付，不得推诿。\n\n### 2. 惩罚性赔偿\n消费者除要求赔偿损失外，还可以向生产者或者经营者要",
+            "elapsed": 19.87
+          }
+        ]
       },
       {
         "id": "q20",
         "question": "进口食品需要中文标签吗？没有中文标签怎么处罚？",
-        "expected_sources": [
-          "中华人民共和国食品安全法_20250912.pdf"
-        ],
-        "actual_sources": [
-          "中华人民共和国食品安全法_20250912.pdf",
-          "中华人民共和国食品安全法_20250912.pdf",
-          "中华人民共和国食品安全法_20250912.pdf",
-          "中华人民共和国食品安全法_20250912.pdf",
-          "中华人民共和国食品安全法_20250912.pdf"
-        ],
-        "hit": true
+        "category": "法条检索",
+        "expected_tool": "legal_rag_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "进口食品需要中文标签吗？没有中文标签怎么处罚？",
+            "expected_tool": "legal_rag_search",
+            "actual_tools": [
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "根据检索的法条，为您解答如下：\n\n## 一、进口食品必须有中文标签\n\n**是的，进口食品必须要有中文标签。**\n\n根据《食品安全法》第九十七条规定：\n\n> **进口的预包装食品、食品添加剂应当有中文标签**；依法应当有说明书的，还应当有中文说明书。\n\n**中文标签应当载明以下内容：**\n- 食品的原产地\n- 境内代理商的名称、地址、联系方式\n- 标签、说明书应当符合我国有关法律、行政法规的规定和食",
+            "elapsed": 54.45
+          }
+        ]
+      },
+      {
+        "id": "q21",
+        "question": "2026年AI生成内容侵权有哪些最新的司法案例或判决？",
+        "category": "联网搜索",
+        "expected_tool": "web_legal_search",
+        "correct": false,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "2026年AI生成内容侵权有哪些最新的司法案例或判决？",
+            "expected_tool": "web_legal_search",
+            "actual_tools": [],
+            "correct": false,
+            "answer": "服务器内部错误: RateLimitError",
+            "elapsed": 1.57
+          }
+        ]
+      },
+      {
+        "id": "q22",
+        "question": "2025年跨境电商退货政策有什么新变化？",
+        "category": "联网搜索",
+        "expected_tool": "web_legal_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "2025年跨境电商退货政策有什么新变化？",
+            "expected_tool": "web_legal_search",
+            "actual_tools": [
+              "web_legal_search",
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "根据检索结果，关于2025年跨境电商退货政策的主要变化如下：\n\n---\n\n## 📜 政策依据\n\n**海关总署公告2024年第167号**《关于进一步促进跨境电商出口发展的公告》明确了跨境电商零售出口跨关区退货的新政策。\n\n---\n\n## 🔄 核心新变化：跨关区退货\n\n**主要内容**：\n\n在**20个直属海关**开展跨境电商零售出口跨关区退货监管模式试点。试点海关包括：北京、天津、大连、哈尔滨、上",
+            "elapsed": 33.94
+          }
+        ]
+      },
+      {
+        "id": "q23",
+        "question": "2026年个人信息保护法有什么最新的司法解释或修订动态？",
+        "category": "联网搜索",
+        "expected_tool": "web_legal_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "2026年个人信息保护法有什么最新的司法解释或修订动态？",
+            "expected_tool": "web_legal_search",
+            "actual_tools": [
+              "web_legal_search",
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "## 2026年个人信息保护法最新动态\n\n根据检索结果，我为您整理了2026年个人信息保护法领域的相关动态：\n\n---\n\n### 一、司法解释与法律修订\n\n| 检索内容 | 结果 |\n|---------|------|\n| 个人信息保护法最新司法解释 | ❌ 未发现2026年发布新的司法解释 |\n| 个人信息保护法本身修订 | ❌ 未发现2026年有新的修订 |\n\n---\n\n### 二、最新政策",
+            "elapsed": 50.82
+          }
+        ]
+      },
+      {
+        "id": "q24",
+        "question": "2025年外卖平台骑手劳动关系认定有什么新规定或典型案例？",
+        "category": "联网搜索",
+        "expected_tool": "web_legal_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "2025年外卖平台骑手劳动关系认定有什么新规定或典型案例？",
+            "expected_tool": "web_legal_search",
+            "actual_tools": [
+              "web_legal_search",
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "根据系统指令，我已先调用 `legal_rag_search` 工具检索法条原文，现将检索结果结合联网搜索信息为您解答：\n\n---\n\n## 🔍 检索结果说明\n\n**legal_rag_search 检索结果**：\n该工具检索到的法条主要为《消费者权益保护法》、《产品质量法》、《反不正当竞争法》的相关内容，这些法条主要涉及消费者权益保护、产品质量监管和市场竞争秩序，**未直接涉及外卖骑手劳动关系认定",
+            "elapsed": 72.79
+          }
+        ]
+      },
+      {
+        "id": "q25",
+        "question": "最近一年关于大数据杀熟有什么新的处罚案例或监管规定？",
+        "category": "联网搜索",
+        "expected_tool": "web_legal_search",
+        "correct": true,
+        "consistency": "1/1",
+        "rounds": [
+          {
+            "status": "ok",
+            "question": "最近一年关于大数据杀熟有什么新的处罚案例或监管规定？",
+            "expected_tool": "web_legal_search",
+            "actual_tools": [
+              "web_legal_search",
+              "legal_rag_search"
+            ],
+            "correct": true,
+            "answer": "## 📋 最近一年大数据杀熟的监管动态与处罚规定\n\n根据检索结果，我为您整理了相关信息：\n\n---\n\n### ⚠️ 最新监管动态\n\n#### 1. \"清朗·网络平台算法典型问题治理\"专项行动\n\n| 项目 | 内容 |\n|------|------|\n| **发布机构** | 中央网信办等四部门 |\n| **实施时间** | 2024年11月24日起至**2025年2月14日** |\n| **核心内",
+            "elapsed": 54.57
+          }
+        ]
       }
     ]
   }

@@ -155,5 +155,40 @@
     "category": "法条检索",
     "expected_sources": ["中华人民共和国食品安全法_20250912.pdf"],
     "note": "进口食品标签要求，食品安全法第97条"
+  },
+  {
+    "id": "q21",
+    "question": "2026年AI生成内容侵权有哪些最新的司法案例或判决？",
+    "expect_tool": "web_legal_search",
+    "category": "联网搜索",
+    "note": "AI生成内容侵权属于前沿话题，需要搜索最新案例"
+  },
+  {
+    "id": "q22",
+    "question": "2025年跨境电商退货政策有什么新变化？",
+    "expect_tool": "web_legal_search",
+    "category": "联网搜索",
+    "note": "跨境电商政策变化快，需要搜索最新规定"
+  },
+  {
+    "id": "q23",
+    "question": "2026年个人信息保护法有什么最新的司法解释或修订动态？",
+    "expect_tool": "web_legal_search",
+    "category": "联网搜索",
+    "note": "个保法修订属于时效性信息，需要搜索最新动态"
+  },
+  {
+    "id": "q24",
+    "question": "2025年外卖平台骑手劳动关系认定有什么新规定或典型案例？",
+    "expect_tool": "web_legal_search",
+    "category": "联网搜索",
+    "note": "平台用工认定是近年热点，需要搜索最新司法实践"
+  },
+  {
+    "id": "q25",
+    "question": "最近一年关于大数据杀熟有什么新的处罚案例或监管规定？",
+    "expect_tool": "web_legal_search",
+    "category": "联网搜索",
+    "note": "大数据杀熟执法案例时效性强，需要搜索最新信息"
   }
 ]

@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
 export interface Message {
+  id: string
   role: 'user' | 'bot'
   content: string
   tools?: string[]
@@ -33,7 +34,7 @@ export default function ChatArea({ messages, isTyping }: ChatAreaProps) {
       <AnimatePresence mode="popLayout">
         {messages.map((msg, idx) => (
           <motion.div
-            key={idx}
+            key={msg.id}
             layout
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}

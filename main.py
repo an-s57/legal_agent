@@ -53,76 +53,85 @@ if FRONTEND_DIST.exists():
 class ChatRequest(BaseModel):
     session_id: str
     message: str
-
-QUICK_REPLIES = {
-    "你好": "你好！我是法律智能助手。你可以告诉我发生了什么、何时发生、造成了什么后果，以及希望获得什么帮助。",
-    "您好": "你好！我是法律智能助手。你可以告诉我发生了什么、何时发生、造成了什么后果，以及希望获得什么帮助。",
-    "嗨": "你好！我是法律智能助手。你可以告诉我发生了什么、何时发生、造成了什么后果，以及希望获得什么帮助。",
-    "在吗": "我在。你可以描述一下遇到的法律问题，我会协助你梳理相关信息。",
-    "谢谢": "不客气！如果还有法律问题，随时可以继续告诉我。",
-    "你是谁": "我是一个基于法律知识库和联网检索构建的法律智能助手。",
-    "你能做什么": "我可以协助你梳理法律问题、检索相关法律材料，并提示还需要补充哪些关键信息。",
-}
-
-
-def get_quick_reply(message: str):
-    normalized = message.strip().rstrip("。！？!?~～")
-    return QUICK_REPLIES.get(normalized)
-#添加快速回复表
+    skip_planner: bool = False
 
 @app.post("/legal/chat")
-async def legal_chat(req: ChatRequest):
+async def legal_chat(req: ChatRequest, background_tasks: BackgroundTasks):
+    print(f"[DEBUG] /legal/chat skip_planner={req.skip_planner} msg={req.message[:30]}", flush=True)
     request_id = uuid.uuid4().hex[:8]
     request_started_at = time.perf_counter()
     print(
         f"[PERF] trace={request_id} stage=request status=start route=chat",
         flush=True,
     )
-    session = get_session(req.session_id)
 
-    history = []
-    for turn in session["history"]:
-        history.append(HumanMessage(content=turn["human"]))
-        history.append(AIMessage(content=turn["ai"]))
+    try:
+        session = get_session(req.session_id)
 
-    case_summary = (
-        json.dumps(session["case_summary"], ensure_ascii=False)
-        if session["case_summary"]
-        else ""
-    )
+        history = []
+        for turn in session["history"]:
+            history.append(HumanMessage(content=turn["human"]))
+            history.append(AIMessage(content=turn["ai"]))
 
-    result = await run_legal_agent(
-        req.message,
-        history,
-        case_summary,
-        request_id=request_id,
-    )
-    answer = result["output"]
+        case_summary = (
+            json.dumps(session["case_summary"], ensure_ascii=False)
+            if session["case_summary"]
+            else ""
+        )
 
-    save_exchange(req.session_id, req.message, answer)
+        result = await run_legal_agent(
+            req.message,
+            history,
+            case_summary,
+            request_id=request_id,
+            skip_planner=req.skip_planner,
+        )
+        answer = result["output"]
 
-    exchange = f"用户：{req.message}\n助手：{answer}"
-    updated_summary = update_case_summary(
-        req.session_id,
-        exchange,
-        request_id=request_id,
-    )
+        save_exchange(req.session_id, req.message, answer)
 
-    tools_used = [step[0] for step in result.get("intermediate_steps", [])]
+        exchange = f"用户：{req.message}\n助手：{answer}"
+        background_tasks.add_task(
+            update_case_summary,
+            req.session_id,
+            exchange,
+            request_id,
+        )
 
-    duration_ms = (time.perf_counter() - request_started_at) * 1000
-    print(
-        f"[PERF] trace={request_id} stage=request_total "
-        f"duration_ms={duration_ms:.0f} status=ok route=chat",
-        flush=True,
-    )
+        tools_used = [step[0] for step in result.get("intermediate_steps", [])]
 
-    return {
-        "answer": answer,
-        "session_id": req.session_id,
-        "tools_used": tools_used,
-        "case_summary": updated_summary,
-    }
+        duration_ms = (time.perf_counter() - request_started_at) * 1000
+        print(
+            f"[PERF] trace={request_id} stage=request_total "
+            f"duration_ms={duration_ms:.0f} status=ok route=chat",
+            flush=True,
+        )
+
+        return {
+            "answer": answer,
+            "session_id": req.session_id,
+            "tools_used": tools_used,
+            "case_summary": session["case_summary"],
+        }
+
+    except Exception as e:
+        import traceback
+        duration_ms = (time.perf_counter() - request_started_at) * 1000
+        print(f"[ERROR] trace={request_id} error={type(e).__name__}: {e}", flush=True)
+        traceback.print_exc()
+        print(
+            f"[PERF] trace={request_id} stage=request_total "
+            f"duration_ms={duration_ms:.0f} status=error route=chat "
+            f"error_type={type(e).__name__}",
+            flush=True,
+        )
+        return {
+            "answer": f"服务器内部错误: {type(e).__name__}",
+            "session_id": req.session_id,
+            "tools_used": [],
+            "case_summary": {},
+            "error": str(e),
+        }
 
 
 @app.post("/legal/chat/stream")
@@ -134,28 +143,6 @@ async def legal_chat_stream(req: ChatRequest,background_tasks:BackgroundTasks):
         flush=True,
     )
     session = get_session(req.session_id)
-    quick_reply=get_quick_reply(req.message)
-    if quick_reply:
-        save_exchange(req.session_id, req.message, quick_reply)
-
-        duration_ms = (time.perf_counter() - request_started_at) * 1000
-        print(
-            f"[PERF] trace={request_id} stage=request_total "
-            f"duration_ms={duration_ms:.0f} status=ok route=quick_reply",
-            flush=True,
-        )
-
-        async def quick_reply_generator():#异步生成器对象
-            token_event={"type":"token","text":quick_reply}
-            done_event={"type":"done","tools_used":[]}
-
-            yield f"data: {json.dumps(token_event,ensure_ascii=False)}\n\n"
-            yield f"data: {json.dumps(done_event,ensure_ascii=False)}\n\n"
-
-        return StreamingResponse(
-            quick_reply_generator(),
-            media_type="text/event-stream"
-        )
 
     history = []
 
@@ -177,6 +164,7 @@ async def legal_chat_stream(req: ChatRequest,background_tasks:BackgroundTasks):
             history,
             case_summary,
             request_id=request_id,
+            skip_planner=req.skip_planner,
         ):
             yield f"data: {json.dumps(event,ensure_ascii=False)}\n\n"
 

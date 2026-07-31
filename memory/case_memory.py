@@ -1,14 +1,10 @@
 """会话管理 — SQLite 会话/消息持久化 + LLM 增量案情摘要。"""
 import json
-import os
 import sqlite3
 import time
 from pathlib import Path
 
-from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
-
-load_dotenv()
+from llm_client import llm
 
 
 #数据库
@@ -16,12 +12,15 @@ DATA_DIR=Path(__file__).resolve().parent.parent/"data"
 DB_PATH=DATA_DIR/"legal_agent.db"
 #数据库路径
 
+MAX_LOAD_MESSAGES = 100  # 最多从 DB 加载最近 100 条消息（50 轮），Agent 层会进一步截断
+
 def init_db()->None:
     DATA_DIR.mkdir(parents=True,exist_ok=True)
 
     conn=sqlite3.connect(DB_PATH)
     try:
         #execute向数据库执行SQL操作
+        conn.execute("PRAGMA journal_mode=WAL")  # 并发读写更稳定，后台摘要更新与请求互不阻塞
         conn.execute("PRAGMA foreign_keys=ON")#消息必须属于某个会话的关系
         conn.execute("""
             CREATE TABLE IF NOT EXISTS sessions(
@@ -139,11 +138,13 @@ def load_session_from_db(session_id:str)->dict:
             SELECT role,content
             FROM messages
             WHERE session_id=?
-            ORDER BY id
+            ORDER BY id DESC
+            LIMIT ?
             """,
-            (session_id,),
+            (session_id, MAX_LOAD_MESSAGES),
 
-        ).fetchall()#历史对话
+        ).fetchall()#历史对话（降序取最近 N 条，Python 侧反转回正序）
+        message_rows = list(reversed(message_rows))
 
         case_summary=json.loads(summary_row[0]) if summary_row else {}
         history=[]
@@ -159,12 +160,6 @@ def load_session_from_db(session_id:str)->dict:
     finally:
         conn.close()
 
-
-llm = ChatOpenAI(
-    model="glm-4.7",
-    openai_api_key=os.getenv("GLM_API_KEY"),
-    openai_api_base="https://open.bigmodel.cn/api/paas/v4/",
-)
 
 
 def get_session(session_id: str) -> dict:
