@@ -1,8 +1,8 @@
 """FAISS 向量库 — 自定义 Ollama 嵌入 + 法律文档检索"""
 import os
 import time
-os.environ['TRANSFORMERS_OFFLINE'] = '1'#不检查更新
-os.environ['HF_HUB_OFFLINE'] = '1'#不联网下载
+os.environ.setdefault('TRANSFORMERS_OFFLINE', '1')  # 有本地缓存时不检查更新
+os.environ.setdefault('HF_HUB_OFFLINE', '1')         # 有本地缓存时不联网下载
 import torch
 import httpx
 from transformers import AutoModelForSequenceClassification,AutoTokenizer
@@ -60,18 +60,52 @@ def _get_reranker():
     global _reranker_model, _reranker_tokenizer
     if _reranker_model is None:
         _reranker_tokenizer = AutoTokenizer.from_pretrained(RERANKER_MODEL_NAME)
-        _reranker_model = AutoModelForSequenceClassification.from_pretrained(
-            RERANKER_MODEL_NAME, torch_dtype=torch.float32
-        )
+        try:
+            _reranker_model = AutoModelForSequenceClassification.from_pretrained(
+                RERANKER_MODEL_NAME, torch_dtype=torch.float32
+            )
+        except Exception:
+            # 离线模式下没有本地缓存时，临时取消离线标志允许联网下载
+            _saved_offline = os.environ.pop("TRANSFORMERS_OFFLINE", None)
+            _saved_hf = os.environ.pop("HF_HUB_OFFLINE", None)
+            try:
+                _reranker_model = AutoModelForSequenceClassification.from_pretrained(
+                    RERANKER_MODEL_NAME, torch_dtype=torch.float32
+                )
+            finally:
+                if _saved_offline: os.environ["TRANSFORMERS_OFFLINE"] = _saved_offline
+                if _saved_hf: os.environ["HF_HUB_OFFLINE"] = _saved_hf
         _reranker_model.eval()
+        # INT8 动态量化：把 Linear 层权重从 float32 压成 int8，
+        # CPU 推理快 2~3 倍；排序只看分数相对大小，重排质量几乎不变。
+        _reranker_model = torch.quantization.quantize_dynamic(
+            _reranker_model, {torch.nn.Linear}, dtype=torch.qint8
+        )
     return _reranker_model, _reranker_tokenizer
 
 
 def preload_reranker():
-    """启动时预加载 reranker，避免首次请求等待"""
+    """启动时预加载 reranker，避免首次请求等待。
+
+    新机器没有本地缓存时，允许联网下载模型（跳过离线标志）。
+    加载失败时不阻塞启动，降级为首次请求时再加载。
+    """
+    global _reranker_model, _reranker_tokenizer
+    if _reranker_model is not None:
+        return
     print("[RAG] 预加载 reranker 模型...", flush=True)
-    _get_reranker()
-    print("[RAG] reranker 模型加载完成", flush=True)
+    try:
+        _get_reranker()
+        print("[RAG] reranker 模型加载完成", flush=True)
+    except Exception as e:
+        print(
+            f"[RAG] reranker 预加载失败（{type(e).__name__}: {e}），"
+            f"将在首次检索时重试。如需手动下载："
+            f"pip install huggingface_hub && "
+            f"python -c \"from huggingface_hub import snapshot_download; "
+            f"snapshot_download('{RERANKER_MODEL_NAME}')\"",
+            flush=True,
+        )
 
 def _get_faiss_db():
     global _faiss_db
@@ -87,7 +121,7 @@ def _rerank(query:str,docs:list,top_k:int=5)->list:
     model,tokenizer=_get_reranker()
     pairs=[[query,doc.page_content] for doc in docs]#配对
     with torch.no_grad():
-        inputs = tokenizer(pairs, padding=True, truncation=True, return_tensors="pt", max_length=512)#翻译
+        inputs = tokenizer(pairs, padding=True, truncation=True, return_tensors="pt", max_length=384)#翻译
         scores=model(**inputs).logits.squeeze(-1)#打分
         ranked_indices = scores.argsort(descending=True)[:top_k]#排序取前5条
         return [docs[i] for i in ranked_indices]
@@ -147,7 +181,7 @@ def add_legal_documents(pdf_folder:str):
     print(f"新增{len(new_chunks)}个文本段，来自{len(set(c.metadata['source'] for c in new_chunks))}个文件")
     return faiss_db
 
-def retrieve_legal_docs(query: str, k: int = 20, top_k: int = 5) -> list[str]:
+def retrieve_legal_docs(query: str, k: int = 30, top_k: int = 5) -> list[str]:
     """对外暴露的检索接口，返回字符串列表"""
     #向量库加载用时
     load_start=time.perf_counter()

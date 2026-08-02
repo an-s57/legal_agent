@@ -195,6 +195,7 @@ async def legal_chat_stream(req: ChatRequest,background_tasks:BackgroundTasks):
             raise
         except Exception as exc:
             error_type = type(exc).__name__
+            yield f'data: {json.dumps({"type": "error", "message": f"请求处理失败: {error_type}"}, ensure_ascii=False)}\n\n'
             raise
         finally:
             duration_ms = (time.perf_counter() - request_started_at) * 1000

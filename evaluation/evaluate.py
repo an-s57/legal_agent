@@ -24,7 +24,8 @@ from rag.retriever import _get_faiss_db, _rerank
 API_BASE = "http://127.0.0.1:8000"
 QUESTIONS_PATH = Path(__file__).parent / "questions.json"
 RESULTS_PATH = Path(__file__).parent / "results.json"
-RATE_LIMIT_DELAY = 20  # GLM 免费 API 限流严格，题间等待秒数
+RATE_LIMIT_DELAY = 60   # GLM 免费 API 限流严格，题间等待秒数
+ROUND_DELAY = 15        # 同一题的轮间等待秒数
 #结果存储地
 
 # ═══════════════════════════════════════════════════════════════
@@ -184,6 +185,11 @@ def evaluate_tool_selection(questions: list, rounds: int = 1) -> dict:
             else:
                 print(f"  round {r+1}: [ERROR] {result['error']}")
 
+            # 轮间等待，避免连续 API 调用触发限流
+            if r < rounds - 1:
+                print(f"  ⏳ 轮间等待 {ROUND_DELAY}s...", flush=True)
+                time.sleep(ROUND_DELAY)
+
         # 题间延迟，避免 GLM API 限流（429）
         if q != questions[-1]:  # 最后一题不用等
             # 如果本轮遇到限流错误，额外多等
@@ -191,7 +197,7 @@ def evaluate_tool_selection(questions: list, rounds: int = 1) -> dict:
                 "RateLimit" in r.get("error", "") or "RateLimit" in r.get("answer", "")
                 for r in round_results
             )
-            extra = 30 if has_rate_limit else 0
+            extra = 60 if has_rate_limit else 0
             total_wait = RATE_LIMIT_DELAY + extra
             msg = f"  ⏳ 等待 {total_wait}s 避免 API 限流"
             if extra:
@@ -217,6 +223,24 @@ def evaluate_tool_selection(questions: list, rounds: int = 1) -> dict:
             "consistency": consistency,
             "rounds": round_results,
         })
+
+        # 增量保存：每跑完一道题就存一次，防止意外中断丢失数据
+        _partial = {
+            "timestamp": datetime.now().isoformat(),
+            "rounds": rounds,
+            "tool_selection": {
+                "total": len(all_results),
+                "correct": sum(1 for r in all_results if r["correct"]),
+                "accuracy": round(sum(1 for r in all_results if r["correct"]) / len(all_results) * 100, 1) if all_results else 0,
+                "details": all_results,
+                "partial": True,
+                "completed": len(all_results),
+            },
+        }
+        RESULTS_PATH.write_text(
+            json.dumps(_partial, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
 
     # 统计
     total = len(all_results)

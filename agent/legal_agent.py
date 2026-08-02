@@ -329,6 +329,11 @@ async def run_legal_agent_stream(
 
         elif kind == "on_chat_model_end":
             if node == "planner":
+                # invoke() 不会触发 on_chat_model_stream，planner_buf 可能为空。
+                # 兜底：从 on_chat_model_end 的 output 取完整文本。
+                if not planner_buf:
+                    output = event.get("data", {}).get("output")
+                    planner_buf = getattr(output, "content", "") if output else ""
                 result = _extract_json(planner_buf)
                 if result and not result.get("info_complete", True) and result.get("follow_up"):
                     yield {"type": "planner_question", "text": result["follow_up"]}
