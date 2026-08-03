@@ -114,6 +114,7 @@ def evaluate_retrieval(
     top_k: int = 5,
     faiss_db=None,
     verbose: bool = False,
+    rerank: bool = True,
 ) -> dict:
     """直接评测 FAISS + Rerank，不经过 FastAPI、Agent 或远程大模型。
 
@@ -142,7 +143,12 @@ def evaluate_retrieval(
         }
 
     print("=" * 72)
-    print(f"检索评测：FAISS k={k} → Rerank Top-{top_k}（{len(retrieval_questions)} 题）")
+    rerank_label = (
+        f"FAISS k={k} → Rerank Top-{top_k}"
+        if rerank
+        else f"FAISS k={k} → 直接取 Top-{top_k}（无 Rerank）"
+    )
+    print(f"检索评测：{rerank_label}（{len(retrieval_questions)} 题）")
     print("=" * 72)
 
     faiss_db = faiss_db or _get_faiss_db()
@@ -158,11 +164,15 @@ def evaluate_retrieval(
 
         rerank_start = time.perf_counter()
         rerank_fallback = False
-        try:
-            docs_top = _rerank(q["question"], candidate_docs, top_k=top_k)
-        except Exception as e:
-            rerank_fallback = True
-            print(f"  ⚠️ [{q['id']}] Rerank 失败，回退到 FAISS Top-{top_k}: {e}")
+        if rerank:
+            try:
+                docs_top = _rerank(q["question"], candidate_docs, top_k=top_k)
+            except Exception as e:
+                rerank_fallback = True
+                print(f"  ⚠️ [{q['id']}] Rerank 失败，回退到 FAISS Top-{top_k}: {e}")
+                docs_top = candidate_docs[:top_k]
+        else:
+            # 消融实验：跳过 reranker，直接用 FAISS 粗排前 top_k
             docs_top = candidate_docs[:top_k]
         rerank_ms = (time.perf_counter() - rerank_start) * 1000
         total_retrieval_ms = vector_search_ms + rerank_ms
@@ -276,6 +286,7 @@ def run_retrieval_k_sweep(
     k_values: list[int],
     top_k: int,
     verbose: bool = False,
+    rerank: bool = True,
 ) -> dict:
     """在同一进程中依次评测多个 k，避免每次重复加载 FAISS 和 reranker。"""
     if not retrieval_questions:
@@ -305,7 +316,8 @@ def run_retrieval_k_sweep(
         )
 
     reranker_load_start = time.perf_counter()
-    _get_reranker()
+    if rerank:
+        _get_reranker()
     reranker_load_ms = (time.perf_counter() - reranker_load_start) * 1000
 
     warmup = {"status": "ok", "vector_search_ms": 0, "rerank_ms": 0}
@@ -317,7 +329,8 @@ def run_retrieval_k_sweep(
             (time.perf_counter() - warmup_vector_start) * 1000, 2
         )
         warmup_rerank_start = time.perf_counter()
-        _rerank(warmup_question, warmup_docs, top_k=top_k)
+        if rerank:
+            _rerank(warmup_question, warmup_docs, top_k=top_k)
         warmup["rerank_ms"] = round(
             (time.perf_counter() - warmup_rerank_start) * 1000, 2
         )
@@ -334,6 +347,7 @@ def run_retrieval_k_sweep(
             top_k=top_k,
             faiss_db=faiss_db,
             verbose=verbose,
+            rerank=rerank,
         )
         runs.append(report)
 
@@ -378,7 +392,8 @@ def run_retrieval_k_sweep(
             "k_values": unique_k_values,
             "top_k": top_k,
             "faiss_document_count": index_document_count,
-            "reranker_model": RERANKER_MODEL_NAME,
+            "reranker_model": RERANKER_MODEL_NAME if rerank else None,
+            "rerank": rerank,
             "faiss_load_ms": round(faiss_load_ms, 2),
             "reranker_preload_ms": round(reranker_load_ms, 2),
             "warmup": warmup,
@@ -622,6 +637,10 @@ if __name__ == "__main__":
         help="打印每题 Top 文档来源和页码；默认只打印一行摘要"
     )
     parser.add_argument(
+        "--no-rerank", action="store_true",
+        help="消融实验：跳过 Rerank，直接用 FAISS 粗排前 top_k 作为结果"
+    )
+    parser.add_argument(
         "--rounds", type=int, default=1,
         help="工具选择评测的轮数（默认1，建议正式评测用3）。检索评测无需多轮。"
     )
@@ -663,6 +682,7 @@ if __name__ == "__main__":
             k_values=args.k_values,
             top_k=args.top_k,
             verbose=args.verbose,
+            rerank=not args.no_rerank,
         )
         report["config"].update({
             "questions_path": str(args.questions),
@@ -670,8 +690,9 @@ if __name__ == "__main__":
             "limit": args.limit,
         })
 
+        rerank_tag = "norerank" if args.no_rerank else "rerank"
         default_name = (
-            f"k_sweep_{args.split}_"
+            f"k_sweep_{args.split}_{rerank_tag}_"
             f"{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
         )
         output_path = args.output or K_TUNING_RESULTS_DIR / default_name

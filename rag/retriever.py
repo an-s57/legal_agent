@@ -121,7 +121,7 @@ def _rerank(query:str,docs:list,top_k:int=5)->list:
     model,tokenizer=_get_reranker()
     pairs=[[query,doc.page_content] for doc in docs]#配对
     with torch.no_grad():
-        inputs = tokenizer(pairs, padding=True, truncation=True, return_tensors="pt", max_length=384)#翻译
+        inputs = tokenizer(pairs, padding=True, truncation=True, return_tensors="pt", max_length=512)#翻译
         scores=model(**inputs).logits.squeeze(-1)#打分
         ranked_indices = scores.argsort(descending=True)[:top_k]#排序取前5条
         return [docs[i] for i in ranked_indices]
