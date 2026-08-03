@@ -10,7 +10,9 @@ from langchain_openai import ChatOpenAI
 load_dotenv()
 
 llm = ChatOpenAI(
-    model="glm-4.7",
-    openai_api_key=os.getenv("GLM_API_KEY"),
-    openai_api_base="https://open.bigmodel.cn/api/paas/v4/",
+    model="deepseek-v4-flash",
+    openai_api_key=os.getenv("DEEPSEEK_API_KEY"),
+    openai_api_base="https://api.deepseek.com/v1",
+    timeout=60,        # 单次请求上限 60s，防止 GLM/DeepSeek 慢窗口拖死服务器
+    max_retries=1,     # 失败只重试一次，避免无限重试
 )

@@ -24,7 +24,7 @@ from rag.retriever import _get_faiss_db, _rerank
 API_BASE = "http://127.0.0.1:8000"
 QUESTIONS_PATH = Path(__file__).parent / "questions.json"
 RESULTS_PATH = Path(__file__).parent / "results.json"
-RATE_LIMIT_DELAY = 60   # GLM 免费 API 限流严格，题间等待秒数
+RATE_LIMIT_DELAY = 5    # DeepSeek 并发高不限流，题间等待降到 5s（原来 GLM 限流严格要 60s）
 ROUND_DELAY = 15        # 同一题的轮间等待秒数
 #结果存储地
 

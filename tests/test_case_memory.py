@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 # 测试不调用远程 LLM；占位值只保证导入模块时不依赖真实密钥。
-os.environ.setdefault("GLM_API_KEY", "test-key")
+os.environ.setdefault("DEEPSEEK_API_KEY", "test-key")
 
 from memory import case_memory
 
