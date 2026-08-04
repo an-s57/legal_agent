@@ -69,7 +69,7 @@ legal_agent/
 
 | 组件 | 技术 |
 |------|------|
-| LLM | GLM-4.7（智谱 AI） |
+| LLM | DeepSeek V4 Flash（deepseek-v4-flash） |
 | Agent 框架 | LangGraph（手写 StateGraph，含 Planner + ReAct） |
 | 向量库 | FAISS（本地） |
 | Embedding | nomic-embed-text（Ollama 本地服务） |
@@ -108,7 +108,7 @@ Copy-Item .env.example .env
 `.env` 内容：
 
 ```
-GLM_API_KEY=你的智谱API密钥
+DEEPSEEK_API_KEY=你的DeepSeek API密钥
 # 联网搜索主服务；未配置或调用失败时会自动尝试 ddgs 兜底
 ANYSEARCH_API_KEY=你的AnySearch密钥
 ```
@@ -150,7 +150,7 @@ python main.py
 
 ### 7. 运行基础回归测试
 
-该测试只验证 SQLite 会话的保存与恢复，不调用 Ollama、GLM 或联网搜索：
+该测试只验证 SQLite 会话的保存与恢复，不调用 Ollama、DeepSeek 或联网搜索：
 
 ```bash
 python -m unittest discover -s tests -v
@@ -227,7 +227,7 @@ python -m unittest discover -s tests -v
 
 ### Reranker 二次排序
 
-FAISS 粗召回 30 条后，用 CrossEncoder（`bge-reranker-base`）对 query-doc 对重新打分，取 Top-5。当前参数由 50 道人工标注检索题调优得到：在 17 道验证题上，正确来源命中率为 17/17，严格证据命中率为 15/17（88.2%）。
+FAISS 粗召回 40 条后，用 CrossEncoder（`bge-reranker-base`）对 query-doc 对重新打分，取 Top-5。当前参数由 50 道人工标注检索题调优得到：k 扫描显示 40 之后证据命中饱和（开发集 33 题 26/33=78.8%），验证集 17 题来源命中 17/17=100%、严格证据命中 13/17=76.5%。消融实验证明 Reranker 不可省略：关闭后验证集来源命中降至 12/17=70.6%。
 
 ### 性能 Trace 与链路排查
 
@@ -246,7 +246,7 @@ FAISS 粗召回 30 条后，用 CrossEncoder（`bge-reranker-base`）对 query-d
 
 ## 检索评测与参数选择
 
-使用 33 道开发题选择检索参数，再以 17 道验证题确认。当前线上配置为 **FAISS 粗召回 K=30、Reranker 返回 Top-K=5**；完整的题集边界、指标定义、耗时、原始结果与复现命令见 [evaluation/README.md](./evaluation/README.md)。
+使用 33 道开发题选择检索参数，再以 17 道验证题确认。当前线上配置为 **FAISS 粗召回 K=40、Reranker 返回 Top-K=5**（top_k 在 3~7 无区分度，取 5 保留容错余量）；完整的题集边界、指标定义、耗时、原始结果与复现命令见 [evaluation/README.md](./evaluation/README.md)。
 
 ## License
 

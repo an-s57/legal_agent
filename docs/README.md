@@ -22,7 +22,7 @@
 
 ## 技术栈
 
-- **LLM：** GLM-4.7（Agent 推理）+ nomic-embed-text（文本转向量）
+- **LLM：** DeepSeek V4 Flash（Agent 推理）+ nomic-embed-text（文本转向量）
 - **框架：** LangGraph + LangChain + FastAPI
 - **向量库：** FAISS（本地）
 - **嵌入服务：** Ollama（本地 127.0.0.1:11434）

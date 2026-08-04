@@ -4,8 +4,14 @@
     "question": "买到存在安全隐患的电热水壶，消费者在人身和财产安全方面享有哪些权利？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"],
-    "gold_evidence": {"article": "第七条", "pdf_page": 2, "anchor": "享有人身、财产安全不受损害的权利"},
+    "expected_sources": [
+      "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+    ],
+    "gold_evidence": {
+      "article": "第七条",
+      "pdf_page": 2,
+      "anchor": "享有人身、财产安全不受损害的权利"
+    },
     "difficulty": "easy",
     "split": "development"
   },
@@ -14,8 +20,14 @@
     "question": "商家不肯说明商品的生产日期、成分和售后规则，消费者有权要求了解这些信息吗？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"],
-    "gold_evidence": {"article": "第八条", "pdf_page": 3, "anchor": "知悉其购买、使用的商品或者接受的服务的真实情况"},
+    "expected_sources": [
+      "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+    ],
+    "gold_evidence": {
+      "article": "第八条",
+      "pdf_page": 3,
+      "anchor": "知悉其购买、使用的商品或者接受的服务的真实情况"
+    },
     "difficulty": "easy",
     "split": "development"
   },
@@ -24,8 +36,14 @@
     "question": "和商家协商不成时，消费者权益纠纷通常可以通过哪些法定途径解决？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"],
-    "gold_evidence": {"article": "第三十九条", "pdf_page": 10, "anchor": "消费者权益争议的，可以通过下列途径解决"},
+    "expected_sources": [
+      "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+    ],
+    "gold_evidence": {
+      "article": "第三十九条",
+      "pdf_page": 10,
+      "anchor": "消费者权益争议的，可以通过下列途径解决"
+    },
     "difficulty": "easy",
     "split": "development"
   },
@@ -34,8 +52,14 @@
     "question": "商场地面湿滑却没有放警示牌，顾客摔伤，商场是否负有安全保障义务？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"],
-    "gold_evidence": {"article": "第十八条", "pdf_page": 5, "anchor": "经营场所的经营者，应当对消费者尽到安全保障义务"},
+    "expected_sources": [
+      "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+    ],
+    "gold_evidence": {
+      "article": "第十八条",
+      "pdf_page": 5,
+      "anchor": "经营场所的经营者，应当对消费者尽到安全保障义务"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -44,8 +68,14 @@
     "question": "商家发现已经售出的充电宝存在爆炸风险后，法律上应当采取哪些措施？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"],
-    "gold_evidence": {"article": "第十九条", "pdf_page": 5, "anchor": "立即向有关行政部门报告和告知消费者"},
+    "expected_sources": [
+      "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+    ],
+    "gold_evidence": {
+      "article": "第十九条",
+      "pdf_page": 5,
+      "anchor": "立即向有关行政部门报告和告知消费者"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -54,8 +84,14 @@
     "question": "商家拒绝给购物小票或服务单据，消费者可以要求其出具凭证吗？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"],
-    "gold_evidence": {"article": "第二十二条", "pdf_page": 5, "anchor": "购货凭证或者服务单据"},
+    "expected_sources": [
+      "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+    ],
+    "gold_evidence": {
+      "article": "第二十二条",
+      "pdf_page": 5,
+      "anchor": "购货凭证或者服务单据"
+    },
     "difficulty": "easy",
     "split": "development"
   },
@@ -64,8 +100,14 @@
     "question": "经营者提供的商品或者服务不符合质量要求时，消费者可以依法要求哪些补救？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"],
-    "gold_evidence": {"article": "第二十四条", "pdf_page": 6, "anchor": "商品或者服务不符合质量要求的"},
+    "expected_sources": [
+      "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+    ],
+    "gold_evidence": {
+      "article": "第二十四条",
+      "pdf_page": 6,
+      "anchor": "商品或者服务不符合质量要求的"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -74,8 +116,14 @@
     "question": "网购普通商品收到后不想要了，在什么条件下可以七天无理由退货？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"],
-    "gold_evidence": {"article": "第二十五条", "pdf_page": 6, "anchor": "自收到商品之日起七日内退货"},
+    "expected_sources": [
+      "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+    ],
+    "gold_evidence": {
+      "article": "第二十五条",
+      "pdf_page": 6,
+      "anchor": "自收到商品之日起七日内退货"
+    },
     "difficulty": "easy",
     "split": "development"
   },
@@ -84,8 +132,14 @@
     "question": "网上定制了刻字礼品，商家说不适用七天无理由退货，这种退货例外如何判断？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"],
-    "gold_evidence": {"article": "第二十五条", "pdf_page": 6, "anchor": "但下列商品除外：（一）消费者定作的"},
+    "expected_sources": [
+      "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+    ],
+    "gold_evidence": {
+      "article": "第二十五条",
+      "pdf_page": 6,
+      "anchor": "但下列商品除外：（一）消费者定作的"
+    },
     "difficulty": "hard",
     "split": "validation"
   },
@@ -94,8 +148,14 @@
     "question": "健身房合同写着“办卡后概不退款、经营者不承担任何责任”，这种格式条款有效吗？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"],
-    "gold_evidence": {"article": "第二十六条", "pdf_page": 7, "anchor": "不得以格式条款、通知、声明、店堂告示等方式"},
+    "expected_sources": [
+      "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+    ],
+    "gold_evidence": {
+      "article": "第二十六条",
+      "pdf_page": 7,
+      "anchor": "不得以格式条款、通知、声明、店堂告示等方式"
+    },
     "difficulty": "medium",
     "split": "validation"
   },
@@ -104,8 +164,14 @@
     "question": "App 未经同意把消费者手机号和地址卖给第三方，经营者收集和使用个人信息应遵守什么原则？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"],
-    "gold_evidence": {"article": "第二十九条", "pdf_page": 7, "anchor": "消费者个人信息，应当遵循合法、正当、必要的原则"},
+    "expected_sources": [
+      "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+    ],
+    "gold_evidence": {
+      "article": "第二十九条",
+      "pdf_page": 7,
+      "anchor": "消费者个人信息，应当遵循合法、正当、必要的原则"
+    },
     "difficulty": "medium",
     "split": "validation"
   },
@@ -114,8 +180,14 @@
     "question": "美容院收了预付款却关门不提供服务，消费者可以要求退回预付款和哪些费用？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"],
-    "gold_evidence": {"article": "第五十三条", "pdf_page": 14, "anchor": "未按照约定提供的，应当按照消费者的要求履行约定"},
+    "expected_sources": [
+      "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+    ],
+    "gold_evidence": {
+      "article": "第五十三条",
+      "pdf_page": 14,
+      "anchor": "未按照约定提供的，应当按照消费者的要求履行约定"
+    },
     "difficulty": "medium",
     "split": "validation"
   },
@@ -124,8 +196,14 @@
     "question": "商品包装上伪造质量认证标志和产地，属于产品质量法禁止的行为吗？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国产品质量法_20181229.pdf"],
-    "gold_evidence": {"article": "第五条", "pdf_page": 1, "anchor": "禁止伪造或者冒用认证标志等质量"},
+    "expected_sources": [
+      "中华人民共和国产品质量法_20181229.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第五条",
+      "pdf_page": 2,
+      "anchor": "禁止伪造或者冒用认证标志等质量"
+    },
     "difficulty": "easy",
     "split": "development"
   },
@@ -134,8 +212,14 @@
     "question": "商家把检验不合格的产品当作合格产品销售，产品质量法对此有什么要求？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国产品质量法_20181229.pdf"],
-    "gold_evidence": {"article": "第十二条", "pdf_page": 2, "anchor": "产品质量应当检验合格"},
+    "expected_sources": [
+      "中华人民共和国产品质量法_20181229.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第十二条",
+      "pdf_page": 4,
+      "anchor": "产品质量应当检验合格"
+    },
     "difficulty": "easy",
     "split": "development"
   },
@@ -144,8 +228,14 @@
     "question": "可能危及人身安全的工业产品，在国家标准和行业标准方面需要满足什么要求？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国产品质量法_20181229.pdf"],
-    "gold_evidence": {"article": "第十三条", "pdf_page": 2, "anchor": "可能危及人体健康和人身、财产"},
+    "expected_sources": [
+      "中华人民共和国产品质量法_20181229.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第十三条",
+      "pdf_page": 4,
+      "anchor": "可能危及人体健康和人身、财产"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -154,8 +244,14 @@
     "question": "非食品工业产品的包装标识应标明哪些基本信息；限期使用产品是否应标明生产日期和安全使用期或失效日期？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国产品质量法_20181229.pdf"],
-    "gold_evidence": {"article": "第二十七条", "pdf_page": 4, "anchor": "产品或者其包装上的标识必须"},
+    "expected_sources": [
+      "中华人民共和国产品质量法_20181229.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第二十七条",
+      "pdf_page": 8,
+      "anchor": "产品或者其包装上的标识必须"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -164,8 +260,14 @@
     "question": "易燃易爆或有毒产品的包装，是否必须有中文警示和储运注意事项？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国产品质量法_20181229.pdf"],
-    "gold_evidence": {"article": "第二十八条", "pdf_page": 4, "anchor": "中文警示说明，标明储运注意事项"},
+    "expected_sources": [
+      "中华人民共和国产品质量法_20181229.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第二十八条",
+      "pdf_page": 9,
+      "anchor": "中文警示说明，标明储运注意事项"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -174,8 +276,14 @@
     "question": "厂家继续生产国家已经明令淘汰的产品，是否合法？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国产品质量法_20181229.pdf"],
-    "gold_evidence": {"article": "第二十九条", "pdf_page": 4, "anchor": "生产者不得生产国家明令淘汰的产品"},
+    "expected_sources": [
+      "中华人民共和国产品质量法_20181229.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第二十九条",
+      "pdf_page": 9,
+      "anchor": "生产者不得生产国家明令淘汰的产品"
+    },
     "difficulty": "easy",
     "split": "development"
   },
@@ -184,8 +292,14 @@
     "question": "销售者进货时是否需要查验产品合格证明和其他标识？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国产品质量法_20181229.pdf"],
-    "gold_evidence": {"article": "第三十三条", "pdf_page": 4, "anchor": "验明产品合格证明和其他标识"},
+    "expected_sources": [
+      "中华人民共和国产品质量法_20181229.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第三十三条",
+      "pdf_page": 9,
+      "anchor": "销售者应当建立并执行进货检查验收制度"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -194,8 +308,14 @@
     "question": "卖家在产品中掺假、以次充好，或者用不合格品冒充合格品，法律禁止吗？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国产品质量法_20181229.pdf"],
-    "gold_evidence": {"article": "第三十九条", "pdf_page": 4, "anchor": "掺假，不得以假充真、以次充好"},
+    "expected_sources": [
+      "中华人民共和国产品质量法_20181229.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第三十九条",
+      "pdf_page": 10,
+      "anchor": "不得掺杂、掺假，不得以假充真"
+    },
     "difficulty": "medium",
     "split": "validation"
   },
@@ -204,8 +324,14 @@
     "question": "买到的产品不具备说明书承诺的使用性能，销售者应负责修理、更换或退货吗？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国产品质量法_20181229.pdf"],
-    "gold_evidence": {"article": "第四十条", "pdf_page": 4, "anchor": "销售者应当负责修理、更换、退货"},
+    "expected_sources": [
+      "中华人民共和国产品质量法_20181229.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第四十条",
+      "pdf_page": 10,
+      "anchor": "销售者应当负责修理、更换、退货"
+    },
     "difficulty": "medium",
     "split": "validation"
   },
@@ -214,8 +340,14 @@
     "question": "依据产品质量法，产品缺陷造成人身伤害时可以主张哪些赔偿项目？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国产品质量法_20181229.pdf"],
-    "gold_evidence": {"article": "第四十四条", "pdf_page": 5, "anchor": "侵害人应当赔偿医疗费"},
+    "expected_sources": [
+      "中华人民共和国产品质量法_20181229.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第四十四条",
+      "pdf_page": 12,
+      "anchor": "侵害人应当赔偿医疗费"
+    },
     "difficulty": "hard",
     "split": "validation"
   },
@@ -224,8 +356,14 @@
     "question": "法律上所说的不正当竞争行为，核心是指什么样的经营行为？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国反不正当竞争法_20250627.pdf"],
-    "gold_evidence": {"article": "第二条", "pdf_page": 1, "anchor": "违反本法规定，扰乱市场竞争秩序"},
+    "expected_sources": [
+      "中华人民共和国反不正当竞争法_20250627.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第二条",
+      "pdf_page": 2,
+      "anchor": "违反本法规定，扰乱市场竞争秩序"
+    },
     "difficulty": "easy",
     "split": "development"
   },
@@ -234,8 +372,14 @@
     "question": "擅自使用与他人有一定影响的商品名称、包装、装潢等相同或近似标识，足以使人误认有关联，属于什么行为？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国反不正当竞争法_20250627.pdf"],
-    "gold_evidence": {"article": "第七条", "pdf_page": 2, "anchor": "相同或者近似的标识"},
+    "expected_sources": [
+      "中华人民共和国反不正当竞争法_20250627.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第七条",
+      "pdf_page": 3,
+      "anchor": "相同或者近似的标识"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -244,8 +388,14 @@
     "question": "把竞争对手的企业名称或商标设成搜索关键词，诱导用户误认为两家公司有关联，违法吗？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国反不正当竞争法_20250627.pdf"],
-    "gold_evidence": {"article": "第七条", "pdf_page": 2, "anchor": "设置为搜索关键词"},
+    "expected_sources": [
+      "中华人民共和国反不正当竞争法_20250627.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第七条",
+      "pdf_page": 3,
+      "anchor": "设置为搜索关键词"
+    },
     "difficulty": "hard",
     "split": "development"
   },
@@ -254,8 +404,14 @@
     "question": "公司为了拿到订单，私下给采购人员回扣，这是否属于商业贿赂？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国反不正当竞争法_20250627.pdf"],
-    "gold_evidence": {"article": "第八条", "pdf_page": 2, "anchor": "经营者不得采用给予财物或者其他"},
+    "expected_sources": [
+      "中华人民共和国反不正当竞争法_20250627.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第八条",
+      "pdf_page": 4,
+      "anchor": "经营者不得采用给予财物或者其他"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -264,8 +420,14 @@
     "question": "经营者通过组织虚假交易、虚假评价，欺骗、误导消费者和其他经营者，属于何种不正当竞争行为？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国反不正当竞争法_20250627.pdf"],
-    "gold_evidence": {"article": "第九条", "pdf_page": 2, "anchor": "不得通过组织虚假交易、虚假评价等"},
+    "expected_sources": [
+      "中华人民共和国反不正当竞争法_20250627.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第九条",
+      "pdf_page": 4,
+      "anchor": "不得通过组织虚假交易、虚假评价等"
+    },
     "difficulty": "easy",
     "split": "development"
   },
@@ -274,8 +436,14 @@
     "question": "员工离职后把公司的客户名单和技术资料带走给竞争公司使用，可能侵犯商业秘密吗？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国反不正当竞争法_20250627.pdf"],
-    "gold_evidence": {"article": "第十条", "pdf_page": 3, "anchor": "不得实施下列侵犯商业秘密"},
+    "expected_sources": [
+      "中华人民共和国反不正当竞争法_20250627.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第十条",
+      "pdf_page": 4,
+      "anchor": "不得实施下列侵犯商业秘密"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -284,8 +452,14 @@
     "question": "商家抽奖时暗中指定内部人员中奖，或者临时改变兑奖条件，是否合法？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国反不正当竞争法_20250627.pdf"],
-    "gold_evidence": {"article": "第十一条", "pdf_page": 3, "anchor": "经营者进行有奖销售不得存在下"},
+    "expected_sources": [
+      "中华人民共和国反不正当竞争法_20250627.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第十一条",
+      "pdf_page": 5,
+      "anchor": "经营者进行有奖销售不得存在下"
+    },
     "difficulty": "hard",
     "split": "development"
   },
@@ -294,8 +468,14 @@
     "question": "企业编造竞争对手产品质量有问题的消息并传播，损害对方商誉，可能违反什么规定？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国反不正当竞争法_20250627.pdf"],
-    "gold_evidence": {"article": "第十二条", "pdf_page": 3, "anchor": "经营者不得编造、传播或者指使"},
+    "expected_sources": [
+      "中华人民共和国反不正当竞争法_20250627.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第十二条",
+      "pdf_page": 6,
+      "anchor": "经营者不得编造、传播或者指使"
+    },
     "difficulty": "medium",
     "split": "validation"
   },
@@ -304,8 +484,14 @@
     "question": "平台利用算法强迫用户关闭或卸载竞争对手合法提供的 App，可能违反什么不正当竞争规定？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国反不正当竞争法_20250627.pdf"],
-    "gold_evidence": {"article": "第十三条", "pdf_page": 3, "anchor": "经营者不得利用数据和算法、技术"},
+    "expected_sources": [
+      "中华人民共和国反不正当竞争法_20250627.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第十三条",
+      "pdf_page": 6,
+      "anchor": "经营者不得利用数据和算法、技术"
+    },
     "difficulty": "hard",
     "split": "validation"
   },
@@ -314,8 +500,14 @@
     "question": "平台强制商家按照平台定价规则低于成本销售商品，法律上如何评价？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国反不正当竞争法_20250627.pdf"],
-    "gold_evidence": {"article": "第十四条", "pdf_page": 3, "anchor": "平台经营者不得强制"},
+    "expected_sources": [
+      "中华人民共和国反不正当竞争法_20250627.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第十四条",
+      "pdf_page": 7,
+      "anchor": "平台经营者不得强制"
+    },
     "difficulty": "medium",
     "split": "validation"
   },
@@ -324,8 +516,14 @@
     "question": "广告内容的真实性由谁负责？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国广告法_20210429.pdf"],
-    "gold_evidence": {"article": "第四条", "pdf_page": 1, "anchor": "广告主应当对广告内容的真实性负责"},
+    "expected_sources": [
+      "中华人民共和国广告法_20210429.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第四条",
+      "pdf_page": 2,
+      "anchor": "广告主应当对广告内容的真实性负责"
+    },
     "difficulty": "easy",
     "split": "development"
   },
@@ -334,8 +532,14 @@
     "question": "广告写着“买主品送礼品”，但没有说明赠品的数量和领取期限，这样的广告信息应如何标明？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国广告法_20210429.pdf"],
-    "gold_evidence": {"article": "第八条", "pdf_page": 2, "anchor": "应当明示所附带赠送商品或者服务的品种、"},
+    "expected_sources": [
+      "中华人民共和国广告法_20210429.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第八条",
+      "pdf_page": 3,
+      "anchor": "应当明示所附带赠送商品或者服务的品种、"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -344,8 +548,14 @@
     "question": "广告使用“国家级”“最高级”“最佳”等绝对化用语，是否违法？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国广告法_20210429.pdf"],
-    "gold_evidence": {"article": "第九条", "pdf_page": 2, "anchor": "使用 “国家级”、 “最高级”、 “最佳”"},
+    "expected_sources": [
+      "中华人民共和国广告法_20210429.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第九条",
+      "pdf_page": 4,
+      "anchor": "使用 “国家级”、 “最高级”、 “最佳”"
+    },
     "difficulty": "easy",
     "split": "development"
   },
@@ -354,8 +564,14 @@
     "question": "广告引用销量数据、调查结果或用户统计时，对真实性和出处有什么要求？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国广告法_20210429.pdf"],
-    "gold_evidence": {"article": "第十一条", "pdf_page": 2, "anchor": "引证内容的，应当真实、准确，并"},
+    "expected_sources": [
+      "中华人民共和国广告法_20210429.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第十一条",
+      "pdf_page": 4,
+      "anchor": "引证内容的，应当真实、准确，并"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -364,8 +580,14 @@
     "question": "企业没有取得专利权，却在广告中宣称产品已经获得专利，这样宣传可以吗？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国广告法_20210429.pdf"],
-    "gold_evidence": {"article": "第十二条", "pdf_page": 2, "anchor": "未取得专利权的，不得在广告中"},
+    "expected_sources": [
+      "中华人民共和国广告法_20210429.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第十二条",
+      "pdf_page": 5,
+      "anchor": "未取得专利权的，不得在广告中"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -374,8 +596,14 @@
     "question": "广告文案是否可以贬低其他生产经营者的商品或服务？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国广告法_20210429.pdf"],
-    "gold_evidence": {"article": "第十三条", "pdf_page": 2, "anchor": "广告不得贬低其他生产经营者的"},
+    "expected_sources": [
+      "中华人民共和国广告法_20210429.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第十三条",
+      "pdf_page": 5,
+      "anchor": "广告不得贬低其他生产经营者的"
+    },
     "difficulty": "medium",
     "split": "validation"
   },
@@ -384,8 +612,14 @@
     "question": "平台把商业推广伪装成新闻报道，消费者难以辨认，这类广告应当具备什么可识别性要求？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国广告法_20210429.pdf"],
-    "gold_evidence": {"article": "第十四条", "pdf_page": 2, "anchor": "广告应当具有可识别性，能够使"},
+    "expected_sources": [
+      "中华人民共和国广告法_20210429.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第十四条",
+      "pdf_page": 5,
+      "anchor": "广告应当具有可识别性，能够使"
+    },
     "difficulty": "medium",
     "split": "validation"
   },
@@ -394,8 +628,14 @@
     "question": "保健食品广告是否可以利用广告代言人作推荐、证明？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国广告法_20210429.pdf"],
-    "gold_evidence": {"article": "第十八条", "pdf_page": 3, "anchor": "利用广告代言人作推荐、证明"},
+    "expected_sources": [
+      "中华人民共和国广告法_20210429.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第十八条",
+      "pdf_page": 6,
+      "anchor": "利用广告代言人作推荐、证明"
+    },
     "difficulty": "hard",
     "split": "validation"
   },
@@ -404,8 +644,14 @@
     "question": "用超过保质期的原料制作食品，或者销售腐败变质食品，是否属于禁止生产经营的食品？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国食品安全法_20250912.pdf"],
-    "gold_evidence": {"article": "第三十四条", "pdf_page": 6, "anchor": "用超过保质期的食品原料"},
+    "expected_sources": [
+      "中华人民共和国食品安全法_20250912.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第三十四条",
+      "pdf_page": 14,
+      "anchor": "用超过保质期的食品原料"
+    },
     "difficulty": "easy",
     "split": "development"
   },
@@ -414,8 +660,14 @@
     "question": "开食品店、餐馆或从事食品销售，一般是否必须先取得食品生产经营许可？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国食品安全法_20250912.pdf"],
-    "gold_evidence": {"article": "第三十五条", "pdf_page": 7, "anchor": "国家对食品生产经营实行许可"},
+    "expected_sources": [
+      "中华人民共和国食品安全法_20250912.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第三十五条",
+      "pdf_page": 15,
+      "anchor": "国家对食品生产经营实行许可"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -424,8 +676,14 @@
     "question": "食品经营者采购食品时，是否要查验供货者许可证和产品合格证明并保存记录？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国食品安全法_20250912.pdf"],
-    "gold_evidence": {"article": "第五十三条", "pdf_page": 9, "anchor": "供货者的许可证和食品出厂检验合格证"},
+    "expected_sources": [
+      "中华人民共和国食品安全法_20250912.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第五十三条",
+      "pdf_page": 21,
+      "anchor": "供货者的许可证和食品出厂检验合格证"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -434,8 +692,14 @@
     "question": "网络食品交易第三方平台提供者对入网食品经营者，是否应实名登记；依法应取得许可的，是否应审查许可证？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国食品安全法_20250912.pdf"],
-    "gold_evidence": {"article": "第六十二条", "pdf_page": 10, "anchor": "应当对入网食品经营者进行实名登记"},
+    "expected_sources": [
+      "中华人民共和国食品安全法_20250912.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第六十二条",
+      "pdf_page": 24,
+      "anchor": "应当对入网食品经营者进行实名登记"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -444,8 +708,14 @@
     "question": "食品生产者发现已上市食品不符合食品安全标准时，是否必须停止生产并召回？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国食品安全法_20250912.pdf"],
-    "gold_evidence": {"article": "第六十三条", "pdf_page": 10, "anchor": "召回已经上市销售的食品"},
+    "expected_sources": [
+      "中华人民共和国食品安全法_20250912.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第六十三条",
+      "pdf_page": 24,
+      "anchor": "召回已经上市销售的食品"
+    },
     "difficulty": "medium",
     "split": "development"
   },
@@ -454,8 +724,14 @@
     "question": "预包装食品的包装上通常需要有哪些标签信息？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国食品安全法_20250912.pdf"],
-    "gold_evidence": {"article": "第六十七条", "pdf_page": 11, "anchor": "标签应当标明下列事项"},
+    "expected_sources": [
+      "中华人民共和国食品安全法_20250912.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第六十七条",
+      "pdf_page": 26,
+      "anchor": "标签应当标明下列事项"
+    },
     "difficulty": "easy",
     "split": "development"
   },
@@ -464,8 +740,14 @@
     "question": "食品标签或说明书写了虚假内容、暗示能治疗疾病，这样的食品还能上市销售吗？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国食品安全法_20250912.pdf"],
-    "gold_evidence": {"article": "第七十一条", "pdf_page": 11, "anchor": "不得含有虚假内容，不得涉及疾病预防"},
+    "expected_sources": [
+      "中华人民共和国食品安全法_20250912.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第七十一条",
+      "pdf_page": 27,
+      "anchor": "不得含有虚假内容，不得涉及疾病预防"
+    },
     "difficulty": "medium",
     "split": "validation"
   },
@@ -474,8 +756,14 @@
     "question": "食品生产经营者是否对食品广告内容的真实性、合法性负责；食品广告能否涉及疾病预防、治疗功能？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国食品安全法_20250912.pdf"],
-    "gold_evidence": {"article": "第七十三条", "pdf_page": 12, "anchor": "不得含有虚假内容，不得涉及疾病预防"},
+    "expected_sources": [
+      "中华人民共和国食品安全法_20250912.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第七十三条",
+      "pdf_page": 27,
+      "anchor": "食品广告的内容应当真实合法，不得含有虚假内容"
+    },
     "difficulty": "medium",
     "split": "validation"
   },
@@ -484,8 +772,14 @@
     "question": "进口预包装食品没有中文标签和中文说明书，是否可以进口销售？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国食品安全法_20250912.pdf"],
-    "gold_evidence": {"article": "第九十七条", "pdf_page": 15, "anchor": "没有中文标签、中文说明书"},
+    "expected_sources": [
+      "中华人民共和国食品安全法_20250912.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第九十七条",
+      "pdf_page": 35,
+      "anchor": "没有中文标签、中文说明书"
+    },
     "difficulty": "medium",
     "split": "validation"
   },
@@ -494,8 +788,14 @@
     "question": "生产不符合食品安全标准的食品，或经营者明知不符合标准仍经营时，消费者除赔偿损失外能否主张价款十倍或损失三倍赔偿；不足一千元时如何处理？",
     "category": "法条检索",
     "expect_tool": "legal_rag_search",
-    "expected_sources": ["中华人民共和国食品安全法_20250912.pdf"],
-    "gold_evidence": {"article": "第一百四十八条", "pdf_page": 25, "anchor": "价款十倍或者损失三倍的赔偿金"},
+    "expected_sources": [
+      "中华人民共和国食品安全法_20250912.pdf"
+    ],
+    "gold_evidence": {
+      "article": "第一百四十八条",
+      "pdf_page": 60,
+      "anchor": "价款十倍或者损失三倍的赔偿金"
+    },
     "difficulty": "hard",
     "split": "validation"
   }

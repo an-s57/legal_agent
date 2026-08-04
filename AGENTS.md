@@ -4,7 +4,7 @@
 
 - **Ollama** 必须在本机 `http://127.0.0.1:11434` 运行，且已拉取 `nomic-embed-text` 模型（`ollama pull nomic-embed-text`）。
 - **虚拟环境：** 运行任何命令前先激活 `.venv`。
-- **API key：** 在 `.env` 中设置 `GLM_API_KEY`；如需使用联网主搜索，再设置 `ANYSEARCH_API_KEY`（该文件已被 gitignore）。LLM 用的是智谱 GLM-4.7，通过 LangChain 的 `ChatOpenAI` 封装调用智谱 API（`open.bigmodel.cn`），**不是** OpenAI；AnySearch 不可用时联网工具会回退到 `ddgs`。
+- **API key：** 在 `.env` 中设置 `DEEPSEEK_API_KEY`；如需使用联网主搜索，再设置 `ANYSEARCH_API_KEY`（该文件已被 gitignore）。LLM 用的是 DeepSeek V4 Flash，通过 LangChain 的 `ChatOpenAI` 封装调用 DeepSeek API（`api.deepseek.com/v1`）；AnySearch 不可用时联网工具会回退到 `ddgs`。
 
 ## 常用命令
 
