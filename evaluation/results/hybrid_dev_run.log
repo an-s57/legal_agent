@@ -1,0 +1,247 @@
+D:\legal_agent\.venv\Lib\site-packages\jieba\_compat.py:18: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+预加载 reranker + BM25 索引（冷启动一次）...
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 7606.33it/s]
+Building prefix dict from the default dictionary ...
+Loading model from cache C:\Users\an\AppData\Local\Temp\jieba.cache
+Loading model cost 0.521 seconds.
+Prefix dict has been built successfully.
+
+========================================================================
+P3 混合检索评测 split=development（33 题）
+基线失败题：['r01', 'r05', 'r06', 'r16', 'r18', 'r28', 'r29']
+========================================================================
+========================================================================
+检索评测：FAISS k=40 → Rerank Top-5（33 题）
+========================================================================
+[r01] source=OK evidence=FAIL vector=232ms rerank=3383ms total=3616ms fallback=False
+[r02] source=OK evidence=OK vector=320ms rerank=2924ms total=3244ms fallback=False
+[r03] source=OK evidence=OK vector=329ms rerank=2835ms total=3163ms fallback=False
+[r04] source=OK evidence=OK vector=352ms rerank=2964ms total=3316ms fallback=False
+[r05] source=OK evidence=FAIL vector=308ms rerank=2826ms total=3134ms fallback=False
+[r06] source=OK evidence=FAIL vector=338ms rerank=2899ms total=3238ms fallback=False
+[r07] source=OK evidence=OK vector=323ms rerank=3422ms total=3744ms fallback=False
+[r08] source=OK evidence=OK vector=333ms rerank=2887ms total=3220ms fallback=False
+[r13] source=OK evidence=OK vector=329ms rerank=3110ms total=3439ms fallback=False
+[r14] source=OK evidence=OK vector=346ms rerank=3372ms total=3719ms fallback=False
+[r15] source=OK evidence=OK vector=369ms rerank=2883ms total=3252ms fallback=False
+[r16] source=OK evidence=FAIL vector=339ms rerank=3076ms total=3415ms fallback=False
+[r17] source=OK evidence=OK vector=363ms rerank=2781ms total=3144ms fallback=False
+[r18] source=OK evidence=FAIL vector=330ms rerank=2762ms total=3092ms fallback=False
+[r19] source=OK evidence=OK vector=306ms rerank=3355ms total=3661ms fallback=False
+[r23] source=OK evidence=OK vector=319ms rerank=2809ms total=3128ms fallback=False
+[r24] source=OK evidence=OK vector=347ms rerank=3023ms total=3370ms fallback=False
+[r25] source=OK evidence=OK vector=340ms rerank=2902ms total=3242ms fallback=False
+[r26] source=OK evidence=OK vector=353ms rerank=2925ms total=3277ms fallback=False
+[r27] source=OK evidence=OK vector=334ms rerank=2941ms total=3275ms fallback=False
+[r28] source=OK evidence=FAIL vector=356ms rerank=2721ms total=3077ms fallback=False
+[r29] source=OK evidence=FAIL vector=330ms rerank=2837ms total=3167ms fallback=False
+[r33] source=OK evidence=OK vector=351ms rerank=2718ms total=3068ms fallback=False
+[r34] source=OK evidence=OK vector=359ms rerank=2877ms total=3236ms fallback=False
+[r35] source=OK evidence=OK vector=339ms rerank=2790ms total=3129ms fallback=False
+[r36] source=OK evidence=OK vector=339ms rerank=2828ms total=3168ms fallback=False
+[r37] source=OK evidence=OK vector=335ms rerank=2884ms total=3218ms fallback=False
+[r41] source=OK evidence=OK vector=351ms rerank=3088ms total=3439ms fallback=False
+[r42] source=OK evidence=OK vector=342ms rerank=2869ms total=3211ms fallback=False
+[r43] source=OK evidence=OK vector=347ms rerank=2964ms total=3311ms fallback=False
+[r44] source=OK evidence=OK vector=349ms rerank=3056ms total=3406ms fallback=False
+[r45] source=OK evidence=OK vector=356ms rerank=2976ms total=3331ms fallback=False
+[r46] source=OK evidence=OK vector=335ms rerank=3022ms total=3357ms fallback=False
+
+────────────────────────────────────────────────────
+来源命中率: 33/33 = 100.0%
+证据命中率: 26/33 = 78.8%
+Rerank 回退: 0/33
+耗时（平均 / 中位数 / P95）：vector=336/339/363ms，rerank=2961/2902/3383ms，total=3297/3244/3718ms
+────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────
+混合检索配置扫描
+────────────────────────────────────────────────────────────────────────
+配置                      | 证据命中        | 平均总检索   | 救回          | 丢失
+========================================================================
+检索评测：Hybrid k_vector=40 k_bm25=20 rrf=60 cand=40 → Rerank Top-5（33 题）
+========================================================================
+[r01] source=OK evidence=OK vector=358ms rerank=3096ms total=3453ms fallback=False
+[r02] source=OK evidence=OK vector=340ms rerank=3435ms total=3775ms fallback=False
+[r03] source=OK evidence=OK vector=361ms rerank=3407ms total=3769ms fallback=False
+[r04] source=OK evidence=OK vector=327ms rerank=3114ms total=3441ms fallback=False
+[r05] source=OK evidence=OK vector=332ms rerank=2822ms total=3154ms fallback=False
+[r06] source=OK evidence=OK vector=321ms rerank=3503ms total=3824ms fallback=False
+[r07] source=OK evidence=OK vector=347ms rerank=3453ms total=3800ms fallback=False
+[r08] source=OK evidence=OK vector=335ms rerank=3458ms total=3793ms fallback=False
+[r13] source=OK evidence=OK vector=342ms rerank=3025ms total=3367ms fallback=False
+[r14] source=OK evidence=OK vector=340ms rerank=3544ms total=3884ms fallback=False
+[r15] source=OK evidence=OK vector=352ms rerank=2801ms total=3153ms fallback=False
+[r16] source=OK evidence=OK vector=357ms rerank=3140ms total=3496ms fallback=False
+[r17] source=OK evidence=OK vector=332ms rerank=3077ms total=3409ms fallback=False
+[r18] source=OK evidence=OK vector=340ms rerank=2841ms total=3181ms fallback=False
+[r19] source=OK evidence=OK vector=328ms rerank=3475ms total=3803ms fallback=False
+[r23] source=OK evidence=OK vector=332ms rerank=2795ms total=3127ms fallback=False
+[r24] source=OK evidence=OK vector=334ms rerank=3186ms total=3520ms fallback=False
+[r25] source=OK evidence=OK vector=347ms rerank=2956ms total=3304ms fallback=False
+[r26] source=OK evidence=OK vector=343ms rerank=2819ms total=3162ms fallback=False
+[r27] source=OK evidence=OK vector=345ms rerank=2916ms total=3261ms fallback=False
+[r28] source=OK evidence=OK vector=364ms rerank=2760ms total=3124ms fallback=False
+[r29] source=OK evidence=OK vector=323ms rerank=3502ms total=3825ms fallback=False
+[r33] source=OK evidence=OK vector=315ms rerank=2789ms total=3104ms fallback=False
+[r34] source=OK evidence=OK vector=331ms rerank=2968ms total=3299ms fallback=False
+[r35] source=OK evidence=OK vector=330ms rerank=2731ms total=3061ms fallback=False
+[r36] source=OK evidence=OK vector=350ms rerank=2891ms total=3241ms fallback=False
+[r37] source=OK evidence=OK vector=342ms rerank=2797ms total=3139ms fallback=False
+[r41] source=OK evidence=OK vector=344ms rerank=3057ms total=3401ms fallback=False
+[r42] source=OK evidence=OK vector=333ms rerank=2853ms total=3186ms fallback=False
+[r43] source=OK evidence=OK vector=321ms rerank=3009ms total=3330ms fallback=False
+[r44] source=OK evidence=OK vector=350ms rerank=3789ms total=4139ms fallback=False
+[r45] source=OK evidence=OK vector=342ms rerank=2980ms total=3322ms fallback=False
+[r46] source=OK evidence=OK vector=334ms rerank=2778ms total=3112ms fallback=False
+
+────────────────────────────────────────────────────
+来源命中率: 33/33 = 100.0%
+证据命中率: 33/33 = 100.0%
+Rerank 回退: 0/33
+混合召回回退: 0/33
+耗时（平均 / 中位数 / P95）：vector=339/340/361ms，rerank=3084/3009/3544ms，total=3423/3330/3884ms
+────────────────────────────────────────────────────
+hybrid k_bm25=20 cand=40 | 33/33 (100.0%) |     3423ms | r01,r05,r06,r16,r18,r28,r29 | -
+========================================================================
+检索评测：Hybrid k_vector=40 k_bm25=20 rrf=60 cand=60 → Rerank Top-5（33 题）
+========================================================================
+[r01] source=OK evidence=OK vector=347ms rerank=3554ms total=3902ms fallback=False
+[r02] source=OK evidence=OK vector=315ms rerank=4186ms total=4501ms fallback=False
+[r03] source=OK evidence=OK vector=345ms rerank=4510ms total=4855ms fallback=False
+[r04] source=OK evidence=OK vector=332ms rerank=3984ms total=4316ms fallback=False
+[r05] source=OK evidence=OK vector=339ms rerank=3863ms total=4202ms fallback=False
+[r06] source=OK evidence=OK vector=310ms rerank=4407ms total=4717ms fallback=False
+[r07] source=OK evidence=OK vector=321ms rerank=4395ms total=4716ms fallback=False
+[r08] source=OK evidence=OK vector=329ms rerank=4293ms total=4622ms fallback=False
+[r13] source=OK evidence=FAIL vector=353ms rerank=3570ms total=3923ms fallback=False
+[r14] source=OK evidence=OK vector=323ms rerank=4145ms total=4467ms fallback=False
+[r15] source=OK evidence=OK vector=335ms rerank=3562ms total=3897ms fallback=False
+[r16] source=OK evidence=FAIL vector=356ms rerank=3958ms total=4314ms fallback=False
+[r17] source=OK evidence=OK vector=320ms rerank=3845ms total=4165ms fallback=False
+[r18] source=OK evidence=OK vector=338ms rerank=3640ms total=3977ms fallback=False
+[r19] source=OK evidence=OK vector=344ms rerank=4391ms total=4735ms fallback=False
+[r23] source=OK evidence=OK vector=349ms rerank=3318ms total=3666ms fallback=False
+[r24] source=OK evidence=OK vector=366ms rerank=3825ms total=4191ms fallback=False
+[r25] source=OK evidence=OK vector=338ms rerank=3630ms total=3968ms fallback=False
+[r26] source=OK evidence=OK vector=339ms rerank=3510ms total=3848ms fallback=False
+[r27] source=OK evidence=OK vector=364ms rerank=3431ms total=3795ms fallback=False
+[r28] source=OK evidence=OK vector=352ms rerank=3185ms total=3537ms fallback=False
+[r29] source=OK evidence=OK vector=314ms rerank=4569ms total=4883ms fallback=False
+[r33] source=OK evidence=OK vector=354ms rerank=3024ms total=3378ms fallback=False
+[r34] source=OK evidence=OK vector=352ms rerank=3408ms total=3760ms fallback=False
+[r35] source=OK evidence=OK vector=346ms rerank=3484ms total=3830ms fallback=False
+[r36] source=OK evidence=OK vector=334ms rerank=3608ms total=3942ms fallback=False
+[r37] source=OK evidence=OK vector=339ms rerank=3514ms total=3852ms fallback=False
+[r41] source=OK evidence=OK vector=330ms rerank=3556ms total=3886ms fallback=False
+[r42] source=OK evidence=OK vector=345ms rerank=3438ms total=3783ms fallback=False
+[r43] source=OK evidence=OK vector=331ms rerank=3549ms total=3880ms fallback=False
+[r44] source=OK evidence=OK vector=366ms rerank=4383ms total=4748ms fallback=False
+[r45] source=OK evidence=OK vector=338ms rerank=3759ms total=4097ms fallback=False
+[r46] source=OK evidence=OK vector=319ms rerank=3565ms total=3884ms fallback=False
+
+────────────────────────────────────────────────────
+来源命中率: 33/33 = 100.0%
+证据命中率: 31/33 = 93.9%
+Rerank 回退: 0/33
+混合召回回退: 0/33
+耗时（平均 / 中位数 / P95）：vector=339/339/366ms，rerank=3790/3630/4510ms，total=4128/3968/4855ms
+────────────────────────────────────────────────────
+hybrid k_bm25=20 cand=60 | 31/33 ( 93.9%) |     4128ms | r01,r05,r06,r18,r28,r29 | r13
+========================================================================
+检索评测：Hybrid k_vector=40 k_bm25=40 rrf=60 cand=40 → Rerank Top-5（33 题）
+========================================================================
+[r01] source=OK evidence=OK vector=355ms rerank=3000ms total=3354ms fallback=False
+[r02] source=OK evidence=OK vector=334ms rerank=3396ms total=3730ms fallback=False
+[r03] source=OK evidence=OK vector=354ms rerank=3781ms total=4135ms fallback=False
+[r04] source=OK evidence=OK vector=346ms rerank=3067ms total=3413ms fallback=False
+[r05] source=OK evidence=OK vector=363ms rerank=2768ms total=3130ms fallback=False
+[r06] source=OK evidence=OK vector=343ms rerank=3353ms total=3696ms fallback=False
+[r07] source=OK evidence=OK vector=372ms rerank=3456ms total=3829ms fallback=False
+[r08] source=OK evidence=OK vector=349ms rerank=3337ms total=3687ms fallback=False
+[r13] source=OK evidence=OK vector=312ms rerank=2957ms total=3270ms fallback=False
+[r14] source=OK evidence=FAIL vector=344ms rerank=2964ms total=3307ms fallback=False
+[r15] source=OK evidence=OK vector=368ms rerank=2981ms total=3349ms fallback=False
+[r16] source=OK evidence=FAIL vector=353ms rerank=3190ms total=3544ms fallback=False
+[r17] source=OK evidence=OK vector=328ms rerank=2874ms total=3202ms fallback=False
+[r18] source=OK evidence=OK vector=322ms rerank=2828ms total=3151ms fallback=False
+[r19] source=OK evidence=OK vector=312ms rerank=3373ms total=3685ms fallback=False
+[r23] source=OK evidence=OK vector=364ms rerank=2747ms total=3111ms fallback=False
+[r24] source=OK evidence=OK vector=345ms rerank=3091ms total=3436ms fallback=False
+[r25] source=OK evidence=OK vector=371ms rerank=2941ms total=3311ms fallback=False
+[r26] source=OK evidence=OK vector=345ms rerank=3334ms total=3678ms fallback=False
+[r27] source=OK evidence=OK vector=373ms rerank=2934ms total=3307ms fallback=False
+[r28] source=OK evidence=OK vector=356ms rerank=2906ms total=3262ms fallback=False
+[r29] source=OK evidence=OK vector=335ms rerank=3414ms total=3748ms fallback=False
+[r33] source=OK evidence=OK vector=335ms rerank=2723ms total=3058ms fallback=False
+[r34] source=OK evidence=OK vector=351ms rerank=3056ms total=3407ms fallback=False
+[r35] source=OK evidence=OK vector=332ms rerank=2799ms total=3131ms fallback=False
+[r36] source=OK evidence=OK vector=337ms rerank=2866ms total=3204ms fallback=False
+[r37] source=OK evidence=OK vector=357ms rerank=2866ms total=3223ms fallback=False
+[r41] source=OK evidence=OK vector=324ms rerank=3430ms total=3755ms fallback=False
+[r42] source=OK evidence=OK vector=360ms rerank=2867ms total=3227ms fallback=False
+[r43] source=OK evidence=OK vector=341ms rerank=3171ms total=3512ms fallback=False
+[r44] source=OK evidence=OK vector=370ms rerank=3510ms total=3879ms fallback=False
+[r45] source=OK evidence=OK vector=328ms rerank=2925ms total=3253ms fallback=False
+[r46] source=OK evidence=OK vector=337ms rerank=2845ms total=3182ms fallback=False
+
+────────────────────────────────────────────────────
+来源命中率: 33/33 = 100.0%
+证据命中率: 31/33 = 93.9%
+Rerank 回退: 0/33
+混合召回回退: 0/33
+耗时（平均 / 中位数 / P95）：vector=346/345/372ms，rerank=3083/2981/3510ms，total=3429/3349/3879ms
+────────────────────────────────────────────────────
+hybrid k_bm25=40 cand=40 | 31/33 ( 93.9%) |     3429ms | r01,r05,r06,r18,r28,r29 | r14
+========================================================================
+检索评测：Hybrid k_vector=40 k_bm25=40 rrf=60 cand=60 → Rerank Top-5（33 题）
+========================================================================
+[r01] source=OK evidence=OK vector=349ms rerank=4911ms total=5260ms fallback=False
+[r02] source=OK evidence=OK vector=352ms rerank=4929ms total=5281ms fallback=False
+[r03] source=OK evidence=OK vector=338ms rerank=4844ms total=5182ms fallback=False
+[r04] source=OK evidence=OK vector=344ms rerank=4282ms total=4626ms fallback=False
+[r05] source=OK evidence=OK vector=354ms rerank=4228ms total=4582ms fallback=False
+[r06] source=OK evidence=OK vector=357ms rerank=4960ms total=5318ms fallback=False
+[r07] source=OK evidence=OK vector=363ms rerank=4886ms total=5249ms fallback=False
+[r08] source=OK evidence=OK vector=338ms rerank=4934ms total=5271ms fallback=False
+[r13] source=OK evidence=OK vector=333ms rerank=4173ms total=4506ms fallback=False
+[r14] source=OK evidence=FAIL vector=336ms rerank=4917ms total=5253ms fallback=False
+[r15] source=OK evidence=OK vector=351ms rerank=4365ms total=4716ms fallback=False
+[r16] source=OK evidence=OK vector=351ms rerank=4462ms total=4813ms fallback=False
+[r17] source=OK evidence=OK vector=345ms rerank=4333ms total=4679ms fallback=False
+[r18] source=OK evidence=OK vector=361ms rerank=4832ms total=5193ms fallback=False
+[r19] source=OK evidence=OK vector=350ms rerank=4864ms total=5214ms fallback=False
+[r23] source=OK evidence=OK vector=333ms rerank=4496ms total=4829ms fallback=False
+[r24] source=OK evidence=OK vector=351ms rerank=5110ms total=5461ms fallback=False
+[r25] source=OK evidence=OK vector=348ms rerank=4346ms total=4693ms fallback=False
+[r26] source=OK evidence=OK vector=330ms rerank=4927ms total=5257ms fallback=False
+[r27] source=OK evidence=OK vector=345ms rerank=4252ms total=4596ms fallback=False
+[r28] source=OK evidence=OK vector=347ms rerank=4977ms total=5325ms fallback=False
+[r29] source=OK evidence=OK vector=337ms rerank=5145ms total=5482ms fallback=False
+[r33] source=OK evidence=OK vector=326ms rerank=3484ms total=3809ms fallback=False
+[r34] source=OK evidence=OK vector=354ms rerank=4148ms total=4502ms fallback=False
+[r35] source=OK evidence=OK vector=354ms rerank=4044ms total=4398ms fallback=False
+[r36] source=OK evidence=OK vector=344ms rerank=4232ms total=4576ms fallback=False
+[r37] source=OK evidence=OK vector=353ms rerank=4922ms total=5275ms fallback=False
+[r41] source=OK evidence=OK vector=361ms rerank=5110ms total=5472ms fallback=False
+[r42] source=OK evidence=OK vector=352ms rerank=4938ms total=5290ms fallback=False
+[r43] source=OK evidence=OK vector=362ms rerank=5208ms total=5569ms fallback=False
+[r44] source=OK evidence=OK vector=363ms rerank=7758ms total=8121ms fallback=False
+[r45] source=OK evidence=OK vector=738ms rerank=4774ms total=5512ms fallback=False
+[r46] source=OK evidence=OK vector=352ms rerank=6713ms total=7065ms fallback=False
+
+────────────────────────────────────────────────────
+来源命中率: 33/33 = 100.0%
+证据命中率: 32/33 = 97.0%
+Rerank 回退: 0/33
+混合召回回退: 0/33
+耗时（平均 / 中位数 / P95）：vector=360/351/363ms，rerank=4803/4864/6713ms，total=5163/5249/7065ms
+────────────────────────────────────────────────────
+hybrid k_bm25=40 cand=60 | 32/33 ( 97.0%) |     5163ms | r01,r05,r06,r16,r18,r28,r29 | r14
+────────────────────────────────────────────────────────────────────────
+
+结果已保存至: D:\legal_agent\evaluation\results\hybrid_development_k40_top5_20260805_182356.json
+
+报告已保存：D:\legal_agent\evaluation\results\hybrid_development_k40_top5_20260805_182356.json

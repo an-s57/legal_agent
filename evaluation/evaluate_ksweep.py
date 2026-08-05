@@ -22,6 +22,7 @@ import requests
 
 # 维度1 需要：直接调 retriever 内部函数
 from rag.retriever import RERANKER_MODEL_NAME, _get_faiss_db, _get_reranker, _rerank
+from rag.hybrid import hybrid_candidates
 
 API_BASE = "http://127.0.0.1:8000"
 QUESTIONS_PATH = Path(__file__).parent / "questions.json"
@@ -115,13 +116,23 @@ def evaluate_retrieval(
     faiss_db=None,
     verbose: bool = False,
     rerank: bool = True,
+    recall: str = "vector",
+    k_bm25: int = 20,
+    rrf_k: int = 60,
+    top_candidates: int = 40,
 ) -> dict:
-    """直接评测 FAISS + Rerank，不经过 FastAPI、Agent 或远程大模型。
+    """直接评测检索 + Rerank，不经过 FastAPI、Agent 或远程大模型。
 
     除来源命中外，若题目提供 gold_evidence，还会检查目标 PDF 页码和短证据句。
+
+    recall 参数（P3 混合检索）：
+      "vector"：纯 FAISS 向量召回（默认，行为与之前完全一致）
+      "hybrid"：FAISS 向量 + BM25 词面 → RRF 融合，候选池 top_candidates
     """
     if k < top_k:
         raise ValueError(f"k={k} 不能小于 top_k={top_k}")
+    if recall not in ("vector", "hybrid"):
+        raise ValueError(f"recall 只支持 'vector'/'hybrid'，收到：{recall!r}")
 
     retrieval_questions = select_retrieval_questions(questions)
     if not retrieval_questions:
@@ -143,10 +154,14 @@ def evaluate_retrieval(
         }
 
     print("=" * 72)
+    recall_label = {
+        "vector": f"FAISS k={k}",
+        "hybrid": f"Hybrid k_vector={k} k_bm25={k_bm25} rrf={rrf_k} cand={top_candidates}",
+    }[recall]
     rerank_label = (
-        f"FAISS k={k} → Rerank Top-{top_k}"
+        f"{recall_label} → Rerank Top-{top_k}"
         if rerank
-        else f"FAISS k={k} → 直接取 Top-{top_k}（无 Rerank）"
+        else f"{recall_label} → 直接取 Top-{top_k}（无 Rerank）"
     )
     print(f"检索评测：{rerank_label}（{len(retrieval_questions)} 题）")
     print("=" * 72)
@@ -159,7 +174,21 @@ def evaluate_retrieval(
         evidence = q.get("gold_evidence")
 
         vector_start = time.perf_counter()
-        candidate_docs = faiss_db.similarity_search(q["question"], k=k)
+        recall_fallback = False
+        if recall == "hybrid":
+            try:
+                candidate_docs = hybrid_candidates(
+                    q["question"], faiss_db,
+                    k_vector=k, k_bm25=k_bm25, rrf_k=rrf_k,
+                    top_candidates=top_candidates,
+                )
+            except Exception as e:
+                # 混合召回失败时回退纯向量，保证评测不崩
+                recall_fallback = True
+                print(f"  ⚠️ [{q['id']}] 混合召回失败，回退向量召回: {e}")
+                candidate_docs = faiss_db.similarity_search(q["question"], k=k)
+        else:
+            candidate_docs = faiss_db.similarity_search(q["question"], k=k)
         vector_search_ms = (time.perf_counter() - vector_start) * 1000
 
         rerank_start = time.perf_counter()
@@ -212,6 +241,8 @@ def evaluate_retrieval(
             "rerank_ms": round(rerank_ms, 2),
             "total_retrieval_ms": round(total_retrieval_ms, 2),
             "rerank_fallback": rerank_fallback,
+            "recall": recall,
+            "recall_fallback": recall_fallback,
             "candidate_count": len(candidate_docs),
             "returned_count": len(docs_top),
         })
@@ -243,6 +274,9 @@ def evaluate_retrieval(
         if evidence_details else 0
     )
     fallback_count = sum(1 for detail in details if detail["rerank_fallback"])
+    recall_fallback_count = sum(
+        1 for detail in details if detail.get("recall_fallback")
+    )
 
     timing = {
         "vector_search": timing_stats([detail["vector_search_ms"] for detail in details]),
@@ -255,6 +289,8 @@ def evaluate_retrieval(
     if evidence_details:
         print(f"证据命中率: {evidence_hit_count}/{len(evidence_details)} = {evidence_accuracy}%")
     print(f"Rerank 回退: {fallback_count}/{total}")
+    if recall == "hybrid":
+        print(f"混合召回回退: {recall_fallback_count}/{total}")
     print(
         "耗时（平均 / 中位数 / P95）："
         f"vector={timing['vector_search']['avg']:.0f}/{timing['vector_search']['median']:.0f}/{timing['vector_search']['p95']:.0f}ms，"
@@ -276,6 +312,8 @@ def evaluate_retrieval(
         "evidence_hit": evidence_hit_count,
         "evidence_accuracy": evidence_accuracy,
         "fallback_count": fallback_count,
+        "recall": recall,
+        "recall_fallback_count": recall_fallback_count,
         "timing_ms": timing,
         "details": details,
     }

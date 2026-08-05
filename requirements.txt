@@ -15,3 +15,5 @@ python-dotenv
 torch
 transformers
 httpx
+jieba
+rank_bm25
