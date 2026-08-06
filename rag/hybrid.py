@@ -42,11 +42,11 @@ def _get_bm25(faiss_db) -> tuple[BM25Okapi, list]:
     """
     global _bm25_index, _bm25_docs
     if _bm25_index is None:
-        with _bm25_lock:
-            if _bm25_index is None:
-                docs = list(faiss_db.docstore._dict.values())
-                corpus = [_tokenize(d.page_content) for d in docs]
-                _bm25_index = BM25Okapi(corpus)
+        with _bm25_lock:#加锁
+            if _bm25_index is None:#双重检查
+                docs = list(faiss_db.docstore._dict.values())#BM25和向量库同源
+                corpus = [_tokenize(d.page_content) for d in docs]#索引文档的分词结果
+                _bm25_index = BM25Okapi(corpus)#建索引
                 _bm25_docs = docs
     return _bm25_index, _bm25_docs
 
@@ -93,13 +93,13 @@ def hybrid_candidates(
 
     返回 list[Document]，由调用方继续 rerank / 判定。
     """
-    vector_docs = faiss_db.similarity_search(query, k=k_vector)
+    vector_docs = faiss_db.similarity_search(query, k=k_vector)#向量路
 
-    tokens = _tokenize(query)
+    tokens = _tokenize(query)#给问题分词
     bm25_docs = []
     if tokens:
         bm25, docs = _get_bm25(faiss_db)
-        scores = bm25.get_scores(tokens)
+        scores = bm25.get_scores(tokens)#对查询的每个词每个文档算分数
         top_idx = sorted(
             range(len(scores)), key=lambda i: scores[i], reverse=True
         )

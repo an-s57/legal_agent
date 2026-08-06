@@ -11,6 +11,8 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.embeddings import Embeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+from rag.hybrid import hybrid_candidates
+
 FAISS_DB_PATH = "rag/vectorstore/db_faiss"
 OLLAMA_BASE_URL = "http://127.0.0.1:11434"
 OLLAMA_EMBED_MODEL = "nomic-embed-text"
@@ -181,18 +183,21 @@ def add_legal_documents(pdf_folder:str):
     print(f"新增{len(new_chunks)}个文本段，来自{len(set(c.metadata['source'] for c in new_chunks))}个文件")
     return faiss_db
 
-def retrieve_legal_docs(query: str, k: int = 30, top_k: int = 5) -> list[str]:
+def retrieve_legal_docs(query: str, k: int = 40, top_k: int = 5) -> list[str]:
     """对外暴露的检索接口，返回字符串列表"""
     #向量库加载用时
     load_start=time.perf_counter()
     faiss_db = _get_faiss_db()
     load_ms=(time.perf_counter()-load_start)*1000
     print(f"[PERF] vectorstore_load={load_ms:.0f}ms",flush=True)
-    #转向量和FAISS粗召回用时
+    #混合检索：FAISS 向量 + BM25 词面 → RRF 融合（k 作 k_vector 传）
     search_start=time.perf_counter()
-    docs = faiss_db.similarity_search(query, k=k)
+    docs = hybrid_candidates(
+        query, faiss_db, k_vector=k, k_bm25=20, rrf_k=60, top_candidates=40,
+    )
     search_ms=(time.perf_counter()-search_start)*1000
-    print(f"[PERF] vector_search={search_ms:.0f}ms k={k}",flush=True)
+    print(f"[PERF] hybrid_search={search_ms:.0f}ms "
+          f"k_vector={k} k_bm25=20 candidates=40",flush=True)
     #rerank用时
     rerank_time=time.perf_counter()
     try:

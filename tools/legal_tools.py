@@ -19,8 +19,10 @@ def legal_rag_search(query: str) -> str:
     适合回答法律条文定义、法律概念解释、历史案例引用、某法条的具体规定。
     不适合：查询涉及最新动态、司法解释、时效性强的法律新闻。
     """
-    # 基于开发集调参与验证集确认后的线上检索配置：K=30，Top-K=5。
-    results = retrieve_legal_docs(query, k=30, top_k=5)
+    # 基于开发集调参与验证集确认后的线上检索配置：K=40，Top-K=5。
+    # 注意：k 会作为 k_vector 传给 hybrid_candidates（FAISS 召回数），
+    # K 扫描定案 k=40 是"最小安全候选池"，不能砍小。
+    results = retrieve_legal_docs(query, k=40, top_k=5)
     if not results:
         return "法律文档库中未找到相关内容"
     return "\n\n---\n\n".join(results)
