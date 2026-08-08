@@ -1,0 +1,5596 @@
+{
+  "timestamp": "2026-08-08T15:55:44.992852",
+  "mode": "hybrid_sweep",
+  "config": {
+    "questions_path": "/home/an/legal_agent/evaluation/retrieval_k_tuning_50.json",
+    "split": "validation",
+    "limit": null,
+    "k_vector": 40,
+    "top_k": 5,
+    "rrf_k": 60,
+    "grid": [
+      [
+        20,
+        40
+      ],
+      [
+        20,
+        60
+      ],
+      [
+        40,
+        40
+      ],
+      [
+        40,
+        60
+      ]
+    ],
+    "reranker_model": "BAAI/bge-reranker-base",
+    "baseline_fails": [
+      "r01",
+      "r05",
+      "r06",
+      "r16",
+      "r18",
+      "r28",
+      "r29"
+    ]
+  },
+  "baseline": {
+    "evidence_hit": 13,
+    "evidence_total": 17,
+    "evidence_accuracy": 76.5,
+    "avg_total_retrieval_ms": 5932.98,
+    "report": {
+      "k": 40,
+      "top_k": 5,
+      "total": 17,
+      "hit": 17,
+      "accuracy": 100.0,
+      "source_hit": 17,
+      "source_accuracy": 100.0,
+      "evidence_total": 17,
+      "evidence_hit": 13,
+      "evidence_accuracy": 76.5,
+      "fallback_count": 0,
+      "recall": "vector",
+      "recall_fallback_count": 0,
+      "timing_ms": {
+        "vector_search": {
+          "avg": 80.35,
+          "median": 64.37,
+          "p95": 219.51
+        },
+        "rerank": {
+          "avg": 5852.63,
+          "median": 5648.35,
+          "p95": 7088.09
+        },
+        "total_retrieval": {
+          "avg": 5932.98,
+          "median": 5772.56,
+          "p95": 7154.09
+        }
+      },
+      "details": [
+        {
+          "id": "r09",
+          "question": "网上定制了刻字礼品，商家说不适用七天无理由退货，这种退货例外如何判断？",
+          "expected_sources": [
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+          ],
+          "gold_evidence": {
+            "article": "第二十五条",
+            "pdf_page": 6,
+            "anchor": "但下列商品除外：（一）消费者定作的"
+          },
+          "actual_sources": [
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "中华人民共和国反不正当竞争法_20250627.pdf",
+            "中华人民共和国电子商务法_20180831.pdf",
+            "中华人民共和国电子商务法_20180831.pdf",
+            "中华人民共和国产品质量法_20181229.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 5,
+              "evidence_match": true
+            },
+            {
+              "rank": 2,
+              "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+              "page_index": 5,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "中华人民共和国电子商务法_20180831.pdf",
+              "page_index": 21,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "中华人民共和国电子商务法_20180831.pdf",
+              "page_index": 18,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 16,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": true,
+          "vector_search_ms": 64.37,
+          "rerank_ms": 6235.81,
+          "total_retrieval_ms": 6300.18,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r10",
+          "question": "健身房合同写着“办卡后概不退款、经营者不承担任何责任”，这种格式条款有效吗？",
+          "expected_sources": [
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+          ],
+          "gold_evidence": {
+            "article": "第二十六条",
+            "pdf_page": 7,
+            "anchor": "不得以格式条款、通知、声明、店堂告示等方式"
+          },
+          "actual_sources": [
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "中华人民共和国反不正当竞争法_20250627.pdf",
+            "中华人民共和国产品质量法_20181229.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 15,
+              "evidence_match": false
+            },
+            {
+              "rank": 2,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 5,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 14,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+              "page_index": 8,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 10,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": false,
+          "vector_search_ms": 219.51,
+          "rerank_ms": 6659.19,
+          "total_retrieval_ms": 6878.7,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r11",
+          "question": "App 未经同意把消费者手机号和地址卖给第三方，经营者收集和使用个人信息应遵守什么原则？",
+          "expected_sources": [
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+          ],
+          "gold_evidence": {
+            "article": "第二十九条",
+            "pdf_page": 7,
+            "anchor": "消费者个人信息，应当遵循合法、正当、必要的原则"
+          },
+          "actual_sources": [
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "中华人民共和国反不正当竞争法_20250627.pdf",
+            "中华人民共和国反不正当竞争法_20250627.pdf",
+            "中华人民共和国反不正当竞争法_20250627.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 7,
+              "evidence_match": false
+            },
+            {
+              "rank": 2,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 6,
+              "evidence_match": true
+            },
+            {
+              "rank": 3,
+              "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+              "page_index": 5,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+              "page_index": 7,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+              "page_index": 4,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": true,
+          "vector_search_ms": 174.62,
+          "rerank_ms": 5597.94,
+          "total_retrieval_ms": 5772.56,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r12",
+          "question": "美容院收了预付款却关门不提供服务，消费者可以要求退回预付款和哪些费用？",
+          "expected_sources": [
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+          ],
+          "gold_evidence": {
+            "article": "第五十三条",
+            "pdf_page": 14,
+            "anchor": "未按照约定提供的，应当按照消费者的要求履行约定"
+          },
+          "actual_sources": [
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "中华人民共和国电子商务法_20180831.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 10,
+              "evidence_match": false
+            },
+            {
+              "rank": 2,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 12,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 2,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 14,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国电子商务法_20180831.pdf",
+              "page_index": 18,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": false,
+          "vector_search_ms": 66.0,
+          "rerank_ms": 7088.09,
+          "total_retrieval_ms": 7154.09,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r20",
+          "question": "卖家在产品中掺假、以次充好，或者用不合格品冒充合格品，法律禁止吗？",
+          "expected_sources": [
+            "中华人民共和国产品质量法_20181229.pdf"
+          ],
+          "gold_evidence": {
+            "article": "第三十九条",
+            "pdf_page": 10,
+            "anchor": "不得掺杂、掺假，不得以假充真"
+          },
+          "actual_sources": [
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "中华人民共和国产品质量法_20181229.pdf",
+            "中华人民共和国产品质量法_20181229.pdf",
+            "中华人民共和国产品质量法_20181229.pdf",
+            "中华人民共和国产品质量法_20181229.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 14,
+              "evidence_match": false
+            },
+            {
+              "rank": 2,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 9,
+              "evidence_match": true
+            },
+            {
+              "rank": 3,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 12,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 1,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 15,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": true,
+          "vector_search_ms": 74.47,
+          "rerank_ms": 6127.26,
+          "total_retrieval_ms": 6201.73,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r21",
+          "question": "买到的产品不具备说明书承诺的使用性能，销售者应负责修理、更换或退货吗？",
+          "expected_sources": [
+            "中华人民共和国产品质量法_20181229.pdf"
+          ],
+          "gold_evidence": {
+            "article": "第四十条",
+            "pdf_page": 10,
+            "anchor": "销售者应当负责修理、更换、退货"
+          },
+          "actual_sources": [
+            "中华人民共和国产品质量法_20181229.pdf",
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "中华人民共和国产品质量法_20181229.pdf",
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "中华人民共和国产品质量法_20181229.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 9,
+              "evidence_match": true
+            },
+            {
+              "rank": 2,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 12,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 10,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 5,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 7,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": true,
+          "vector_search_ms": 62.6,
+          "rerank_ms": 5384.96,
+          "total_retrieval_ms": 5447.56,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r22",
+          "question": "依据产品质量法，产品缺陷造成人身伤害时可以主张哪些赔偿项目？",
+          "expected_sources": [
+            "中华人民共和国产品质量法_20181229.pdf"
+          ],
+          "gold_evidence": {
+            "article": "第四十四条",
+            "pdf_page": 12,
+            "anchor": "侵害人应当赔偿医疗费"
+          },
+          "actual_sources": [
+            "中华人民共和国产品质量法_20181229.pdf",
+            "中华人民共和国产品质量法_20181229.pdf",
+            "中华人民共和国产品质量法_20181229.pdf",
+            "中华人民共和国产品质量法_20181229.pdf",
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 10,
+              "evidence_match": false
+            },
+            {
+              "rank": 2,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 0,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 17,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 14,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 14,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": false,
+          "vector_search_ms": 61.21,
+          "rerank_ms": 5381.51,
+          "total_retrieval_ms": 5442.71,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r30",
+          "question": "企业编造竞争对手产品质量有问题的消息并传播，损害对方商誉，可能违反什么规定？",
+          "expected_sources": [
+            "中华人民共和国反不正当竞争法_20250627.pdf"
+          ],
+          "gold_evidence": {
+            "article": "第十二条",
+            "pdf_page": 6,
+            "anchor": "经营者不得编造、传播或者指使"
+          },
+          "actual_sources": [
+            "中华人民共和国反不正当竞争法_20250627.pdf",
+            "中华人民共和国产品质量法_20181229.pdf",
+            "中华人民共和国反不正当竞争法_20250627.pdf",
+            "中华人民共和国广告法_20210429.pdf",
+            "中华人民共和国广告法_20210429.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+              "page_index": 5,
+              "evidence_match": true
+            },
+            {
+              "rank": 2,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 17,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+              "page_index": 8,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "中华人民共和国广告法_20210429.pdf",
+              "page_index": 21,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国广告法_20210429.pdf",
+              "page_index": 22,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": true,
+          "vector_search_ms": 68.84,
+          "rerank_ms": 5405.17,
+          "total_retrieval_ms": 5474.01,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r31",
+          "question": "平台利用算法强迫用户关闭或卸载竞争对手合法提供的 App，可能违反什么不正当竞争规定？",
+          "expected_sources": [
+            "中华人民共和国反不正当竞争法_20250627.pdf"
+          ],
+          "gold_evidence": {
+            "article": "第十三条",
+            "pdf_page": 6,
+            "anchor": "经营者不得利用数据和算法、技术"
+          },
+          "actual_sources": [
+            "中华人民共和国反不正当竞争法_20250627.pdf",
+            "中华人民共和国反不正当竞争法_20250627.pdf",
+            "中华人民共和国反不正当竞争法_20250627.pdf",
+            "中华人民共和国反不正当竞争法_20250627.pdf",
+            "中华人民共和国反不正当竞争法_20250627.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+              "page_index": 5,
+              "evidence_match": true
+            },
+            {
+              "rank": 2,
+              "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+              "page_index": 7,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+              "page_index": 6,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+              "page_index": 2,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+              "page_index": 1,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": true,
+          "vector_search_ms": 66.17,
+          "rerank_ms": 5648.35,
+          "total_retrieval_ms": 5714.52,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r32",
+          "question": "平台强制商家按照平台定价规则低于成本销售商品，法律上如何评价？",
+          "expected_sources": [
+            "中华人民共和国反不正当竞争法_20250627.pdf"
+          ],
+          "gold_evidence": {
+            "article": "第十四条",
+            "pdf_page": 7,
+            "anchor": "平台经营者不得强制"
+          },
+          "actual_sources": [
+            "中华人民共和国反不正当竞争法_20250627.pdf",
+            "中华人民共和国反不正当竞争法_20250627.pdf",
+            "中华人民共和国电子商务法_20180831.pdf",
+            "中华人民共和国电子商务法_20180831.pdf",
+            "中华人民共和国反不正当竞争法_20250627.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+              "page_index": 6,
+              "evidence_match": true
+            },
+            {
+              "rank": 2,
+              "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+              "page_index": 10,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "中华人民共和国电子商务法_20180831.pdf",
+              "page_index": 8,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "中华人民共和国电子商务法_20180831.pdf",
+              "page_index": 19,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+              "page_index": 5,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": true,
+          "vector_search_ms": 57.4,
+          "rerank_ms": 5617.75,
+          "total_retrieval_ms": 5675.15,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r38",
+          "question": "广告文案是否可以贬低其他生产经营者的商品或服务？",
+          "expected_sources": [
+            "中华人民共和国广告法_20210429.pdf"
+          ],
+          "gold_evidence": {
+            "article": "第十三条",
+            "pdf_page": 5,
+            "anchor": "广告不得贬低其他生产经营者的"
+          },
+          "actual_sources": [
+            "中华人民共和国广告法_20210429.pdf",
+            "中华人民共和国广告法_20210429.pdf",
+            "中华人民共和国广告法_20210429.pdf",
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "中华人民共和国广告法_20210429.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "中华人民共和国广告法_20210429.pdf",
+              "page_index": 4,
+              "evidence_match": true
+            },
+            {
+              "rank": 2,
+              "source": "中华人民共和国广告法_20210429.pdf",
+              "page_index": 19,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "中华人民共和国广告法_20210429.pdf",
+              "page_index": 21,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 11,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国广告法_20210429.pdf",
+              "page_index": 8,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": true,
+          "vector_search_ms": 52.34,
+          "rerank_ms": 5203.23,
+          "total_retrieval_ms": 5255.56,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r39",
+          "question": "平台把商业推广伪装成新闻报道，消费者难以辨认，这类广告应当具备什么可识别性要求？",
+          "expected_sources": [
+            "中华人民共和国广告法_20210429.pdf"
+          ],
+          "gold_evidence": {
+            "article": "第十四条",
+            "pdf_page": 5,
+            "anchor": "广告应当具有可识别性，能够使"
+          },
+          "actual_sources": [
+            "中华人民共和国广告法_20210429.pdf",
+            "中华人民共和国广告法_20210429.pdf",
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "中华人民共和国广告法_20210429.pdf",
+            "中华人民共和国广告法_20210429.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "中华人民共和国广告法_20210429.pdf",
+              "page_index": 4,
+              "evidence_match": true
+            },
+            {
+              "rank": 2,
+              "source": "中华人民共和国广告法_20210429.pdf",
+              "page_index": 3,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 11,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "中华人民共和国广告法_20210429.pdf",
+              "page_index": 9,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国广告法_20210429.pdf",
+              "page_index": 8,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": true,
+          "vector_search_ms": 63.52,
+          "rerank_ms": 5585.44,
+          "total_retrieval_ms": 5648.96,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r40",
+          "question": "保健食品广告是否可以利用广告代言人作推荐、证明？",
+          "expected_sources": [
+            "中华人民共和国广告法_20210429.pdf"
+          ],
+          "gold_evidence": {
+            "article": "第十八条",
+            "pdf_page": 6,
+            "anchor": "利用广告代言人作推荐、证明"
+          },
+          "actual_sources": [
+            "中华人民共和国广告法_20210429.pdf",
+            "中华人民共和国广告法_20210429.pdf",
+            "中华人民共和国广告法_20210429.pdf",
+            "中华人民共和国广告法_20210429.pdf",
+            "中华人民共和国广告法_20210429.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "中华人民共和国广告法_20210429.pdf",
+              "page_index": 5,
+              "evidence_match": true
+            },
+            {
+              "rank": 2,
+              "source": "中华人民共和国广告法_20210429.pdf",
+              "page_index": 4,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "中华人民共和国广告法_20210429.pdf",
+              "page_index": 19,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "中华人民共和国广告法_20210429.pdf",
+              "page_index": 6,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国广告法_20210429.pdf",
+              "page_index": 10,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": true,
+          "vector_search_ms": 51.99,
+          "rerank_ms": 5346.95,
+          "total_retrieval_ms": 5398.93,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r47",
+          "question": "食品标签或说明书写了虚假内容、暗示能治疗疾病，这样的食品还能上市销售吗？",
+          "expected_sources": [
+            "中华人民共和国食品安全法_20250912.pdf"
+          ],
+          "gold_evidence": {
+            "article": "第七十一条",
+            "pdf_page": 27,
+            "anchor": "不得含有虚假内容，不得涉及疾病预防"
+          },
+          "actual_sources": [
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 26,
+              "evidence_match": true
+            },
+            {
+              "rank": 2,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 59,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 25,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 24,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 14,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": true,
+          "vector_search_ms": 64.04,
+          "rerank_ms": 6002.85,
+          "total_retrieval_ms": 6066.89,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r48",
+          "question": "食品生产经营者是否对食品广告内容的真实性、合法性负责；食品广告能否涉及疾病预防、治疗功能？",
+          "expected_sources": [
+            "中华人民共和国食品安全法_20250912.pdf"
+          ],
+          "gold_evidence": {
+            "article": "第七十三条",
+            "pdf_page": 27,
+            "anchor": "食品广告的内容应当真实合法，不得含有虚假内容"
+          },
+          "actual_sources": [
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 55,
+              "evidence_match": false
+            },
+            {
+              "rank": 2,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 56,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 28,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 23,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 24,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": false,
+          "vector_search_ms": 69.63,
+          "rerank_ms": 6034.23,
+          "total_retrieval_ms": 6103.86,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r49",
+          "question": "进口预包装食品没有中文标签和中文说明书，是否可以进口销售？",
+          "expected_sources": [
+            "中华人民共和国食品安全法_20250912.pdf"
+          ],
+          "gold_evidence": {
+            "article": "第九十七条",
+            "pdf_page": 35,
+            "anchor": "没有中文标签、中文说明书"
+          },
+          "actual_sources": [
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 34,
+              "evidence_match": true
+            },
+            {
+              "rank": 2,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 14,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 25,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 1,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 24,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": true,
+          "vector_search_ms": 59.71,
+          "rerank_ms": 5989.01,
+          "total_retrieval_ms": 6048.71,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r50",
+          "question": "生产不符合食品安全标准的食品，或经营者明知不符合标准仍经营时，消费者除赔偿损失外能否主张价款十倍或损失三倍赔偿；不足一千元时如何处理？",
+          "expected_sources": [
+            "中华人民共和国食品安全法_20250912.pdf"
+          ],
+          "gold_evidence": {
+            "article": "第一百四十八条",
+            "pdf_page": 60,
+            "anchor": "价款十倍或者损失三倍的赔偿金"
+          },
+          "actual_sources": [
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 59,
+              "evidence_match": true
+            },
+            {
+              "rank": 2,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 47,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 46,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 45,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 54,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": true,
+          "vector_search_ms": 89.49,
+          "rerank_ms": 6187.0,
+          "total_retrieval_ms": 6276.49,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        }
+      ]
+    }
+  },
+  "hybrid_runs": [
+    {
+      "k_bm25": 20,
+      "top_candidates": 40,
+      "rrf_k": 60,
+      "k_vector": 40,
+      "evidence_hit": 17,
+      "evidence_total": 17,
+      "evidence_accuracy": 100.0,
+      "avg_total_retrieval_ms": 6044.4,
+      "avg_rerank_ms": 5979.8,
+      "rescue": {
+        "rescued": [
+          "r10",
+          "r12",
+          "r22",
+          "r48"
+        ],
+        "lost": [],
+        "still_fail": [],
+        "baseline_fails": [
+          "r10",
+          "r12",
+          "r22",
+          "r48"
+        ]
+      },
+      "report": {
+        "k": 40,
+        "top_k": 5,
+        "total": 17,
+        "hit": 17,
+        "accuracy": 100.0,
+        "source_hit": 17,
+        "source_accuracy": 100.0,
+        "evidence_total": 17,
+        "evidence_hit": 17,
+        "evidence_accuracy": 100.0,
+        "fallback_count": 0,
+        "recall": "hybrid",
+        "recall_fallback_count": 0,
+        "timing_ms": {
+          "vector_search": {
+            "avg": 64.59,
+            "median": 64.56,
+            "p95": 88.56
+          },
+          "rerank": {
+            "avg": 5979.8,
+            "median": 5917.09,
+            "p95": 6822.07
+          },
+          "total_retrieval": {
+            "avg": 6044.4,
+            "median": 5984.85,
+            "p95": 6886.64
+          }
+        },
+        "details": [
+          {
+            "id": "r09",
+            "question": "网上定制了刻字礼品，商家说不适用七天无理由退货，这种退货例外如何判断？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第二十五条",
+              "pdf_page": 6,
+              "anchor": "但下列商品除外：（一）消费者定作的"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 13,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 9,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 72.15,
+            "rerank_ms": 5828.85,
+            "total_retrieval_ms": 5901.0,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r10",
+            "question": "健身房合同写着“办卡后概不退款、经营者不承担任何责任”，这种格式条款有效吗？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第二十六条",
+              "pdf_page": 7,
+              "anchor": "不得以格式条款、通知、声明、店堂告示等方式"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 11,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 74.39,
+            "rerank_ms": 5875.57,
+            "total_retrieval_ms": 5949.97,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r11",
+            "question": "App 未经同意把消费者手机号和地址卖给第三方，经营者收集和使用个人信息应遵守什么原则？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第二十九条",
+              "pdf_page": 7,
+              "anchor": "消费者个人信息，应当遵循合法、正当、必要的原则"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国电子商务法_20180831.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 7,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 1,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 66.97,
+            "rerank_ms": 5815.16,
+            "total_retrieval_ms": 5882.13,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r12",
+            "question": "美容院收了预付款却关门不提供服务，消费者可以要求退回预付款和哪些费用？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第五十三条",
+              "pdf_page": 14,
+              "anchor": "未按照约定提供的，应当按照消费者的要求履行约定"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 13,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 4,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 63.21,
+            "rerank_ms": 5964.89,
+            "total_retrieval_ms": 6028.11,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r20",
+            "question": "卖家在产品中掺假、以次充好，或者用不合格品冒充合格品，法律禁止吗？",
+            "expected_sources": [
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第三十九条",
+              "pdf_page": 10,
+              "anchor": "不得掺杂、掺假，不得以假充真"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 9,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 1,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 59.44,
+            "rerank_ms": 6197.58,
+            "total_retrieval_ms": 6257.02,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r21",
+            "question": "买到的产品不具备说明书承诺的使用性能，销售者应负责修理、更换或退货吗？",
+            "expected_sources": [
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第四十条",
+              "pdf_page": 10,
+              "anchor": "销售者应当负责修理、更换、退货"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 9,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 13,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 64.56,
+            "rerank_ms": 6822.07,
+            "total_retrieval_ms": 6886.64,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r22",
+            "question": "依据产品质量法，产品缺陷造成人身伤害时可以主张哪些赔偿项目？",
+            "expected_sources": [
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第四十四条",
+              "pdf_page": 12,
+              "anchor": "侵害人应当赔偿医疗费"
+            },
+            "actual_sources": [
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 11,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 0,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 58.72,
+            "rerank_ms": 6669.25,
+            "total_retrieval_ms": 6727.97,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r30",
+            "question": "企业编造竞争对手产品质量有问题的消息并传播，损害对方商誉，可能违反什么规定？",
+            "expected_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十二条",
+              "pdf_page": 6,
+              "anchor": "经营者不得编造、传播或者指使"
+            },
+            "actual_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 21,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 13,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 22,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 11,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 64.69,
+            "rerank_ms": 6200.62,
+            "total_retrieval_ms": 6265.31,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r31",
+            "question": "平台利用算法强迫用户关闭或卸载竞争对手合法提供的 App，可能违反什么不正当竞争规定？",
+            "expected_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十三条",
+              "pdf_page": 6,
+              "anchor": "经营者不得利用数据和算法、技术"
+            },
+            "actual_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国电子商务法_20180831.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 1,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 7,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 6,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 20,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 65.3,
+            "rerank_ms": 5597.25,
+            "total_retrieval_ms": 5662.55,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r32",
+            "question": "平台强制商家按照平台定价规则低于成本销售商品，法律上如何评价？",
+            "expected_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十四条",
+              "pdf_page": 7,
+              "anchor": "平台经营者不得强制"
+            },
+            "actual_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国电子商务法_20180831.pdf",
+              "中华人民共和国电子商务法_20180831.pdf",
+              "中华人民共和国电子商务法_20180831.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 6,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 19,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 9,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 57.41,
+            "rerank_ms": 6607.07,
+            "total_retrieval_ms": 6664.48,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r38",
+            "question": "广告文案是否可以贬低其他生产经营者的商品或服务？",
+            "expected_sources": [
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十三条",
+              "pdf_page": 5,
+              "anchor": "广告不得贬低其他生产经营者的"
+            },
+            "actual_sources": [
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 4,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 19,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 21,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 17,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 11,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 54.72,
+            "rerank_ms": 5549.41,
+            "total_retrieval_ms": 5604.13,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r39",
+            "question": "平台把商业推广伪装成新闻报道，消费者难以辨认，这类广告应当具备什么可识别性要求？",
+            "expected_sources": [
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十四条",
+              "pdf_page": 5,
+              "anchor": "广告应当具有可识别性，能够使"
+            },
+            "actual_sources": [
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 4,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 1,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 9,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 12,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 67.76,
+            "rerank_ms": 5917.09,
+            "total_retrieval_ms": 5984.85,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r40",
+            "question": "保健食品广告是否可以利用广告代言人作推荐、证明？",
+            "expected_sources": [
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十八条",
+              "pdf_page": 6,
+              "anchor": "利用广告代言人作推荐、证明"
+            },
+            "actual_sources": [
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 19,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 4,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 6,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 53.63,
+            "rerank_ms": 5491.43,
+            "total_retrieval_ms": 5545.06,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r47",
+            "question": "食品标签或说明书写了虚假内容、暗示能治疗疾病，这样的食品还能上市销售吗？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第七十一条",
+              "pdf_page": 27,
+              "anchor": "不得含有虚假内容，不得涉及疾病预防"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 26,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 59,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 24,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 28,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 60.78,
+            "rerank_ms": 5601.7,
+            "total_retrieval_ms": 5662.48,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r48",
+            "question": "食品生产经营者是否对食品广告内容的真实性、合法性负责；食品广告能否涉及疾病预防、治疗功能？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第七十三条",
+              "pdf_page": 27,
+              "anchor": "食品广告的内容应当真实合法，不得含有虚假内容"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 26,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 55,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 28,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 56,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 1,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 67.22,
+            "rerank_ms": 5936.26,
+            "total_retrieval_ms": 6003.48,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r49",
+            "question": "进口预包装食品没有中文标签和中文说明书，是否可以进口销售？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第九十七条",
+              "pdf_page": 35,
+              "anchor": "没有中文标签、中文说明书"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 34,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 25,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 7,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 58.55,
+            "rerank_ms": 5392.06,
+            "total_retrieval_ms": 5450.61,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r50",
+            "question": "生产不符合食品安全标准的食品，或经营者明知不符合标准仍经营时，消费者除赔偿损失外能否主张价款十倍或损失三倍赔偿；不足一千元时如何处理？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第一百四十八条",
+              "pdf_page": 60,
+              "anchor": "价款十倍或者损失三倍的赔偿金"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 59,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 47,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 45,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 46,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 54,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 88.56,
+            "rerank_ms": 6190.42,
+            "total_retrieval_ms": 6278.98,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          }
+        ]
+      }
+    },
+    {
+      "k_bm25": 20,
+      "top_candidates": 60,
+      "rrf_k": 60,
+      "k_vector": 40,
+      "evidence_hit": 17,
+      "evidence_total": 17,
+      "evidence_accuracy": 100.0,
+      "avg_total_retrieval_ms": 7318.24,
+      "avg_rerank_ms": 7255.04,
+      "rescue": {
+        "rescued": [
+          "r10",
+          "r12",
+          "r22",
+          "r48"
+        ],
+        "lost": [],
+        "still_fail": [],
+        "baseline_fails": [
+          "r10",
+          "r12",
+          "r22",
+          "r48"
+        ]
+      },
+      "report": {
+        "k": 40,
+        "top_k": 5,
+        "total": 17,
+        "hit": 17,
+        "accuracy": 100.0,
+        "source_hit": 17,
+        "source_accuracy": 100.0,
+        "evidence_total": 17,
+        "evidence_hit": 17,
+        "evidence_accuracy": 100.0,
+        "fallback_count": 0,
+        "recall": "hybrid",
+        "recall_fallback_count": 0,
+        "timing_ms": {
+          "vector_search": {
+            "avg": 63.19,
+            "median": 62.16,
+            "p95": 92.1
+          },
+          "rerank": {
+            "avg": 7255.04,
+            "median": 7267.66,
+            "p95": 8463.18
+          },
+          "total_retrieval": {
+            "avg": 7318.24,
+            "median": 7331.85,
+            "p95": 8525.9
+          }
+        },
+        "details": [
+          {
+            "id": "r09",
+            "question": "网上定制了刻字礼品，商家说不适用七天无理由退货，这种退货例外如何判断？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第二十五条",
+              "pdf_page": 6,
+              "anchor": "但下列商品除外：（一）消费者定作的"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 13,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 9,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 62.16,
+            "rerank_ms": 7736.96,
+            "total_retrieval_ms": 7799.12,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 55,
+            "returned_count": 5
+          },
+          {
+            "id": "r10",
+            "question": "健身房合同写着“办卡后概不退款、经营者不承担任何责任”，这种格式条款有效吗？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第二十六条",
+              "pdf_page": 7,
+              "anchor": "不得以格式条款、通知、声明、店堂告示等方式"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 15,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": true
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 64.19,
+            "rerank_ms": 7250.99,
+            "total_retrieval_ms": 7315.18,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 52,
+            "returned_count": 5
+          },
+          {
+            "id": "r11",
+            "question": "App 未经同意把消费者手机号和地址卖给第三方，经营者收集和使用个人信息应遵守什么原则？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第二十九条",
+              "pdf_page": 7,
+              "anchor": "消费者个人信息，应当遵循合法、正当、必要的原则"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国电子商务法_20180831.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 7,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 3,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 5,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 65.45,
+            "rerank_ms": 7383.44,
+            "total_retrieval_ms": 7448.89,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 54,
+            "returned_count": 5
+          },
+          {
+            "id": "r12",
+            "question": "美容院收了预付款却关门不提供服务，消费者可以要求退回预付款和哪些费用？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第五十三条",
+              "pdf_page": 14,
+              "anchor": "未按照约定提供的，应当按照消费者的要求履行约定"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 13,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 4,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 10,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 62.72,
+            "rerank_ms": 8463.18,
+            "total_retrieval_ms": 8525.9,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 53,
+            "returned_count": 5
+          },
+          {
+            "id": "r20",
+            "question": "卖家在产品中掺假、以次充好，或者用不合格品冒充合格品，法律禁止吗？",
+            "expected_sources": [
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第三十九条",
+              "pdf_page": 10,
+              "anchor": "不得掺杂、掺假，不得以假充真"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 9,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 1,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 60.2,
+            "rerank_ms": 7271.65,
+            "total_retrieval_ms": 7331.85,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 51,
+            "returned_count": 5
+          },
+          {
+            "id": "r21",
+            "question": "买到的产品不具备说明书承诺的使用性能，销售者应负责修理、更换或退货吗？",
+            "expected_sources": [
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第四十条",
+              "pdf_page": 10,
+              "anchor": "销售者应当负责修理、更换、退货"
+            },
+            "actual_sources": [
+              "中华人民共和国产品质量法_20181229.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 9,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 13,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 59.57,
+            "rerank_ms": 7397.9,
+            "total_retrieval_ms": 7457.46,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 46,
+            "returned_count": 5
+          },
+          {
+            "id": "r22",
+            "question": "依据产品质量法，产品缺陷造成人身伤害时可以主张哪些赔偿项目？",
+            "expected_sources": [
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第四十四条",
+              "pdf_page": 12,
+              "anchor": "侵害人应当赔偿医疗费"
+            },
+            "actual_sources": [
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 11,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 0,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 55.15,
+            "rerank_ms": 8055.79,
+            "total_retrieval_ms": 8110.94,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 51,
+            "returned_count": 5
+          },
+          {
+            "id": "r30",
+            "question": "企业编造竞争对手产品质量有问题的消息并传播，损害对方商誉，可能违反什么规定？",
+            "expected_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十二条",
+              "pdf_page": 6,
+              "anchor": "经营者不得编造、传播或者指使"
+            },
+            "actual_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 22,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 11,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 21,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 9,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 64.48,
+            "rerank_ms": 7023.03,
+            "total_retrieval_ms": 7087.51,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 50,
+            "returned_count": 5
+          },
+          {
+            "id": "r31",
+            "question": "平台利用算法强迫用户关闭或卸载竞争对手合法提供的 App，可能违反什么不正当竞争规定？",
+            "expected_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十三条",
+              "pdf_page": 6,
+              "anchor": "经营者不得利用数据和算法、技术"
+            },
+            "actual_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 1,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 6,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 7,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 2,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 63.02,
+            "rerank_ms": 6852.63,
+            "total_retrieval_ms": 6915.65,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 47,
+            "returned_count": 5
+          },
+          {
+            "id": "r32",
+            "question": "平台强制商家按照平台定价规则低于成本销售商品，法律上如何评价？",
+            "expected_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十四条",
+              "pdf_page": 7,
+              "anchor": "平台经营者不得强制"
+            },
+            "actual_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国电子商务法_20180831.pdf",
+              "中华人民共和国电子商务法_20180831.pdf",
+              "中华人民共和国电子商务法_20180831.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 6,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 19,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 9,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 56.53,
+            "rerank_ms": 7692.83,
+            "total_retrieval_ms": 7749.36,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 49,
+            "returned_count": 5
+          },
+          {
+            "id": "r38",
+            "question": "广告文案是否可以贬低其他生产经营者的商品或服务？",
+            "expected_sources": [
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十三条",
+              "pdf_page": 5,
+              "anchor": "广告不得贬低其他生产经营者的"
+            },
+            "actual_sources": [
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 4,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 19,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 21,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 11,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 57.09,
+            "rerank_ms": 6951.5,
+            "total_retrieval_ms": 7008.6,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 51,
+            "returned_count": 5
+          },
+          {
+            "id": "r39",
+            "question": "平台把商业推广伪装成新闻报道，消费者难以辨认，这类广告应当具备什么可识别性要求？",
+            "expected_sources": [
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十四条",
+              "pdf_page": 5,
+              "anchor": "广告应当具有可识别性，能够使"
+            },
+            "actual_sources": [
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 4,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 9,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 3,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 21,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 69.53,
+            "rerank_ms": 7267.66,
+            "total_retrieval_ms": 7337.19,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 51,
+            "returned_count": 5
+          },
+          {
+            "id": "r40",
+            "question": "保健食品广告是否可以利用广告代言人作推荐、证明？",
+            "expected_sources": [
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十八条",
+              "pdf_page": 6,
+              "anchor": "利用广告代言人作推荐、证明"
+            },
+            "actual_sources": [
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 19,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 4,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 6,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 53.46,
+            "rerank_ms": 5551.92,
+            "total_retrieval_ms": 5605.38,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 41,
+            "returned_count": 5
+          },
+          {
+            "id": "r47",
+            "question": "食品标签或说明书写了虚假内容、暗示能治疗疾病，这样的食品还能上市销售吗？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第七十一条",
+              "pdf_page": 27,
+              "anchor": "不得含有虚假内容，不得涉及疾病预防"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 26,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 59,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 24,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 28,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 59.69,
+            "rerank_ms": 7059.28,
+            "total_retrieval_ms": 7118.97,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 51,
+            "returned_count": 5
+          },
+          {
+            "id": "r48",
+            "question": "食品生产经营者是否对食品广告内容的真实性、合法性负责；食品广告能否涉及疾病预防、治疗功能？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第七十三条",
+              "pdf_page": 27,
+              "anchor": "食品广告的内容应当真实合法，不得含有虚假内容"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 26,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 56,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 28,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 55,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 2,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 70.73,
+            "rerank_ms": 6847.04,
+            "total_retrieval_ms": 6917.76,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 48,
+            "returned_count": 5
+          },
+          {
+            "id": "r49",
+            "question": "进口预包装食品没有中文标签和中文说明书，是否可以进口销售？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第九十七条",
+              "pdf_page": 35,
+              "anchor": "没有中文标签、中文说明书"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 34,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 25,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 48,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 7,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 58.24,
+            "rerank_ms": 7001.67,
+            "total_retrieval_ms": 7059.92,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 50,
+            "returned_count": 5
+          },
+          {
+            "id": "r50",
+            "question": "生产不符合食品安全标准的食品，或经营者明知不符合标准仍经营时，消费者除赔偿损失外能否主张价款十倍或损失三倍赔偿；不足一千元时如何处理？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第一百四十八条",
+              "pdf_page": 60,
+              "anchor": "价款十倍或者损失三倍的赔偿金"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 59,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 47,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 54,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 45,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 46,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 92.1,
+            "rerank_ms": 7528.27,
+            "total_retrieval_ms": 7620.37,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 52,
+            "returned_count": 5
+          }
+        ]
+      }
+    },
+    {
+      "k_bm25": 40,
+      "top_candidates": 40,
+      "rrf_k": 60,
+      "k_vector": 40,
+      "evidence_hit": 17,
+      "evidence_total": 17,
+      "evidence_accuracy": 100.0,
+      "avg_total_retrieval_ms": 6150.69,
+      "avg_rerank_ms": 6088.42,
+      "rescue": {
+        "rescued": [
+          "r10",
+          "r12",
+          "r22",
+          "r48"
+        ],
+        "lost": [],
+        "still_fail": [],
+        "baseline_fails": [
+          "r10",
+          "r12",
+          "r22",
+          "r48"
+        ]
+      },
+      "report": {
+        "k": 40,
+        "top_k": 5,
+        "total": 17,
+        "hit": 17,
+        "accuracy": 100.0,
+        "source_hit": 17,
+        "source_accuracy": 100.0,
+        "evidence_total": 17,
+        "evidence_hit": 17,
+        "evidence_accuracy": 100.0,
+        "fallback_count": 0,
+        "recall": "hybrid",
+        "recall_fallback_count": 0,
+        "timing_ms": {
+          "vector_search": {
+            "avg": 62.27,
+            "median": 61.37,
+            "p95": 86.6
+          },
+          "rerank": {
+            "avg": 6088.42,
+            "median": 6041.55,
+            "p95": 6934.97
+          },
+          "total_retrieval": {
+            "avg": 6150.69,
+            "median": 6105.54,
+            "p95": 6996.08
+          }
+        },
+        "details": [
+          {
+            "id": "r09",
+            "question": "网上定制了刻字礼品，商家说不适用七天无理由退货，这种退货例外如何判断？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第二十五条",
+              "pdf_page": 6,
+              "anchor": "但下列商品除外：（一）消费者定作的"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 13,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 9,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 61.37,
+            "rerank_ms": 6242.45,
+            "total_retrieval_ms": 6303.81,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r10",
+            "question": "健身房合同写着“办卡后概不退款、经营者不承担任何责任”，这种格式条款有效吗？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第二十六条",
+              "pdf_page": 7,
+              "anchor": "不得以格式条款、通知、声明、店堂告示等方式"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 15,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 5,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 65.16,
+            "rerank_ms": 5934.61,
+            "total_retrieval_ms": 5999.77,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r11",
+            "question": "App 未经同意把消费者手机号和地址卖给第三方，经营者收集和使用个人信息应遵守什么原则？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第二十九条",
+              "pdf_page": 7,
+              "anchor": "消费者个人信息，应当遵循合法、正当、必要的原则"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国电子商务法_20180831.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 7,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 1,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 5,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 63.82,
+            "rerank_ms": 5637.18,
+            "total_retrieval_ms": 5701.0,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r12",
+            "question": "美容院收了预付款却关门不提供服务，消费者可以要求退回预付款和哪些费用？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第五十三条",
+              "pdf_page": 14,
+              "anchor": "未按照约定提供的，应当按照消费者的要求履行约定"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 13,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 4,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 10,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 61.73,
+            "rerank_ms": 6792.1,
+            "total_retrieval_ms": 6853.83,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r20",
+            "question": "卖家在产品中掺假、以次充好，或者用不合格品冒充合格品，法律禁止吗？",
+            "expected_sources": [
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第三十九条",
+              "pdf_page": 10,
+              "anchor": "不得掺杂、掺假，不得以假充真"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 9,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 1,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 56.4,
+            "rerank_ms": 6072.23,
+            "total_retrieval_ms": 6128.62,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r21",
+            "question": "买到的产品不具备说明书承诺的使用性能，销售者应负责修理、更换或退货吗？",
+            "expected_sources": [
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第四十条",
+              "pdf_page": 10,
+              "anchor": "销售者应当负责修理、更换、退货"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 9,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 13,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 61.11,
+            "rerank_ms": 6934.97,
+            "total_retrieval_ms": 6996.08,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r22",
+            "question": "依据产品质量法，产品缺陷造成人身伤害时可以主张哪些赔偿项目？",
+            "expected_sources": [
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第四十四条",
+              "pdf_page": 12,
+              "anchor": "侵害人应当赔偿医疗费"
+            },
+            "actual_sources": [
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 11,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 17,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 54.49,
+            "rerank_ms": 6588.97,
+            "total_retrieval_ms": 6643.45,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r30",
+            "question": "企业编造竞争对手产品质量有问题的消息并传播，损害对方商誉，可能违反什么规定？",
+            "expected_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十二条",
+              "pdf_page": 6,
+              "anchor": "经营者不得编造、传播或者指使"
+            },
+            "actual_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 21,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 11,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 22,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 63.98,
+            "rerank_ms": 6041.55,
+            "total_retrieval_ms": 6105.54,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r31",
+            "question": "平台利用算法强迫用户关闭或卸载竞争对手合法提供的 App，可能违反什么不正当竞争规定？",
+            "expected_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十三条",
+              "pdf_page": 6,
+              "anchor": "经营者不得利用数据和算法、技术"
+            },
+            "actual_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 7,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 6,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 1,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 2,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 63.01,
+            "rerank_ms": 5618.97,
+            "total_retrieval_ms": 5681.98,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r32",
+            "question": "平台强制商家按照平台定价规则低于成本销售商品，法律上如何评价？",
+            "expected_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十四条",
+              "pdf_page": 7,
+              "anchor": "平台经营者不得强制"
+            },
+            "actual_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国电子商务法_20180831.pdf",
+              "中华人民共和国电子商务法_20180831.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 6,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 19,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 5,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 56.15,
+            "rerank_ms": 6669.21,
+            "total_retrieval_ms": 6725.36,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r38",
+            "question": "广告文案是否可以贬低其他生产经营者的商品或服务？",
+            "expected_sources": [
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十三条",
+              "pdf_page": 5,
+              "anchor": "广告不得贬低其他生产经营者的"
+            },
+            "actual_sources": [
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 4,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 19,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 21,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 11,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 55.11,
+            "rerank_ms": 5578.51,
+            "total_retrieval_ms": 5633.61,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r39",
+            "question": "平台把商业推广伪装成新闻报道，消费者难以辨认，这类广告应当具备什么可识别性要求？",
+            "expected_sources": [
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十四条",
+              "pdf_page": 5,
+              "anchor": "广告应当具有可识别性，能够使"
+            },
+            "actual_sources": [
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 4,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 9,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 19,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 21,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 69.27,
+            "rerank_ms": 6790.78,
+            "total_retrieval_ms": 6860.06,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r40",
+            "question": "保健食品广告是否可以利用广告代言人作推荐、证明？",
+            "expected_sources": [
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十八条",
+              "pdf_page": 6,
+              "anchor": "利用广告代言人作推荐、证明"
+            },
+            "actual_sources": [
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 19,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 6,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 4,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 53.6,
+            "rerank_ms": 5259.58,
+            "total_retrieval_ms": 5313.19,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r47",
+            "question": "食品标签或说明书写了虚假内容、暗示能治疗疾病，这样的食品还能上市销售吗？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第七十一条",
+              "pdf_page": 27,
+              "anchor": "不得含有虚假内容，不得涉及疾病预防"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 26,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 59,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 24,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 28,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 61.34,
+            "rerank_ms": 5518.05,
+            "total_retrieval_ms": 5579.39,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r48",
+            "question": "食品生产经营者是否对食品广告内容的真实性、合法性负责；食品广告能否涉及疾病预防、治疗功能？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第七十三条",
+              "pdf_page": 27,
+              "anchor": "食品广告的内容应当真实合法，不得含有虚假内容"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 26,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 56,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 28,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 55,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 23,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 71.4,
+            "rerank_ms": 5920.9,
+            "total_retrieval_ms": 5992.3,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r49",
+            "question": "进口预包装食品没有中文标签和中文说明书，是否可以进口销售？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第九十七条",
+              "pdf_page": 35,
+              "anchor": "没有中文标签、中文说明书"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 34,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 25,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 48,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 54.0,
+            "rerank_ms": 5675.61,
+            "total_retrieval_ms": 5729.61,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r50",
+            "question": "生产不符合食品安全标准的食品，或经营者明知不符合标准仍经营时，消费者除赔偿损失外能否主张价款十倍或损失三倍赔偿；不足一千元时如何处理？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第一百四十八条",
+              "pdf_page": 60,
+              "anchor": "价款十倍或者损失三倍的赔偿金"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 59,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 45,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 47,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 54,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 46,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 86.6,
+            "rerank_ms": 6227.48,
+            "total_retrieval_ms": 6314.08,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          }
+        ]
+      }
+    },
+    {
+      "k_bm25": 40,
+      "top_candidates": 60,
+      "rrf_k": 60,
+      "k_vector": 40,
+      "evidence_hit": 17,
+      "evidence_total": 17,
+      "evidence_accuracy": 100.0,
+      "avg_total_retrieval_ms": 8669.43,
+      "avg_rerank_ms": 8605.99,
+      "rescue": {
+        "rescued": [
+          "r10",
+          "r12",
+          "r22",
+          "r48"
+        ],
+        "lost": [],
+        "still_fail": [],
+        "baseline_fails": [
+          "r10",
+          "r12",
+          "r22",
+          "r48"
+        ]
+      },
+      "report": {
+        "k": 40,
+        "top_k": 5,
+        "total": 17,
+        "hit": 17,
+        "accuracy": 100.0,
+        "source_hit": 17,
+        "source_accuracy": 100.0,
+        "evidence_total": 17,
+        "evidence_hit": 17,
+        "evidence_accuracy": 100.0,
+        "fallback_count": 0,
+        "recall": "hybrid",
+        "recall_fallback_count": 0,
+        "timing_ms": {
+          "vector_search": {
+            "avg": 63.44,
+            "median": 62.56,
+            "p95": 91.37
+          },
+          "rerank": {
+            "avg": 8605.99,
+            "median": 8382.26,
+            "p95": 10168.39
+          },
+          "total_retrieval": {
+            "avg": 8669.43,
+            "median": 8443.67,
+            "p95": 10259.77
+          }
+        },
+        "details": [
+          {
+            "id": "r09",
+            "question": "网上定制了刻字礼品，商家说不适用七天无理由退货，这种退货例外如何判断？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第二十五条",
+              "pdf_page": 6,
+              "anchor": "但下列商品除外：（一）消费者定作的"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 13,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 61.4,
+            "rerank_ms": 8382.26,
+            "total_retrieval_ms": 8443.67,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          },
+          {
+            "id": "r10",
+            "question": "健身房合同写着“办卡后概不退款、经营者不承担任何责任”，这种格式条款有效吗？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第二十六条",
+              "pdf_page": 7,
+              "anchor": "不得以格式条款、通知、声明、店堂告示等方式"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 15,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 62.56,
+            "rerank_ms": 8170.3,
+            "total_retrieval_ms": 8232.85,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          },
+          {
+            "id": "r11",
+            "question": "App 未经同意把消费者手机号和地址卖给第三方，经营者收集和使用个人信息应遵守什么原则？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第二十九条",
+              "pdf_page": 7,
+              "anchor": "消费者个人信息，应当遵循合法、正当、必要的原则"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国电子商务法_20180831.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 7,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 3,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 14,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 65.43,
+            "rerank_ms": 8589.03,
+            "total_retrieval_ms": 8654.46,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          },
+          {
+            "id": "r12",
+            "question": "美容院收了预付款却关门不提供服务，消费者可以要求退回预付款和哪些费用？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第五十三条",
+              "pdf_page": 14,
+              "anchor": "未按照约定提供的，应当按照消费者的要求履行约定"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 13,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 6,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 63.32,
+            "rerank_ms": 9349.12,
+            "total_retrieval_ms": 9412.44,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          },
+          {
+            "id": "r20",
+            "question": "卖家在产品中掺假、以次充好，或者用不合格品冒充合格品，法律禁止吗？",
+            "expected_sources": [
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第三十九条",
+              "pdf_page": 10,
+              "anchor": "不得掺杂、掺假，不得以假充真"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 9,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 1,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 60.77,
+            "rerank_ms": 8392.67,
+            "total_retrieval_ms": 8453.43,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          },
+          {
+            "id": "r21",
+            "question": "买到的产品不具备说明书承诺的使用性能，销售者应负责修理、更换或退货吗？",
+            "expected_sources": [
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第四十条",
+              "pdf_page": 10,
+              "anchor": "销售者应当负责修理、更换、退货"
+            },
+            "actual_sources": [
+              "中华人民共和国产品质量法_20181229.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 9,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 13,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 64.98,
+            "rerank_ms": 9069.57,
+            "total_retrieval_ms": 9134.55,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 57,
+            "returned_count": 5
+          },
+          {
+            "id": "r22",
+            "question": "依据产品质量法，产品缺陷造成人身伤害时可以主张哪些赔偿项目？",
+            "expected_sources": [
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第四十四条",
+              "pdf_page": 12,
+              "anchor": "侵害人应当赔偿医疗费"
+            },
+            "actual_sources": [
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 11,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 0,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 65.53,
+            "rerank_ms": 9211.03,
+            "total_retrieval_ms": 9276.56,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          },
+          {
+            "id": "r30",
+            "question": "企业编造竞争对手产品质量有问题的消息并传播，损害对方商誉，可能违反什么规定？",
+            "expected_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十二条",
+              "pdf_page": 6,
+              "anchor": "经营者不得编造、传播或者指使"
+            },
+            "actual_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国产品质量法_20181229.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 13,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 21,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 17,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 64.21,
+            "rerank_ms": 8353.9,
+            "total_retrieval_ms": 8418.11,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          },
+          {
+            "id": "r31",
+            "question": "平台利用算法强迫用户关闭或卸载竞争对手合法提供的 App，可能违反什么不正当竞争规定？",
+            "expected_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十三条",
+              "pdf_page": 6,
+              "anchor": "经营者不得利用数据和算法、技术"
+            },
+            "actual_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国电子商务法_20180831.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 7,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 6,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 20,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 2,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 61.64,
+            "rerank_ms": 8033.16,
+            "total_retrieval_ms": 8094.8,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          },
+          {
+            "id": "r32",
+            "question": "平台强制商家按照平台定价规则低于成本销售商品，法律上如何评价？",
+            "expected_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十四条",
+              "pdf_page": 7,
+              "anchor": "平台经营者不得强制"
+            },
+            "actual_sources": [
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国反不正当竞争法_20250627.pdf",
+              "中华人民共和国电子商务法_20180831.pdf",
+              "中华人民共和国电子商务法_20180831.pdf",
+              "中华人民共和国电子商务法_20180831.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 6,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国反不正当竞争法_20250627.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 9,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 19,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国电子商务法_20180831.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 57.62,
+            "rerank_ms": 9381.04,
+            "total_retrieval_ms": 9438.67,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          },
+          {
+            "id": "r38",
+            "question": "广告文案是否可以贬低其他生产经营者的商品或服务？",
+            "expected_sources": [
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十三条",
+              "pdf_page": 5,
+              "anchor": "广告不得贬低其他生产经营者的"
+            },
+            "actual_sources": [
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 4,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 19,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 21,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 16,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 49.75,
+            "rerank_ms": 8101.63,
+            "total_retrieval_ms": 8151.39,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          },
+          {
+            "id": "r39",
+            "question": "平台把商业推广伪装成新闻报道，消费者难以辨认，这类广告应当具备什么可识别性要求？",
+            "expected_sources": [
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十四条",
+              "pdf_page": 5,
+              "anchor": "广告应当具有可识别性，能够使"
+            },
+            "actual_sources": [
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 4,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 1,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 9,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 21,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 66.86,
+            "rerank_ms": 9454.28,
+            "total_retrieval_ms": 9521.13,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          },
+          {
+            "id": "r40",
+            "question": "保健食品广告是否可以利用广告代言人作推荐、证明？",
+            "expected_sources": [
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第十八条",
+              "pdf_page": 6,
+              "anchor": "利用广告代言人作推荐、证明"
+            },
+            "actual_sources": [
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf",
+              "中华人民共和国广告法_20210429.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 5,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 19,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 10,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 4,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国广告法_20210429.pdf",
+                "page_index": 6,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 53.82,
+            "rerank_ms": 6861.21,
+            "total_retrieval_ms": 6915.03,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 48,
+            "returned_count": 5
+          },
+          {
+            "id": "r47",
+            "question": "食品标签或说明书写了虚假内容、暗示能治疗疾病，这样的食品还能上市销售吗？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第七十一条",
+              "pdf_page": 27,
+              "anchor": "不得含有虚假内容，不得涉及疾病预防"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 26,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 59,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 28,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 24,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 14,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 62.26,
+            "rerank_ms": 8328.75,
+            "total_retrieval_ms": 8391.01,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          },
+          {
+            "id": "r48",
+            "question": "食品生产经营者是否对食品广告内容的真实性、合法性负责；食品广告能否涉及疾病预防、治疗功能？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第七十三条",
+              "pdf_page": 27,
+              "anchor": "食品广告的内容应当真实合法，不得含有虚假内容"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 26,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 56,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 55,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 28,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 1,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 69.64,
+            "rerank_ms": 8196.26,
+            "total_retrieval_ms": 8265.9,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 59,
+            "returned_count": 5
+          },
+          {
+            "id": "r49",
+            "question": "进口预包装食品没有中文标签和中文说明书，是否可以进口销售？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第九十七条",
+              "pdf_page": 35,
+              "anchor": "没有中文标签、中文说明书"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 34,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 25,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 48,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 57.34,
+            "rerank_ms": 8259.16,
+            "total_retrieval_ms": 8316.5,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          },
+          {
+            "id": "r50",
+            "question": "生产不符合食品安全标准的食品，或经营者明知不符合标准仍经营时，消费者除赔偿损失外能否主张价款十倍或损失三倍赔偿；不足一千元时如何处理？",
+            "expected_sources": [
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "gold_evidence": {
+              "article": "第一百四十八条",
+              "pdf_page": 60,
+              "anchor": "价款十倍或者损失三倍的赔偿金"
+            },
+            "actual_sources": [
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 59,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 45,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 47,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 54,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 48,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 91.37,
+            "rerank_ms": 10168.39,
+            "total_retrieval_ms": 10259.77,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          }
+        ]
+      }
+    }
+  ]
+}

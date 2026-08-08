@@ -1,0 +1,922 @@
+{
+  "timestamp": "2026-08-08T14:56:35.816795",
+  "mode": "hybrid_sweep",
+  "config": {
+    "questions_path": "/home/an/legal_agent/evaluation/retrieval_k_tuning_50.json",
+    "split": "development",
+    "limit": 2,
+    "k_vector": 40,
+    "top_k": 5,
+    "rrf_k": 60,
+    "grid": [
+      [
+        20,
+        40
+      ],
+      [
+        20,
+        60
+      ],
+      [
+        40,
+        40
+      ],
+      [
+        40,
+        60
+      ]
+    ],
+    "reranker_model": "BAAI/bge-reranker-base",
+    "baseline_fails": [
+      "r01",
+      "r05",
+      "r06",
+      "r16",
+      "r18",
+      "r28",
+      "r29"
+    ]
+  },
+  "baseline": {
+    "evidence_hit": 1,
+    "evidence_total": 2,
+    "evidence_accuracy": 50.0,
+    "avg_total_retrieval_ms": 6667.33,
+    "report": {
+      "k": 40,
+      "top_k": 5,
+      "total": 2,
+      "hit": 2,
+      "accuracy": 100.0,
+      "source_hit": 2,
+      "source_accuracy": 100.0,
+      "evidence_total": 2,
+      "evidence_hit": 1,
+      "evidence_accuracy": 50.0,
+      "fallback_count": 0,
+      "recall": "vector",
+      "recall_fallback_count": 0,
+      "timing_ms": {
+        "vector_search": {
+          "avg": 88.19,
+          "median": 114.4,
+          "p95": 114.4
+        },
+        "rerank": {
+          "avg": 6579.14,
+          "median": 6588.66,
+          "p95": 6588.66
+        },
+        "total_retrieval": {
+          "avg": 6667.33,
+          "median": 6703.05,
+          "p95": 6703.05
+        }
+      },
+      "details": [
+        {
+          "id": "r01",
+          "question": "买到存在安全隐患的电热水壶，消费者在人身和财产安全方面享有哪些权利？",
+          "expected_sources": [
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+          ],
+          "gold_evidence": {
+            "article": "第七条",
+            "pdf_page": 2,
+            "anchor": "享有人身、财产安全不受损害的权利"
+          },
+          "actual_sources": [
+            "中华人民共和国产品质量法_20181229.pdf",
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国食品安全法_20250912.pdf",
+            "中华人民共和国产品质量法_20181229.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 7,
+              "evidence_match": false
+            },
+            {
+              "rank": 2,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 4,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 7,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 59,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国产品质量法_20181229.pdf",
+              "page_index": 3,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": false,
+          "vector_search_ms": 61.98,
+          "rerank_ms": 6569.61,
+          "total_retrieval_ms": 6631.6,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        },
+        {
+          "id": "r02",
+          "question": "商家不肯说明商品的生产日期、成分和售后规则，消费者有权要求了解这些信息吗？",
+          "expected_sources": [
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+          ],
+          "gold_evidence": {
+            "article": "第八条",
+            "pdf_page": 3,
+            "anchor": "知悉其购买、使用的商品或者接受的服务的真实情况"
+          },
+          "actual_sources": [
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+            "中华人民共和国食品安全法_20250912.pdf"
+          ],
+          "actual_documents": [
+            {
+              "rank": 1,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 2,
+              "evidence_match": true
+            },
+            {
+              "rank": 2,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 12,
+              "evidence_match": false
+            },
+            {
+              "rank": 3,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 14,
+              "evidence_match": false
+            },
+            {
+              "rank": 4,
+              "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "page_index": 3,
+              "evidence_match": false
+            },
+            {
+              "rank": 5,
+              "source": "中华人民共和国食品安全法_20250912.pdf",
+              "page_index": 59,
+              "evidence_match": false
+            }
+          ],
+          "hit": true,
+          "source_hit": true,
+          "evidence_hit": true,
+          "vector_search_ms": 114.4,
+          "rerank_ms": 6588.66,
+          "total_retrieval_ms": 6703.05,
+          "rerank_fallback": false,
+          "recall": "vector",
+          "recall_fallback": false,
+          "candidate_count": 40,
+          "returned_count": 5
+        }
+      ]
+    }
+  },
+  "hybrid_runs": [
+    {
+      "k_bm25": 20,
+      "top_candidates": 40,
+      "rrf_k": 60,
+      "k_vector": 40,
+      "evidence_hit": 2,
+      "evidence_total": 2,
+      "evidence_accuracy": 100.0,
+      "avg_total_retrieval_ms": 7173.21,
+      "avg_rerank_ms": 7011.15,
+      "rescue": {
+        "rescued": [
+          "r01"
+        ],
+        "lost": [],
+        "still_fail": [],
+        "baseline_fails": [
+          "r01"
+        ]
+      },
+      "report": {
+        "k": 40,
+        "top_k": 5,
+        "total": 2,
+        "hit": 2,
+        "accuracy": 100.0,
+        "source_hit": 2,
+        "source_accuracy": 100.0,
+        "evidence_total": 2,
+        "evidence_hit": 2,
+        "evidence_accuracy": 100.0,
+        "fallback_count": 0,
+        "recall": "hybrid",
+        "recall_fallback_count": 0,
+        "timing_ms": {
+          "vector_search": {
+            "avg": 162.06,
+            "median": 225.11,
+            "p95": 225.11
+          },
+          "rerank": {
+            "avg": 7011.15,
+            "median": 7114.28,
+            "p95": 7114.28
+          },
+          "total_retrieval": {
+            "avg": 7173.21,
+            "median": 7213.28,
+            "p95": 7213.28
+          }
+        },
+        "details": [
+          {
+            "id": "r01",
+            "question": "买到存在安全隐患的电热水壶，消费者在人身和财产安全方面享有哪些权利？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第七条",
+              "pdf_page": 2,
+              "anchor": "享有人身、财产安全不受损害的权利"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 2,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 3,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 1,
+                "evidence_match": true
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 4,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 225.11,
+            "rerank_ms": 6908.03,
+            "total_retrieval_ms": 7133.14,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r02",
+            "question": "商家不肯说明商品的生产日期、成分和售后规则，消费者有权要求了解这些信息吗？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第八条",
+              "pdf_page": 3,
+              "anchor": "知悉其购买、使用的商品或者接受的服务的真实情况"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 2,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 59,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 9,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 99.01,
+            "rerank_ms": 7114.28,
+            "total_retrieval_ms": 7213.28,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          }
+        ]
+      }
+    },
+    {
+      "k_bm25": 20,
+      "top_candidates": 60,
+      "rrf_k": 60,
+      "k_vector": 40,
+      "evidence_hit": 2,
+      "evidence_total": 2,
+      "evidence_accuracy": 100.0,
+      "avg_total_retrieval_ms": 7681.59,
+      "avg_rerank_ms": 7614.54,
+      "rescue": {
+        "rescued": [
+          "r01"
+        ],
+        "lost": [],
+        "still_fail": [],
+        "baseline_fails": [
+          "r01"
+        ]
+      },
+      "report": {
+        "k": 40,
+        "top_k": 5,
+        "total": 2,
+        "hit": 2,
+        "accuracy": 100.0,
+        "source_hit": 2,
+        "source_accuracy": 100.0,
+        "evidence_total": 2,
+        "evidence_hit": 2,
+        "evidence_accuracy": 100.0,
+        "fallback_count": 0,
+        "recall": "hybrid",
+        "recall_fallback_count": 0,
+        "timing_ms": {
+          "vector_search": {
+            "avg": 67.05,
+            "median": 68.34,
+            "p95": 68.34
+          },
+          "rerank": {
+            "avg": 7614.54,
+            "median": 8279.82,
+            "p95": 8279.82
+          },
+          "total_retrieval": {
+            "avg": 7681.59,
+            "median": 8345.57,
+            "p95": 8345.57
+          }
+        },
+        "details": [
+          {
+            "id": "r01",
+            "question": "买到存在安全隐患的电热水壶，消费者在人身和财产安全方面享有哪些权利？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第七条",
+              "pdf_page": 2,
+              "anchor": "享有人身、财产安全不受损害的权利"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 2,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 1,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 3,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 7,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 68.34,
+            "rerank_ms": 6949.26,
+            "total_retrieval_ms": 7017.6,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 48,
+            "returned_count": 5
+          },
+          {
+            "id": "r02",
+            "question": "商家不肯说明商品的生产日期、成分和售后规则，消费者有权要求了解这些信息吗？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第八条",
+              "pdf_page": 3,
+              "anchor": "知悉其购买、使用的商品或者接受的服务的真实情况"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 2,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 59,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 65.75,
+            "rerank_ms": 8279.82,
+            "total_retrieval_ms": 8345.57,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 50,
+            "returned_count": 5
+          }
+        ]
+      }
+    },
+    {
+      "k_bm25": 40,
+      "top_candidates": 40,
+      "rrf_k": 60,
+      "k_vector": 40,
+      "evidence_hit": 2,
+      "evidence_total": 2,
+      "evidence_accuracy": 100.0,
+      "avg_total_retrieval_ms": 6980.22,
+      "avg_rerank_ms": 6899.59,
+      "rescue": {
+        "rescued": [
+          "r01"
+        ],
+        "lost": [],
+        "still_fail": [],
+        "baseline_fails": [
+          "r01"
+        ]
+      },
+      "report": {
+        "k": 40,
+        "top_k": 5,
+        "total": 2,
+        "hit": 2,
+        "accuracy": 100.0,
+        "source_hit": 2,
+        "source_accuracy": 100.0,
+        "evidence_total": 2,
+        "evidence_hit": 2,
+        "evidence_accuracy": 100.0,
+        "fallback_count": 0,
+        "recall": "hybrid",
+        "recall_fallback_count": 0,
+        "timing_ms": {
+          "vector_search": {
+            "avg": 80.63,
+            "median": 95.95,
+            "p95": 95.95
+          },
+          "rerank": {
+            "avg": 6899.59,
+            "median": 6936.07,
+            "p95": 6936.07
+          },
+          "total_retrieval": {
+            "avg": 6980.22,
+            "median": 7001.38,
+            "p95": 7001.38
+          }
+        },
+        "details": [
+          {
+            "id": "r01",
+            "question": "买到存在安全隐患的电热水壶，消费者在人身和财产安全方面享有哪些权利？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第七条",
+              "pdf_page": 2,
+              "anchor": "享有人身、财产安全不受损害的权利"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 2,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 3,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 1,
+                "evidence_match": true
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 7,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 65.31,
+            "rerank_ms": 6936.07,
+            "total_retrieval_ms": 7001.38,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          },
+          {
+            "id": "r02",
+            "question": "商家不肯说明商品的生产日期、成分和售后规则，消费者有权要求了解这些信息吗？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第八条",
+              "pdf_page": 3,
+              "anchor": "知悉其购买、使用的商品或者接受的服务的真实情况"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国食品安全法_20250912.pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国产品质量法_20181229.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 2,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 59,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国产品质量法_20181229.pdf",
+                "page_index": 8,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 95.95,
+            "rerank_ms": 6863.1,
+            "total_retrieval_ms": 6959.05,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 40,
+            "returned_count": 5
+          }
+        ]
+      }
+    },
+    {
+      "k_bm25": 40,
+      "top_candidates": 60,
+      "rrf_k": 60,
+      "k_vector": 40,
+      "evidence_hit": 2,
+      "evidence_total": 2,
+      "evidence_accuracy": 100.0,
+      "avg_total_retrieval_ms": 9961.7,
+      "avg_rerank_ms": 9899.26,
+      "rescue": {
+        "rescued": [
+          "r01"
+        ],
+        "lost": [],
+        "still_fail": [],
+        "baseline_fails": [
+          "r01"
+        ]
+      },
+      "report": {
+        "k": 40,
+        "top_k": 5,
+        "total": 2,
+        "hit": 2,
+        "accuracy": 100.0,
+        "source_hit": 2,
+        "source_accuracy": 100.0,
+        "evidence_total": 2,
+        "evidence_hit": 2,
+        "evidence_accuracy": 100.0,
+        "fallback_count": 0,
+        "recall": "hybrid",
+        "recall_fallback_count": 0,
+        "timing_ms": {
+          "vector_search": {
+            "avg": 62.45,
+            "median": 63.87,
+            "p95": 63.87
+          },
+          "rerank": {
+            "avg": 9899.26,
+            "median": 10025.87,
+            "p95": 10025.87
+          },
+          "total_retrieval": {
+            "avg": 9961.7,
+            "median": 10089.75,
+            "p95": 10089.75
+          }
+        },
+        "details": [
+          {
+            "id": "r01",
+            "question": "买到存在安全隐患的电热水壶，消费者在人身和财产安全方面享有哪些权利？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第七条",
+              "pdf_page": 2,
+              "anchor": "享有人身、财产安全不受损害的权利"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 3,
+                "evidence_match": false
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 1,
+                "evidence_match": true
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 2,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 10,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 61.02,
+            "rerank_ms": 9772.64,
+            "total_retrieval_ms": 9833.66,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          },
+          {
+            "id": "r02",
+            "question": "商家不肯说明商品的生产日期、成分和售后规则，消费者有权要求了解这些信息吗？",
+            "expected_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf"
+            ],
+            "gold_evidence": {
+              "article": "第八条",
+              "pdf_page": 3,
+              "anchor": "知悉其购买、使用的商品或者接受的服务的真实情况"
+            },
+            "actual_sources": [
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+              "中华人民共和国食品安全法_20250912.pdf"
+            ],
+            "actual_documents": [
+              {
+                "rank": 1,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 2,
+                "evidence_match": true
+              },
+              {
+                "rank": 2,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 12,
+                "evidence_match": false
+              },
+              {
+                "rank": 3,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 14,
+                "evidence_match": false
+              },
+              {
+                "rank": 4,
+                "source": "20231011165113245437_中华人民共和国消费者权益保护法(2013修正).pdf",
+                "page_index": 5,
+                "evidence_match": false
+              },
+              {
+                "rank": 5,
+                "source": "中华人民共和国食品安全法_20250912.pdf",
+                "page_index": 59,
+                "evidence_match": false
+              }
+            ],
+            "hit": true,
+            "source_hit": true,
+            "evidence_hit": true,
+            "vector_search_ms": 63.87,
+            "rerank_ms": 10025.87,
+            "total_retrieval_ms": 10089.75,
+            "rerank_fallback": false,
+            "recall": "hybrid",
+            "recall_fallback": false,
+            "candidate_count": 60,
+            "returned_count": 5
+          }
+        ]
+      }
+    }
+  ]
+}
