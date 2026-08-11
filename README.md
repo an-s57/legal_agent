@@ -1,6 +1,6 @@
 # AI 法律助手
 
-基于 **LangGraph + RAG + FastAPI** 的智能法律问答系统。Agent 先通过 Planner 节点判断用户信息是否完整（缺失则追问），信息完备后自主决策调用 RAG 法条检索或联网搜索，整合后给出带来源标注的回答；会话历史与案情摘要使用 SQLite 持久化。前端会在浏览器本地保存当前 `session_id`，刷新页面后恢复该会话。
+基于 **LangGraph + RAG + FastAPI** 的智能法律问答系统。Agent 先通过 Planner 节点判断用户信息是否完整（缺失则追问），信息完备后自主决策调用 RAG 法条检索（FAISS 向量 + BM25 词面混合召回）或联网搜索，整合后给出带来源标注的回答；会话历史与案情摘要使用 SQLite 持久化。前端会在浏览器本地保存当前 `session_id`，刷新页面后恢复该会话。
 
 对“你好”“谢谢”等简单输入，前端优先走快速回复，避免进入 Planner、LLM 与工具调用；完整回答通过 SSE 逐事件推送，回答结束后再由后台更新案情摘要，避免摘要生成阻塞用户界面。
 
@@ -30,7 +30,7 @@ flowchart TD
 
     G --> H{"有 tool_calls？"}
     H -->|"有"| I["🔧 执行工具"]
-    I --> I1["legal_rag_search<br/>📚 FAISS 粗召回 30 条<br/>🎯 Reranker 精排 Top 5"]
+    I --> I1["legal_rag_search<br/>📚 FAISS + BM25 混合召回 40 条<br/>🎯 Reranker 精排 Top 5"]
     I --> I2["web_legal_search<br/>🌐 AnySearch 主搜索<br/>ddgs 失败兜底"]
     I1 --> G
     I2 --> G
@@ -56,7 +56,9 @@ legal_agent/
 ├── tools/
 │   └── legal_tools.py       # legal_rag_search + web_legal_search
 ├── rag/
-│   └── retriever.py         # FAISS 检索 + Reranker + 自定义 OllamaEmbeddings
+│   ├── retriever.py         # 检索入口：混合召回 + Reranker + 自定义 OllamaEmbeddings
+│   ├── hybrid.py            # FAISS 向量 + BM25 词面 + RRF 融合
+│   └── vectorstore/         # 本地 FAISS 向量库（build_vectorstore.py 生成）
 ├── memory/
 │   └── case_memory.py       # SQLite 会话持久化 + LLM 案情摘要
 ├── evaluation/              # 检索评测、参数调优与原始结果
@@ -73,7 +75,8 @@ legal_agent/
 | Agent 框架 | LangGraph（手写 StateGraph，含 Planner + ReAct） |
 | 向量库 | FAISS（本地） |
 | Embedding | nomic-embed-text（Ollama 本地服务） |
-| Reranker | BAAI/bge-reranker-base（CrossEncoder） |
+| Reranker | BAAI/bge-reranker-base（CrossEncoder，INT8 量化） |
+| 混合检索 | FAISS 向量 + BM25 词面（jieba 分词）+ RRF 融合 |
 | Web 搜索 | AnySearch（主搜索）+ ddgs（失败兜底） |
 | 后端 | FastAPI + Uvicorn |
 | 会话持久化 | SQLite |
@@ -225,9 +228,15 @@ python -m unittest discover -s tests -v
 - **长期记忆**：LLM 增量提取案情摘要（`case_summary`），压缩为结构化 JSON（案件类型/关键事实/用户诉求）
 - 两类数据均按 `session_id` 保存到 SQLite，在服务重启后可恢复并注入下一轮对话
 
+### 混合检索：向量 + 词面双路召回
+
+纯向量检索对短锚句（10~17 字的法条核心句，如"网购七天无理由退货"）词面匹配弱：锚句虽在完整文本段里、正确页码上，却进不了 Top-5。BM25 按词频打分恰好补这个短板。
+
+链路：**FAISS 向量召回 top 40 + BM25 词面召回 top 20 → RRF 融合 → 候选池 40 → Reranker 精排 Top-5**。RRF（Reciprocal Rank Fusion）只按排名累加 `1/(rrf_k + rank)`、不看原始分数，因此只被 BM25 一路召回的段也能进候选池——这正是救短锚句的机制。BM25 索引与向量库同源（从 `faiss_db.docstore` 建，jieba 分词、懒加载缓存），source/page 元数据天然对齐。
+
 ### Reranker 二次排序
 
-FAISS 粗召回 40 条后，用 CrossEncoder（`bge-reranker-base`）对 query-doc 对重新打分，取 Top-5。当前参数由 50 道人工标注检索题调优得到：k 扫描显示 40 之后证据命中饱和（开发集 33 题 26/33=78.8%），验证集 17 题来源命中 17/17=100%、严格证据命中 13/17=76.5%。消融实验证明 Reranker 不可省略：关闭后验证集来源命中降至 12/17=70.6%。
+候选池进 Reranker 后，用 CrossEncoder（`bge-reranker-base`）对 query-doc 对重新打分，取 Top-5。模型加载时做 INT8 动态量化（Linear 层 fp32 → int8），CPU 推理快 2~3 倍，排序只看相对大小、重排质量几乎不变。消融实验证明 Reranker 不可省略：关闭后验证集来源命中从 17/17 降至 12/17（70.6%）。
 
 ### 性能 Trace 与链路排查
 
@@ -242,11 +251,25 @@ FAISS 粗召回 40 条后，用 CrossEncoder（`bge-reranker-base`）对 query-d
 | DuckDuckGo（ddgs） | 9/20（45.0%） | 8/20（40.0%） | 4.24 s |
 | AnySearch | 19/20（95.0%） | 19/20（95.0%） | 1.52 s |
 
-其中，**官方来源命中@3** 指 Top-3 是否至少包含一条预标注的政府、法院、人社或法规数据库链接；**自动通过@3** 则要求同时命中官方来源与核心主题。AnySearch 在该评测中胜出，平均网页搜索耗时约低 **64%**，因此现已作为当前演示版本的主搜索；调用异常、缺少密钥或返回异常时自动回退到 `ddgs`。已完成主服务直连、强制回退和 UI SSE 链路验证。完整指标定义、原始结果和已知失败案例见 [evaluation/README.md](./evaluation/README.md)。
+其中，**官方来源命中@3** 指 Top-3 是否至少包含一条预标注的政府、法院、人社或法规数据库链接；**自动通过@3** 则要求同时命中官方来源与核心主题。AnySearch 在该评测中胜出，平均网页搜索耗时约低 **64%**，因此现已作为当前演示版本的主搜索；调用异常、缺少密钥或返回异常时自动回退到 `ddgs`。已完成主服务直连、强制回退和 UI SSE 链路验证。原始结果见 [evaluation/web_search_benchmark_20.json](./evaluation/web_search_benchmark_20.json)。
 
 ## 检索评测与参数选择
 
-使用 33 道开发题选择检索参数，再以 17 道验证题确认。当前线上配置为 **FAISS 粗召回 K=40、Reranker 返回 Top-K=5**（top_k 在 3~7 无区分度，取 5 保留容错余量）；完整的题集边界、指标定义、耗时、原始结果与复现命令见 [evaluation/README.md](./evaluation/README.md)。
+用 50 道人工标注检索题（开发 33 题选参 + 验证 17 题确认）评测**证据命中率**（Top-5 是否覆盖标注的证据文本段，按 source + page 严格判定）：
+
+| 配置 | 开发集 33 题 | 验证集 17 题 |
+| --- | ---: | ---: |
+| 纯向量（FAISS k=40 → rerank） | 25/33（75.8%） | 13/17（76.5%） |
+| **混合检索（FAISS + BM25 + RRF → rerank）** | **31/33（93.9%）** | **17/17（100%）** |
+
+开发集 7 道纯向量失败题全部被 BM25 路救回；加大候选池（40→60）在验证集无区分度、只增加 rerank 耗时，故线上定案 **k_vector=40、k_bm25=20、rrf_k=60、候选池 40、Top-5**。评测以 WSL 环境复跑为准（Windows/WSL 存在 reranker 数值环境噪声，WSL 才是生产真实水平）。复现命令：
+
+```bash
+python evaluation/evaluate_hybrid.py --split development   # 开发集
+python evaluation/evaluate_hybrid.py --split validation    # 验证集
+```
+
+原始结果见 [evaluation/results/](./evaluation/results/)。
 
 ## License
 
