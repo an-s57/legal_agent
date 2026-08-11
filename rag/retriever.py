@@ -14,7 +14,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from rag.hybrid import hybrid_candidates
 
 FAISS_DB_PATH = "rag/vectorstore/db_faiss"
-OLLAMA_BASE_URL = "http://127.0.0.1:11434"
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
 OLLAMA_EMBED_MODEL = "nomic-embed-text"
 
 

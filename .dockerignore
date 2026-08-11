@@ -1,0 +1,35 @@
+# 虚拟环境（1.2G 最大头：不排除每次构建都白打包 1.2G）
+.venv/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+
+# 环境变量（含 API key，安全红线）
+.env
+.env.example
+
+# Git 元数据（构建不需要）
+.git/
+.gitignore
+
+# 前端源码（镜像只要 dist，Dockerfile 已 COPY）
+frontend/node_modules/
+
+# 不打包进镜像的目录
+evaluation/
+tests/
+docs/
+deliverables/
+
+# 宿主机专用脚本
+sync.sh
+start.bat
+
+# 隐藏/临时目录
+_agents/
+.claude/
+.agents/
+_resume_render_review/
+*.bak
+*.tmp

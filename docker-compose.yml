@@ -1,0 +1,33 @@
+# === AI 法律助手 docker-compose.yml ===
+services:
+  # 服务一：Ollama（提供 embedding 模型）
+  ollama:
+    image: ollama/ollama
+    container_name: legal-agent-ollama
+    ports:
+      - "11435:11434"  #端口映射，宿主机和容器有意义
+    volumes:
+      - ollama_models:/root/.ollama    # 拉取的模型持久化
+    restart: unless-stopped
+
+  # 服务二：后端（FastAPI + 检索 + rerank）
+  backend:
+    build: .                            # 用当前目录的 Dockerfile 构建
+    container_name: legal-agent-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env                            # 注入 API key，不写进镜像
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434   # 覆盖代码里的 127.0.0.1
+      - HF_HOME=/models                 # bge-reranker 从挂载目录读
+    volumes:
+      - ./data:/app/data                # SQLite 数据持久化
+      - C:/Users/an/.cache/huggingface:/models   # 复用模型缓存（只读）
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+# 命名卷声明
+volumes:
+  ollama_models:
