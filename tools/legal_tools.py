@@ -5,12 +5,18 @@ import time
 import httpx
 from langchain.tools import tool
 
+from config import (
+    ANYSEARCH_URL,
+    RETRIEVAL_K_VECTOR,
+    RETRIEVAL_TOP_K,
+    WEB_SEARCH_SUFFIX,
+    WEB_SEARCH_TIMEOUT_SECONDS,
+    WEB_SEARCH_TOP_N,
+)
+from logger import get_logger
 from rag.retriever import retrieve_legal_docs
 
-ANYSEARCH_URL = "https://api.anysearch.com/v1/search"
-WEB_SEARCH_SUFFIX = "法律法规 中国"
-WEB_SEARCH_TOP_N = 3
-WEB_SEARCH_TIMEOUT_SECONDS = 10.0
+logger = get_logger("legal_agent.tools")
 
 @tool
 def legal_rag_search(query: str) -> str:
@@ -19,10 +25,10 @@ def legal_rag_search(query: str) -> str:
     适合回答法律条文定义、法律概念解释、历史案例引用、某法条的具体规定。
     不适合：查询涉及最新动态、司法解释、时效性强的法律新闻。
     """
-    # 基于开发集调参与验证集确认后的线上检索配置：K=40，Top-K=5。
+    # 基于开发集调参与验证集确认后的线上检索配置：K=40，Top-K=5（值在 config.py）。
     # 注意：k 会作为 k_vector 传给 hybrid_candidates（FAISS 召回数），
     # K 扫描定案 k=40 是"最小安全候选池"，不能砍小。
-    results = retrieve_legal_docs(query, k=40, top_k=5)
+    results = retrieve_legal_docs(query, k=RETRIEVAL_K_VECTOR, top_k=RETRIEVAL_TOP_K)
     if not results:
         return "法律文档库中未找到相关内容"
     return "\n\n---\n\n".join(results)
@@ -55,7 +61,7 @@ def _request_anysearch_payload(query: str) -> object:
         payload = response.json()
 
     elapsed_ms = (time.perf_counter() - start) * 1000
-    print(f"[WEB] provider=anysearch status=ok duration_ms={elapsed_ms:.0f}")
+    logger.info(f"[WEB] provider=anysearch status=ok duration_ms={elapsed_ms:.0f}")
     return payload
 
 
@@ -150,10 +156,7 @@ def _search_with_ddgs(query: str) -> list[dict[str, str]]:
         raise RuntimeError("ddgs 未返回有效搜索结果")
 
     elapsed_ms = (time.perf_counter() - start) * 1000
-    print(
-        f"[WEB] provider=ddgs status=ok "
-        f"duration_ms={elapsed_ms:.0f}"
-    )
+    logger.info(f"[WEB] provider=ddgs status=ok duration_ms={elapsed_ms:.0f}")
     return results
 
 
@@ -168,15 +171,15 @@ def web_legal_search(query: str) -> str:
     try:
         results=_search_with_anysearch(query)
     except (httpx.HTTPError,RuntimeError,ValueError) as anysearch_error:
-        print(
+        logger.warning(
             f"[WEB] provider=anysearch status=fallback "
             f"reason={type(anysearch_error).__name__}"
         )
         try:
             results = _search_with_ddgs(query)
         except Exception as ddgs_error:
-            print(f"[WEB] provider=ddgs status=error "
-                  f"reason={type(ddgs_error).__name__}")
+            logger.error(f"[WEB] provider=ddgs status=error "
+                         f"reason={type(ddgs_error).__name__}")
 
             return "联网搜索服务暂时不可用，请稍后重试或先参考本地法律知识库。"
 

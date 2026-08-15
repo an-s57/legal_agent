@@ -1,19 +1,25 @@
-fastapi
-uvicorn
-langchain
-langchain-openai
-langchain-community
-langchain-ollama
-langchain-text-splitters
-langgraph
-faiss-cpu
-pdfplumber
-requests
-duckduckgo-search
-ddgs
-python-dotenv
-torch
-transformers
-httpx
-jieba
-rank_bm25
+# 直接依赖锁定版本（保证环境可复现）：用 pip list --format=freeze 逐包锁定当前可用版本
+fastapi==0.136.3
+uvicorn==0.48.0
+langchain==1.3.2
+langchain-openai==1.2.2
+langchain-community==0.4.2
+langchain-ollama==1.1.0
+langchain-text-splitters==1.1.2
+langgraph==1.2.2
+faiss-cpu==1.14.2
+pdfplumber==0.11.9
+requests==2.34.2
+# duckduckgo-search：线上兜底用的是 ddgs；此包仅保留给 evaluation/web_search_benchmark.py 做历史基线对比
+duckduckgo-search==8.1.1
+ddgs==9.14.4
+python-dotenv==1.2.2
+# torch：Docker 中从 CPU 源单独安装，构建镜像时留意与 2.12.0 保持一致
+torch==2.12.0
+transformers==5.12.1
+httpx==0.28.1
+jieba==0.42.1
+# rank-bm25：pip 分发名带连字符，代码里 import 名是 rank_bm25
+rank-bm25==0.2.2
+# MCP server（mcp_server.py）依赖；含底层 mcp SDK
+fastmcp==3.4.7

@@ -2,17 +2,12 @@
 import json
 import sqlite3
 import time
-from pathlib import Path
 
+from config import DATA_DIR, DB_PATH, MAX_LOAD_MESSAGES
 from llm_client import llm
+from logger import get_logger
 
-
-#数据库
-DATA_DIR=Path(__file__).resolve().parent.parent/"data"
-DB_PATH=DATA_DIR/"legal_agent.db"
-#数据库路径
-
-MAX_LOAD_MESSAGES = 100  # 最多从 DB 加载最近 100 条消息（50 轮），Agent 层会进一步截断
+logger = get_logger("legal_agent.memory")
 
 def init_db()->None:
     DATA_DIR.mkdir(parents=True,exist_ok=True)
@@ -208,9 +203,8 @@ def update_case_summary(
     finally:
         duration_ms = (time.perf_counter() - started_at) * 1000
         trace = request_id or "-"
-        print(
+        logger.info(
             f"[PERF] trace={trace} stage=summary "
             f"duration_ms={duration_ms:.0f} status={status} "
-            f"background={str(background).lower()}",
-            flush=True,
+            f"background={str(background).lower()}"
         )

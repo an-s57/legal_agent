@@ -11,11 +11,22 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.embeddings import Embeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+from config import (
+    FAISS_DB_PATH,
+    OLLAMA_BASE_URL,
+    OLLAMA_EMBED_MODEL,
+    RERANKER_MODEL_NAME,
+    RERANK_MAX_LENGTH,
+    RETRIEVAL_CANDIDATES,
+    RETRIEVAL_K_BM25,
+    RETRIEVAL_K_VECTOR,
+    RETRIEVAL_RRF_K,
+    RETRIEVAL_TOP_K,
+)
+from logger import get_logger
 from rag.hybrid import hybrid_candidates
 
-FAISS_DB_PATH = "rag/vectorstore/db_faiss"
-OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
-OLLAMA_EMBED_MODEL = "nomic-embed-text"
+logger = get_logger("legal_agent.rag")
 
 
 class OllamaEmbeddings(Embeddings):
@@ -54,7 +65,6 @@ _faiss_db = None
 
 _reranker_model = None
 _reranker_tokenizer = None
-RERANKER_MODEL_NAME = "BAAI/bge-reranker-base"
 
 
 def _get_reranker():
@@ -95,18 +105,17 @@ def preload_reranker():
     global _reranker_model, _reranker_tokenizer
     if _reranker_model is not None:
         return
-    print("[RAG] 预加载 reranker 模型...", flush=True)
+    logger.info("[RAG] 预加载 reranker 模型...")
     try:
         _get_reranker()
-        print("[RAG] reranker 模型加载完成", flush=True)
+        logger.info("[RAG] reranker 模型加载完成")
     except Exception as e:
-        print(
+        logger.warning(
             f"[RAG] reranker 预加载失败（{type(e).__name__}: {e}），"
             f"将在首次检索时重试。如需手动下载："
             f"pip install huggingface_hub && "
             f"python -c \"from huggingface_hub import snapshot_download; "
-            f"snapshot_download('{RERANKER_MODEL_NAME}')\"",
-            flush=True,
+            f"snapshot_download('{RERANKER_MODEL_NAME}')\""
         )
 
 def _get_faiss_db():
@@ -123,7 +132,7 @@ def _rerank(query:str,docs:list,top_k:int=5)->list:
     model,tokenizer=_get_reranker()
     pairs=[[query,doc.page_content] for doc in docs]#配对
     with torch.no_grad():
-        inputs = tokenizer(pairs, padding=True, truncation=True, return_tensors="pt", max_length=512)#翻译
+        inputs = tokenizer(pairs, padding=True, truncation=True, return_tensors="pt", max_length=RERANK_MAX_LENGTH)#翻译
         scores=model(**inputs).logits.squeeze(-1)#打分
         ranked_indices = scores.argsort(descending=True)[:top_k]#排序取前5条
         return [docs[i] for i in ranked_indices]
@@ -148,7 +157,7 @@ def build_legal_vectorstore(pdf_folder: str):
 
     faiss_db = FAISS.from_documents(all_chunks, embedding_model)
     faiss_db.save_local(FAISS_DB_PATH)
-    print(f"向量库建好了，共 {len(all_chunks)} 个文本段")
+    logger.info(f"向量库建好了，共 {len(all_chunks)} 个文本段")
     return faiss_db
 
 def add_legal_documents(pdf_folder:str):
@@ -162,9 +171,9 @@ def add_legal_documents(pdf_folder:str):
         if not filename.endswith(".pdf"):
             continue
         if filename in existing_sources:
-            print(f"跳过已存在：{filename}")
+            logger.info(f"跳过已存在：{filename}")
             continue
-        print(f"正在处理:{filename}")
+        logger.info(f"正在处理:{filename}")
         file_path=os.path.join(pdf_folder,filename)
         loader=PDFPlumberLoader(file_path)
         documents=loader.load()
@@ -175,42 +184,41 @@ def add_legal_documents(pdf_folder:str):
         new_chunks.extend(chunks)
     
     if not new_chunks:
-        print("没有新的PDF要添加")
+        logger.info("没有新的PDF要添加")
         return faiss_db
     
     faiss_db.add_documents(new_chunks)
     faiss_db.save_local(FAISS_DB_PATH)
-    print(f"新增{len(new_chunks)}个文本段，来自{len(set(c.metadata['source'] for c in new_chunks))}个文件")
+    logger.info(f"新增{len(new_chunks)}个文本段，来自{len(set(c.metadata['source'] for c in new_chunks))}个文件")
     return faiss_db
 
-def retrieve_legal_docs(query: str, k: int = 40, top_k: int = 5) -> list[str]:
+def retrieve_legal_docs(query: str, k: int = RETRIEVAL_K_VECTOR, top_k: int = RETRIEVAL_TOP_K) -> list[str]:
     """对外暴露的检索接口，返回字符串列表"""
     #向量库加载用时
     load_start=time.perf_counter()
     faiss_db = _get_faiss_db()
     load_ms=(time.perf_counter()-load_start)*1000
-    print(f"[PERF] vectorstore_load={load_ms:.0f}ms",flush=True)
+    logger.info(f"[PERF] vectorstore_load={load_ms:.0f}ms")
     #混合检索：FAISS 向量 + BM25 词面 → RRF 融合（k 作 k_vector 传）
     search_start=time.perf_counter()
     docs = hybrid_candidates(
-        query, faiss_db, k_vector=k, k_bm25=20, rrf_k=60, top_candidates=40,
+        query, faiss_db, k_vector=k, k_bm25=RETRIEVAL_K_BM25, rrf_k=RETRIEVAL_RRF_K, top_candidates=RETRIEVAL_CANDIDATES,
     )
     search_ms=(time.perf_counter()-search_start)*1000
-    print(f"[PERF] hybrid_search={search_ms:.0f}ms "
-          f"k_vector={k} k_bm25=20 candidates=40",flush=True)
+    logger.info(f"[PERF] hybrid_search={search_ms:.0f}ms "
+                f"k_vector={k} k_bm25={RETRIEVAL_K_BM25} candidates={RETRIEVAL_CANDIDATES}")
     #rerank用时
     rerank_time=time.perf_counter()
     try:
         docs=_rerank(query,docs,top_k=top_k)
         rerank_ms=(time.perf_counter()-rerank_time)*1000
-        print(f"[PERF] rerank={rerank_ms:.0f}ms "
-              f"top_k={top_k} fallback=False",flush=True)
+        logger.info(f"[PERF] rerank={rerank_ms:.0f}ms "
+                    f"top_k={top_k} fallback=False")
     except Exception as e:
         rerank_ms=(time.perf_counter()-rerank_time)*1000
-        print(f"[PERF] rerank={rerank_ms:.0f}ms "
-              f"fallback=True error_type={type(e).__name__}",
-              flush=True)
-        print(f"Rerank 失败，使用 FAISS 原始结果: {e}")
+        logger.info(f"[PERF] rerank={rerank_ms:.0f}ms "
+                    f"fallback=True error_type={type(e).__name__}")
+        logger.warning(f"Rerank 失败，使用 FAISS 原始结果: {e}")
         docs=docs[:top_k]
 
     results = []

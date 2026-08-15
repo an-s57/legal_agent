@@ -231,9 +231,25 @@ export default function App() {
                 toolsUsed.push(event.name)
               } else if (event.type === 'done') {
                 if (event.tools_used) toolsUsed = event.tools_used
+                // 服务端随后可能还会推送 case_summary 事件（摘要更新），
+                // 先结束输入状态，避免转圈动画等待摘要的 LLM 调用。
+                setIsTyping(false)
               } else if (event.type === 'case_summary') {
                 finalSummary = event.data || {}
                 setCaseSummary(finalSummary)
+              } else if (event.type === 'error') {
+                // 服务端流式处理中途出错：展示错误信息，避免留下空白气泡
+                botContent = event.message || '请求处理失败'
+                if (!botAdded) {
+                  setMessages(prev => [...prev, { id: botId, role: 'bot', content: botContent }])
+                  botAdded = true
+                } else {
+                  setMessages(prev => {
+                    const next = [...prev]
+                    next[next.length - 1] = { ...next[next.length - 1], content: botContent }
+                    return next
+                  })
+                }
               }
             } catch { /* skip malformed events */ }
           }

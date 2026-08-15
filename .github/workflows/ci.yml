@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: 安装依赖（CPU torch，与 Dockerfile 同款做法，避免拉 2GB CUDA 包）
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
+
+      - name: ruff 错误级检查（不查风格，只抓语法错误/未定义名）
+        run: |
+          pip install ruff
+          ruff check agent rag tools memory tests main.py config.py logger.py mcp_server.py mcp_client_demo.py build_vectorstore.py --select E9,F63,F7,F82
+
+      - name: 跑单元测试（全部离线：不调 LLM、不连 Ollama、不联网）
+        run: python -m unittest discover -s tests -v
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: 安装前端依赖
+        working-directory: frontend
+        run: npm ci
+
+      - name: 构建前端（tsc 类型检查 + vite 打包）
+        working-directory: frontend
+        run: npm run build

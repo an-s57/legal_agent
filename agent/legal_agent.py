@@ -1,50 +1,29 @@
 """LangGraph ReAct 法律智能体"""
 import json
-import re
 import time
 from typing import Annotated, TypedDict
+
+from pydantic import BaseModel, Field
 
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, ToolMessage
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode
 
-from llm_client import llm
+from llm_client import llm, planner_llm
+from logger import get_logger
 from tools.legal_tools import legal_rag_search, web_legal_search
 from agent.hallucination_guard import check_hallucination, format_hallucination_warning
+from config import MAX_HISTORY_TURNS, PLANNER_CONTEXT_TURNS, RECURSION_LIMIT
+
+logger = get_logger("legal_agent.agent")
 
 tools = [legal_rag_search, web_legal_search]
 
 
-def _extract_json(text: str) -> dict | None:
-    """从可能包含 markdown 代码块或多余文本的 LLM 响应中提取 JSON。
-
-    依次尝试：直接解析 → 提取 ```json``` 代码块 → 提取第一个 {...} 块。
-    全部失败时返回 None。
-    """
-    text = text.strip()
-    try:
-        return json.loads(text)
-    except json.JSONDecodeError:
-        pass
-    match = re.search(r'```(?:json)?\s*\n?(.*?)\n?```', text, re.DOTALL)
-    if match:
-        try:
-            return json.loads(match.group(1).strip())
-        except json.JSONDecodeError:
-            pass
-    match = re.search(r'\{.*\}', text, re.DOTALL)
-    if match:
-        try:
-            return json.loads(match.group(0))
-        except json.JSONDecodeError:
-            pass
-    return None
-
 # ── 上下文管理配置 ──────────────────────────────────────────────
 # 后续可在此处添加 LLM 摘要压缩层，将超出窗口的旧消息压缩为结构化摘要。
-MAX_HISTORY_TURNS = 12       # 传给 LLM 的最大对话轮数（1 轮 = 用户 + AI 各一条）
-PLANNER_CONTEXT_TURNS = 3   # 传给 Planner 的最近对话轮数（理解多轮上下文）
+# 参数值统一在 config.py 维护（MAX_HISTORY_TURNS / PLANNER_CONTEXT_TURNS / RECURSION_LIMIT）。
 
 
 def _trim_history(chat_history: list, max_turns: int = MAX_HISTORY_TURNS) -> list:
@@ -112,11 +91,21 @@ PLANNER_PROMPT = """你是一个法律咨询信息收集员。
 已知的案情摘要：{case_summary}
 用户最新消息：{user_message}
 
-第一步：判断消息类型
-- 如果是打招呼、闲聊、感谢、简单提问（如"你好""谢谢""你是谁""你能做什么"），直接放行：
-{{"info_complete": true}}
+第一步：判断消息类型，以下情况直接放行（不追问）：
+- 打招呼、闲聊、感谢、简单提问（如"你好""谢谢""你是谁""你能做什么"）
+- 情绪抱怨、纯宣泄（如"气死了""太坑了""我要举报"）——安抚即可，不追问案情
+→ 返回 {{"info_complete": true}}
 
-第二步：如果是法律咨询，检查以下维度
+第二步：如果是法律相关，先区分「客观知识查询」还是「个人案情咨询」
+- 客观知识/法条查询：问一般性规定、法条内容、某类行为的法律后果，
+  主语通常是抽象的（消费者/用人单位/平台），不涉及用户本人的具体遭遇，
+  不需要知道个人情况就能回答。
+  → 直接放行检索，绝不追问个人案情：{{"info_complete": true}}
+- 个人案情咨询：用户描述自己的具体遭遇（"我遇到/我买了/我公司/我被……"），
+  需要结合具体案情才能给出针对性建议。
+  → 进入第三步检查四槽位。
+
+第三步：仅对「个人案情咨询」检查以下四个维度
 1. event_description — 事件描述：发生了什么事？
 2. event_time — 发生时间：什么时候发生的？
 3. damages — 损失/后果：造成了什么损失？
@@ -125,20 +114,41 @@ PLANNER_PROMPT = """你是一个法律咨询信息收集员。
 判断原则：只要用户大致提到了某个维度（哪怕不详细），就算该维度已具备。
 只有完全没提到某个维度时才算缺失。
 例如"上个月在淘宝买了假货花了3000块要求退款"——四个维度都有，应判为完整。
+特例：如果用户是泛泛问法（直接问"怎么办/怎么处理/怎么赔"这类，如
+"买到假货了怎么办"），即使缺时间、金额等细节，也应放行——通用维权
+路径不依赖这些细节即可回答。注意：本特例只覆盖问句形式的泛泛问法；
+已提出具体主张的陈述句（"要补偿/要赔偿/要退货"这类）不适用，仍按
+上面四槽位正常判断。
 
 如果信息有缺失，返回：
 {{"info_complete": false, "missing_fields": ["缺失的字段"], "follow_up": "追问的问题，语气自然友好，像律师一样"}}
 
 如果信息足够，返回：
 {{"info_complete": true}}
+
+判别示例（务必遵守）：
+- "试用期最多可以约定几个月？" → 客观知识查询 → 放行
+- "消费者买到过期食品能不能要求十倍赔偿？" → 客观知识查询 → 放行
+- "上周我在网上买了个手机结果是翻新机，花了5000块，想退货" → 个人案情咨询，四槽位齐全 → 放行
+- "我在工地受伤了" → 个人案情咨询，缺时间/损失/诉求 → 追问
 """
 
 
+class PlannerDecision(BaseModel):
+    """PLANNER 节点的结构化输出：追问决策。"""
+    info_complete: bool
+    missing_fields: list[str] = Field(default_factory=list)
+    follow_up: str = ""
+
+
+planner_tool_llm = planner_llm.bind_tools([PlannerDecision])
+
+
 def call_planner(state: AgentState):
-    print(f"[DEBUG] call_planner skip_planner={state.get('skip_planner', False)}", flush=True)
+    logger.debug(f"[DEBUG] call_planner skip_planner={state.get('skip_planner', False)}")
     # 评测模式：跳过 Planner，直接放行进 ReAct
     if state.get("skip_planner", False):
-        print("[DEBUG] Planner SKIPPED → info_complete=True", flush=True)
+        logger.debug("[DEBUG] Planner SKIPPED → info_complete=True")
         return {"info_complete": True}
 
     last_message = state["messages"][-1]
@@ -152,16 +162,30 @@ def call_planner(state: AgentState):
         user_message=user_message,
     )
     _planner_start = time.perf_counter()
-    response = llm.invoke(prompt)
+    response = planner_tool_llm.invoke(prompt)
     _planner_ms = (time.perf_counter() - _planner_start) * 1000
-    print(f"[PERF] stage=planner duration_ms={_planner_ms:.0f}", flush=True)
+    logger.info(f"[PERF] stage=planner duration_ms={_planner_ms:.0f}")
 
-    result = _extract_json(response.content)
-    if result is None:
-        print("[WARN] Planner JSON 解析失败，放行进入 ReAct", flush=True)
-        return {"info_complete": True}
-    info_complete = result.get("info_complete", True)
-    follow_up = result.get("follow_up", "")
+    # 从工具调用参数里拿结构化判定；模型偶尔不调用工具或参数异常时保守放行
+    if response.tool_calls:
+        try:
+            args = response.tool_calls[0]["args"]
+            if isinstance(args, str):
+                # 与流式路径一致：部分模型把结构化参数作为 JSON 字符串返回
+                args = json.loads(args)
+            decision = PlannerDecision(**args)
+            info_complete = decision.info_complete
+            follow_up = decision.follow_up or ""
+        except Exception as e:
+            logger.warning(
+                f"[WARN] Planner 决策解析失败（{type(e).__name__}），放行进入 ReAct"
+            )
+            info_complete = True
+            follow_up = ""
+    else:
+        logger.warning("[WARN] Planner 未调用工具，放行进入 ReAct")
+        info_complete = True
+        follow_up = ""
 
     if not info_complete and follow_up:
         return {
@@ -179,7 +203,7 @@ def call_model(state: AgentState):
     _has_tc = bool(response.tool_calls)
     _tc_names = [t["name"] for t in (response.tool_calls or [])]
     _content_len = len(response.content) if response.content else 0
-    print(f"[PERF] stage=llm duration_ms={_llm_ms:.0f} has_tool_calls={_has_tc} tc_names={_tc_names} content_len={_content_len}", flush=True)
+    logger.info(f"[PERF] stage=llm duration_ms={_llm_ms:.0f} has_tool_calls={_has_tc} tc_names={_tc_names} content_len={_content_len}")
     return {"messages": [response]}
 
 
@@ -229,7 +253,7 @@ async def run_legal_agent(
 
     result = await _compiled_graph.ainvoke(
         {"messages": messages, "case_summary": case_summary, "skip_planner": skip_planner},
-        config={"recursion_limit": 12},  # 限制最多 ~5 轮工具调用
+        config={"recursion_limit": RECURSION_LIMIT},  # 限制最多 ~5 轮工具调用
     )
 
     final_messages = result["messages"]
@@ -242,8 +266,8 @@ async def run_legal_agent(
                 "content_len": len(m.content) if m.content else 0,
                 "tool_calls": [t["name"] for t in (m.tool_calls or [])],
             })
-    print(f"[DEBUG] final_messages types={_msg_types}", flush=True)
-    print(f"[DEBUG] AIMessage details={_ai_tcs}", flush=True)
+    logger.debug(f"[DEBUG] final_messages types={_msg_types}")
+    logger.debug(f"[DEBUG] AIMessage details={_ai_tcs}")
     # END DEBUG
     ai_messages = [m for m in final_messages if isinstance(m, AIMessage)]
     answer = ai_messages[-1].content if ai_messages else "抱歉，无法生成回答"
@@ -259,15 +283,29 @@ async def run_legal_agent(
         if warning:
             answer = answer + warning
 
-    tool_calls_seen = set()
+    # ── 工具调用记录：按调用顺序返回 (工具名, 真实工具输出)，不再用假数据 ──
+    # ToolMessage 通过 tool_call_id 关联回 AIMessage 的 tool_calls，取到实际输出。
+    tool_output_by_call_id = {}
     for m in final_messages:
-        if isinstance(m, AIMessage) and m.tool_calls:
-            for tc in m.tool_calls:
-                tool_calls_seen.add(tc["name"])
+        if isinstance(m, ToolMessage):
+            content = m.content if isinstance(m.content, str) else str(m.content)
+            tool_output_by_call_id[m.tool_call_id] = content
+
+    intermediate_steps = []
+    seen_tools = set()
+    for m in final_messages:
+        if isinstance(m, AIMessage):
+            for tc in (m.tool_calls or []):
+                name = tc["name"]
+                if name in seen_tools:
+                    continue
+                seen_tools.add(name)
+                call_id = tc.get("id", "")
+                intermediate_steps.append((name, tool_output_by_call_id.get(call_id)))
 
     return {
         "output": answer,
-        "intermediate_steps": [(tc, None) for tc in tool_calls_seen],
+        "intermediate_steps": intermediate_steps,
     }
 
 
@@ -298,7 +336,7 @@ async def run_legal_agent_stream(
 
     async for event in _compiled_graph.astream_events(
         state, version="v2",
-        config={"recursion_limit": 12},  # 限制最多 ~5 轮工具调用
+        config={"recursion_limit": RECURSION_LIMIT},  # 限制最多 ~5 轮工具调用
     ):
         kind = event["event"]
         metadata = event.get("metadata", {})
@@ -329,15 +367,22 @@ async def run_legal_agent_stream(
 
         elif kind == "on_chat_model_end":
             if node == "planner":
-                # invoke() 不会触发 on_chat_model_stream，planner_buf 可能为空。
-                # 兜底：从 on_chat_model_end 的 output 取完整文本。
-                if not planner_buf:
-                    output = event.get("data", {}).get("output")
-                    planner_buf = getattr(output, "content", "") if output else ""
-                result = _extract_json(planner_buf)
-                if result and not result.get("info_complete", True) and result.get("follow_up"):
-                    yield {"type": "planner_question", "text": result["follow_up"]}
-                    return
+                # 结构化输出：planner 的 LLM 输出是 AIMessage 带 tool_calls，
+                # 从 tool_calls 的 args 拿判定结果，不再从文本抠 JSON。
+                output = event.get("data", {}).get("output")
+                tool_calls = getattr(output, "tool_calls", None) or []
+                if tool_calls:
+                    try:
+                        args = tool_calls[0].get("args", {})
+                        if isinstance(args, str):
+                            args = json.loads(args)
+                        if not args.get("info_complete", True) and args.get("follow_up"):
+                            yield {"type": "planner_question", "text": args["follow_up"]}
+                            return
+                    except Exception as e:
+                        logger.warning(
+                            f"[WARN] Planner 决策解析失败（{type(e).__name__}），放行进入 ReAct"
+                        )
             elif node == "llm":
                 # 当前节点用 invoke() 调模型时，部分模型适配器不会触发
                 # on_chat_model_stream。此时在结束事件中兜底发送完整回答，

@@ -17,8 +17,7 @@ import threading
 import jieba
 from rank_bm25 import BM25Okapi
 
-# RRF 融合常数，经验默认 60（经典取值，后续可扫）
-RRF_K = 60
+from config import RETRIEVAL_RRF_K as RRF_K  # RRF 融合常数，经验默认 60（经典取值，后续可扫）
 
 _bm25_index = None
 _bm25_docs = None
@@ -34,7 +33,7 @@ def _tokenize(text: str) -> list[str]:
     return [w for w in jieba.cut_for_search(text) if w.strip()]
 
 
-def _get_bm25(faiss_db) -> tuple[BM25Okapi, list]:
+def _get_bm25(faiss_db) -> tuple[BM25Okapi | None, list]:
     """懒加载 BM25 索引（与向量库同源），线程安全缓存。
 
     注：缓存无失效机制——docstore 变化（增量建库）后需重启进程。
@@ -45,6 +44,9 @@ def _get_bm25(faiss_db) -> tuple[BM25Okapi, list]:
         with _bm25_lock:#加锁
             if _bm25_index is None:#双重检查
                 docs = list(faiss_db.docstore._dict.values())#BM25和向量库同源
+                if not docs:
+                    # 空语料：不建索引（BM25Okapi([]) 会除零），调用方按"无 BM25 路"处理
+                    return None, []
                 corpus = [_tokenize(d.page_content) for d in docs]#索引文档的分词结果
                 _bm25_index = BM25Okapi(corpus)#建索引
                 _bm25_docs = docs
@@ -99,11 +101,12 @@ def hybrid_candidates(
     bm25_docs = []
     if tokens:
         bm25, docs = _get_bm25(faiss_db)
-        scores = bm25.get_scores(tokens)#对查询的每个词每个文档算分数
-        top_idx = sorted(
-            range(len(scores)), key=lambda i: scores[i], reverse=True
-        )
-        bm25_docs = [docs[i] for i in top_idx[:k_bm25] if scores[i] > 0]
+        if bm25 is not None:
+            scores = bm25.get_scores(tokens)#对查询的每个词每个文档算分数
+            top_idx = sorted(
+                range(len(scores)), key=lambda i: scores[i], reverse=True
+            )
+            bm25_docs = [docs[i] for i in top_idx[:k_bm25] if scores[i] > 0]
 
     return _rrf_fuse(
         vector_docs, bm25_docs, rrf_k=rrf_k, top_candidates=top_candidates

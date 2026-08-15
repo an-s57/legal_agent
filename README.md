@@ -1,5 +1,7 @@
 # AI 法律助手
 
+[![CI](https://github.com/an-s57/legal_agent/actions/workflows/ci.yml/badge.svg)](https://github.com/an-s57/legal_agent/actions/workflows/ci.yml)
+
 基于 **LangGraph + RAG + FastAPI** 的智能法律问答系统。Agent 先通过 Planner 节点判断用户信息是否完整（缺失则追问），信息完备后自主决策调用 RAG 法条检索（FAISS 向量 + BM25 词面混合召回）或联网搜索，整合后给出带来源标注的回答；会话历史与案情摘要使用 SQLite 持久化。前端会在浏览器本地保存当前 `session_id`，刷新页面后恢复该会话。
 
 对“你好”“谢谢”等简单输入，前端优先走快速回复，避免进入 Planner、LLM 与工具调用；完整回答通过 SSE 逐事件推送，回答结束后再由后台更新案情摘要，避免摘要生成阻塞用户界面。
@@ -46,6 +48,13 @@ flowchart TD
 ```
 legal_agent/
 ├── main.py                  # FastAPI 入口
+├── config.py                # 全部可调参数/常量集中管理（单一数据源）
+├── logger.py                # 统一日志配置（stderr 输出，LOG_LEVEL 可调）
+├── mcp_server.py            # MCP server：把两个工具暴露给任意 MCP 客户端
+├── mcp_client_demo.py       # 最小 MCP 客户端 demo（官方 mcp SDK，三步流程）
+├── Dockerfile               # 后端镜像（CPU torch + 依赖 + 前端产物）
+├── docker-compose.yml       # 编排 Ollama 与后端，注入配置与挂载
+├── .dockerignore            # 构建上下文过滤（.env / .venv 不进镜像）
 ├── frontend/                # React + TypeScript + Tailwind 前端
 │   ├── src/
 │   │   ├── components/      # ChatArea, Sidebar, InputBox 等
@@ -151,13 +160,27 @@ python main.py
 
 访问 http://localhost:8000
 
-### 7. 运行基础回归测试
+### 7. 运行单元测试
 
-该测试只验证 SQLite 会话的保存与恢复，不调用 Ollama、DeepSeek 或联网搜索：
+回归测试覆盖：SQLite 会话持久化、混合检索（RRF 融合 + 双路召回）、幻觉守卫（引用提取/校验）、Agent 层（历史截断 + Planner 决策，LLM 用 stub 替换）。全部**离线运行**：不调用 Ollama、DeepSeek 或联网搜索：
 
 ```bash
 python -m unittest discover -s tests -v
 ```
+
+### 8. 使用 Docker 部署（可选）
+
+项目提供容器化三件套（`Dockerfile` / `docker-compose.yml` / `.dockerignore`），一条命令起服务：
+
+```bash
+docker compose up -d --build
+```
+
+- **Dockerfile**：基于 `python:3.13-slim`，先装 CPU 版 torch，再装依赖、拷入项目代码与前端构建产物，`uvicorn main:app` 启动
+- **docker-compose.yml**：编排 Ollama（embedding 服务）与后端；宿主机 `8000` 端口映射；从 `.env` 注入 API Key（不写进镜像）；挂载 SQLite 数据（`./data`）与 HuggingFace 模型缓存（只读）
+- **.dockerignore**：排除 `.env`、`.env.example`、`.venv` 等，防止真实 API Key 与 1.2G 虚拟环境进构建上下文
+
+启动后访问 http://localhost:8000（前端已内置到镜像）。注意：容器内 Ollama embedding 走 `http://ollama:11434`，首次启动需等模型拉取。
 
 ### 使用边界
 
@@ -174,7 +197,9 @@ python -m unittest discover -s tests -v
 - `token`：增量回答文本；
 - `planner_question`：信息不完整时的追问；
 - `tool_start` / `tool_end`：工具调用状态；
-- `done`：本轮输出结束，前端据此关闭加载状态。
+- `done`：本轮输出结束，前端据此关闭加载状态；
+- `case_summary`：本轮案情摘要更新后的最新结构化摘要（在 `done` 之后到达，用于侧边栏实时刷新）；
+- `error`：流式处理中途出错时的错误事件（携带 `message` 字段）。
 
 ### POST /legal/chat
 
@@ -208,6 +233,42 @@ python -m unittest discover -s tests -v
 
 健康检查。
 
+## MCP Server（可选）
+
+项目把两个核心工具（`legal_rag_search` 法条检索、`web_legal_search` 联网搜索）包装成标准 **MCP server**（[mcp_server.py](mcp_server.py)），任何支持 MCP 的客户端（Claude Desktop、Cursor 等）都可以直接调用，工具逻辑与主项目完全复用、零重复实现。
+
+通信走 **stdio**：协议消息（JSON-RPC）走 stdout，日志走 stderr（见 [logger.py](logger.py) 的设计说明），两者互不干扰。
+
+```bash
+# 启动（默认 stdio 传输）
+python mcp_server.py
+
+# 命令行直接调用工具（最快验证方式，无需任何客户端）
+fastmcp call mcp_server.py legal_rag_search '{"query": "消费者权益保护法第五十五条"}'
+
+# 或启动 FastMCP 网页调试器（MCP Inspector），可视化测试工具调用
+fastmcp dev inspector mcp_server.py
+```
+
+不带任何商业客户端也能完整验证：`mcp_client_demo.py` 是用官方 `mcp` SDK 写的最小客户端（三步：握手 → 拿工具清单 → 调用工具），跑 `python mcp_client_demo.py` 即可看到完整流程（路径默认按 WSL 写，可用参数覆盖）。
+
+以 Claude Desktop 为例，在 `claude_desktop_config.json` 中注册（WSL 路径示例）：
+
+```json
+{
+  "mcpServers": {
+    "legal-agent": {
+      "command": "/home/an/legal_agent/venv/bin/python",
+      "args": ["/home/an/legal_agent/mcp_server.py"]
+    }
+  }
+}
+```
+
+Windows 侧同理：`command` 改为 `.venv\Scripts\python.exe`，`args` 指向 `D:\legal_agent\mcp_server.py`。
+
+> 注意：调用工具时需要 Ollama 在运行且向量库已构建（与主项目同一前置条件）。
+
 ## 核心设计
 
 ### Planner 节点：先收集信息，再回答
@@ -228,6 +289,10 @@ python -m unittest discover -s tests -v
 - **长期记忆**：LLM 增量提取案情摘要（`case_summary`），压缩为结构化 JSON（案件类型/关键事实/用户诉求）
 - 两类数据均按 `session_id` 保存到 SQLite，在服务重启后可恢复并注入下一轮对话
 
+### 幻觉守卫：两层规则防御
+
+回答生成后执行零 LLM 调用的双层校验：第一层用正则提取回答中的法条引用（如"第五十五条"），逐一确认是否存在于本轮检索结果中；第二层检查回答与检索结果的字符覆盖度，防止答非所问。任一异常会标注风险等级并在回答末尾追加"检索校验"提示（见 [hallucination_guard.py](agent/hallucination_guard.py)），而非静默放行编造内容。
+
 ### 混合检索：向量 + 词面双路召回
 
 纯向量检索对短锚句（10~17 字的法条核心句，如"网购七天无理由退货"）词面匹配弱：锚句虽在完整文本段里、正确页码上，却进不了 Top-5。BM25 按词频打分恰好补这个短板。
@@ -240,7 +305,9 @@ python -m unittest discover -s tests -v
 
 ### 性能 Trace 与链路排查
 
-每个请求会生成独立 `trace_id`。当前后端终端已记录 `vectorstore_load`、`vector_search`、`rerank`、联网搜索服务及耗时、请求总耗时等信息；其中 CPU 上的 Reranker 通常是已记录链路中最显著的耗时项。Planner 与每轮 LLM 的独立耗时尚未打点，因此不能仅凭总耗时把等待全部归因给某个模型；下一步会补齐这两个阶段及首 token 时间（TTFT）的日志。当前日志仅输出到本地终端，后续可写入结构化 JSONL 或日志平台。
+每个请求会生成独立 `trace_id`。后端按 `[PERF]` 打点记录 `vectorstore_load`、`hybrid_search`（FAISS+BM25+RRF）、`rerank`、`planner`、每轮 `llm`（含 `has_tool_calls` 与工具名）、联网搜索服务及耗时、请求总耗时；其中 CPU 上的 Reranker 通常是链路中最显著的耗时项。
+
+日志统一走标准库 `logging`（见 [logger.py](logger.py)）：**输出到 stderr**（终端照常显示，同时让出 stdout 给未来的 MCP server 协议通信），每条日志带时间戳、级别与来源模块；级别由环境变量 `LOG_LEVEL` 控制（默认 `INFO`，设 `LOG_LEVEL=DEBUG` 可查看调试打点）。后续可写入结构化 JSONL 或日志平台，并补充首 token 时间（TTFT）日志。
 
 ### 联网搜索服务选型（20 题对比）
 

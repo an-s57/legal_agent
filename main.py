@@ -6,7 +6,7 @@ import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI,BackgroundTasks
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
@@ -14,8 +14,12 @@ from langchain_core.messages import HumanMessage, AIMessage
 from pydantic import BaseModel
 
 from agent.legal_agent import run_legal_agent, run_legal_agent_stream
+from config import HOST, LOCAL_ORIGINS, PORT
+from logger import get_logger
 from memory.case_memory import get_session, init_db, save_exchange, update_case_summary
 from rag.retriever import preload_reranker
+
+logger = get_logger("legal_agent.main")
 
 
 @asynccontextmanager
@@ -28,14 +32,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="AI Legal Assistant", version="1.0.0", lifespan=lifespan)
 
-# 当前项目用于本地演示；只允许本机网页访问 API。
-LOCAL_ORIGINS = [
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
-
+# 当前项目用于本地演示；只允许本机网页访问 API（白名单在 config.py）。
 app.add_middleware(
     CORSMiddleware,
     allow_origins=LOCAL_ORIGINS,
@@ -47,7 +44,7 @@ app.add_middleware(
 FRONTEND_DIST = Path(__file__).parent / "frontend" / "dist"
 if FRONTEND_DIST.exists():
     app.mount("/assets", StaticFiles(directory=str(FRONTEND_DIST / "assets")), name="assets")
-    print(f"[OK] Static files mounted: {FRONTEND_DIST / 'assets'}")
+    logger.info(f"[OK] Static files mounted: {FRONTEND_DIST / 'assets'}")
 
 
 class ChatRequest(BaseModel):
@@ -56,14 +53,11 @@ class ChatRequest(BaseModel):
     skip_planner: bool = False
 
 @app.post("/legal/chat")
-async def legal_chat(req: ChatRequest, background_tasks: BackgroundTasks):
-    print(f"[DEBUG] /legal/chat skip_planner={req.skip_planner} msg={req.message[:30]}", flush=True)
+async def legal_chat(req: ChatRequest):
+    logger.debug(f"[DEBUG] /legal/chat skip_planner={req.skip_planner} msg={req.message[:30]}")
     request_id = uuid.uuid4().hex[:8]
     request_started_at = time.perf_counter()
-    print(
-        f"[PERF] trace={request_id} stage=request status=start route=chat",
-        flush=True,
-    )
+    logger.info(f"[PERF] trace={request_id} stage=request status=start route=chat")
 
     try:
         session = get_session(req.session_id)
@@ -91,39 +85,47 @@ async def legal_chat(req: ChatRequest, background_tasks: BackgroundTasks):
         save_exchange(req.session_id, req.message, answer)
 
         exchange = f"用户：{req.message}\n助手：{answer}"
-        background_tasks.add_task(
-            update_case_summary,
-            req.session_id,
-            exchange,
-            request_id,
-        )
+        try:
+            # 同步更新案情摘要（to_thread 避免阻塞事件循环），
+            # 返回给调用方的是本轮更新后的最新摘要，而不是陈旧值。
+            updated_summary = await asyncio.to_thread(
+                update_case_summary,
+                req.session_id,
+                exchange,
+                request_id,
+            )
+        except Exception as e:
+            logger.error(
+                f"[ERROR] trace={request_id} stage=summary "
+                f"error={type(e).__name__}: {e}"
+            )
+            updated_summary = session["case_summary"]
 
         tools_used = [step[0] for step in result.get("intermediate_steps", [])]
 
         duration_ms = (time.perf_counter() - request_started_at) * 1000
-        print(
+        logger.info(
             f"[PERF] trace={request_id} stage=request_total "
-            f"duration_ms={duration_ms:.0f} status=ok route=chat",
-            flush=True,
+            f"duration_ms={duration_ms:.0f} status=ok route=chat"
         )
 
         return {
             "answer": answer,
             "session_id": req.session_id,
             "tools_used": tools_used,
-            "case_summary": session["case_summary"],
+            "case_summary": updated_summary,
         }
 
     except Exception as e:
-        import traceback
         duration_ms = (time.perf_counter() - request_started_at) * 1000
-        print(f"[ERROR] trace={request_id} error={type(e).__name__}: {e}", flush=True)
-        traceback.print_exc()
-        print(
+        logger.error(
+            f"[ERROR] trace={request_id} error={type(e).__name__}: {e}",
+            exc_info=True,  # 附带完整堆栈，替代原 traceback.print_exc()
+        )
+        logger.info(
             f"[PERF] trace={request_id} stage=request_total "
             f"duration_ms={duration_ms:.0f} status=error route=chat "
-            f"error_type={type(e).__name__}",
-            flush=True,
+            f"error_type={type(e).__name__}"
         )
         return {
             "answer": f"服务器内部错误: {type(e).__name__}",
@@ -135,13 +137,10 @@ async def legal_chat(req: ChatRequest, background_tasks: BackgroundTasks):
 
 
 @app.post("/legal/chat/stream")
-async def legal_chat_stream(req: ChatRequest,background_tasks:BackgroundTasks):
+async def legal_chat_stream(req: ChatRequest):
     request_id = uuid.uuid4().hex[:8]
     request_started_at = time.perf_counter()
-    print(
-        f"[PERF] trace={request_id} stage=request status=start route=stream",
-        flush=True,
-    )
+    logger.info(f"[PERF] trace={request_id} stage=request status=start route=stream")
     session = get_session(req.session_id)
 
     history = []
@@ -157,7 +156,7 @@ async def legal_chat_stream(req: ChatRequest,background_tasks:BackgroundTasks):
     )
 
     async def _event_generator_body():
-        full_answer=""
+        full_answer = ""
 
         async for event in run_legal_agent_stream(
             req.message,
@@ -166,20 +165,38 @@ async def legal_chat_stream(req: ChatRequest,background_tasks:BackgroundTasks):
             request_id=request_id,
             skip_planner=req.skip_planner,
         ):
-            yield f"data: {json.dumps(event,ensure_ascii=False)}\n\n"
+            yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
 
-            if event["type"] in ("token","planner_question"):
-                full_answer+=event["text"]
+            if event["type"] in ("token", "planner_question"):
+                full_answer += event["text"]
+
+        # 流结束：先持久化本轮对话，再同步更新案情摘要，
+        # 并把最新摘要作为 case_summary 事件推给前端（侧边栏实时刷新）。
+        # 摘要更新失败不影响已完成的回答，只记日志。
         if full_answer:
             save_exchange(req.session_id, req.message, full_answer)
 
-            exchange=f"用户:{req.message}\n助手:{full_answer}"
-            background_tasks.add_task(
-                update_case_summary,
-                req.session_id,
-                exchange,
-                request_id,
-                True,
+            exchange = f"用户:{req.message}\n助手:{full_answer}"
+            try:
+                updated_summary = await asyncio.to_thread(
+                    update_case_summary,
+                    req.session_id,
+                    exchange,
+                    request_id,
+                    True,
+                )
+                yield (
+                    "data: "
+                    + json.dumps(
+                        {"type": "case_summary", "data": updated_summary},
+                        ensure_ascii=False,
+                    )
+                    + "\n\n"
+                )
+            except Exception as e:
+                logger.error(
+                    f"[ERROR] trace={request_id} stage=summary "
+                    f"error={type(e).__name__}: {e}"
                 )
 
     async def event_generator():
@@ -200,16 +217,14 @@ async def legal_chat_stream(req: ChatRequest,background_tasks:BackgroundTasks):
         finally:
             duration_ms = (time.perf_counter() - request_started_at) * 1000
             error_suffix = f" error_type={error_type}" if error_type else ""
-            print(
+            logger.info(
                 f"[PERF] trace={request_id} stage=request_total "
                 f"duration_ms={duration_ms:.0f} status={status} route=stream"
-                f"{error_suffix}",
-                flush=True,
+                f"{error_suffix}"
             )
     return StreamingResponse(
         event_generator(),
         media_type="text/event-stream",
-        background=background_tasks,
     )        
             
 
@@ -239,4 +254,4 @@ async def health():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("main:app", host=HOST, port=PORT, reload=True)
