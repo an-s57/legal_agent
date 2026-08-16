@@ -1,31 +1,33 @@
-# === AI·¨ÂÉÖúÊÖDockerfile ===
+# === AIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Dockerfile ===
 
-#1.»ù´¡¾µÏñ
+#1.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FROM python:3.13-slim
-#2.¹¤×÷Ä¿Â¼
+#2.ï¿½ï¿½ï¿½ï¿½Ä¿Â¼
 WORKDIR /app
-#3.ÏÈ¶ÀÁ¢°²×°CPU°ætorch
+#3.ï¿½È¶ï¿½ï¿½ï¿½ï¿½ï¿½×°CPUï¿½ï¿½torch
 RUN pip install torch --index-url https://download.pytorch.org/whl/cpu
 
-# ºóÐø pip ×°ÒÀÀµ×ßÇå»ª¾µÏñ£¨torch ÄÇÐÐÏÔÊ½Ö¸¶¨¹Ù·½ CPU Ô´£¬²»ÊÜÓ°Ïì£©
+# ï¿½ï¿½ï¿½ï¿½ pip ×°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½å»ªï¿½ï¿½ï¿½ï¿½torch ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½Ö¸ï¿½ï¿½ï¿½Ù·ï¿½ CPU Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ì£©
 ENV PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
 
-#4.¿½±´ÒÀÀµÇåµ¥
+#4.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½åµ¥
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-#5.¿½±´ÏîÄ¿´úÂë
+#5.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½
 COPY main.py .
+COPY config.py .
+COPY logger.py .
 COPY agent/ ./agent/
 COPY tools/ ./tools/
 COPY rag/ ./rag/
 COPY memory/ ./memory/
 COPY build_vectorstore.py .
 COPY llm_client.py .
-#6.¿½±´Ç°¶Ë¹¹½¨²úÎï
+#6.ï¿½ï¿½ï¿½ï¿½Ç°ï¿½Ë¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 COPY frontend/dist ./frontend/dist
-#7.»·¾³±äÁ¿bge ranker·ÅÔÚ¹ÒÔØÄ¿Â¼£¬²»·ÅÔÚ¾µÏñ
+#7.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bge rankerï¿½ï¿½ï¿½Ú¹ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¾ï¿½ï¿½ï¿½
 ENV HF_HOME=/models
-#8.ÉùÃ÷ÈÝÆ÷¼àÌý¶Ë¿Ú
+#8.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¿ï¿½
 EXPOSE 8000
-#9.Æô¶¯ÃüÁî
+#9.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
