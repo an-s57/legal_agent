@@ -48,7 +48,7 @@ flowchart TD
     LLM -->|"tool_calls"| WEB
     RAG -->|"检索结果"| LLM
     WEB -->|"检索结果"| LLM
-    LLM -->|"回答"| GUARD["🛡️ 幻觉守卫<br/>两层规则校验（零 LLM 调用）"]
+    LLM -->|"回答"| GUARD["🛡️ 幻觉守卫 + 合规复核<br/>规则校验（零 LLM）+ GLM 判卷"]
     GUARD --> OUT["📤 SSE 输出<br/>token / tool / done"]
 
     OUT --> FE_DONE["✅ 前端结束加载状态"]
@@ -87,7 +87,8 @@ legal_agent/
 │   └── dist/                # 构建产物（npm run build）
 ├── agent/
 │   ├── legal_agent.py       # LangGraph 智能体（Planner + ReAct）
-│   └── hallucination_guard.py  # 两层规则幻觉守卫
+│   ├── hallucination_guard.py  # 两层规则幻觉守卫
+│   └── review_agent.py      # 合规复核 Agent（GLM 判卷，LLM-as-Judge 在线化）
 ├── tools/
 │   └── legal_tools.py       # legal_rag_search + web_legal_search
 ├── rag/
@@ -107,7 +108,7 @@ legal_agent/
 
 | 组件 | 技术 |
 |------|------|
-| LLM | DeepSeek V4 Flash（deepseek-v4-flash） |
+| LLM | DeepSeek V4 Flash（主回答/意图识别）+ GLM-4.7（合规复核 judge，异构） |
 | Agent 框架 | LangGraph（手写 StateGraph，含 Planner + ReAct） |
 | 向量库 | FAISS（本地） |
 | Embedding | nomic-embed-text（Ollama 本地服务） |
@@ -329,6 +330,16 @@ Windows 侧同理：`command` 改为 `.venv\Scripts\python.exe`，`args` 指向 
 ### 幻觉守卫：两层规则防御
 
 回答生成后执行零 LLM 调用的双层校验：第一层用正则提取回答中的法条引用（如"第五十五条"），逐一确认是否存在于本轮检索结果中；第二层检查回答与检索结果的字符覆盖度，防止答非所问。任一异常会标注风险等级并在回答末尾追加"检索校验"提示（见 [hallucination_guard.py](agent/hallucination_guard.py)），而非静默放行编造内容。
+
+### 合规复核 Agent：LLM-as-Judge 在线化
+
+规则校验之上再加一层**语义级合规复核**（见 [review_agent.py](agent/review_agent.py)）：主 Agent 生成回答后，用**异构判卷模型 GLM-4.7**（与主模型 DeepSeek 不同，避免自评偏好）对 {用户问题 + 最终回答 + 本轮检索到的法条原文} 做一次事实一致性判定，输出 `{"verdict": 0/1, "reason": 一句话理由}`；判 0 时在回答末尾追加"合规复核"提示，不删除回答、只标注风险。
+
+- 设计来源：把事实性评测（LLM-as-Judge，GLM 判 DeepSeek，45/47=95.7%）里的离线判卷逻辑搬进生产链路——评测时的 judge 变成了生产里的复核 Agent；
+- 与规则守卫互补：规则抓"引用不存在/覆盖度低"，复核抓规则抓不到的**语义级编造**；
+- **fail-open**：GLM 未配置 key、调用失败或解析失败时跳过复核，绝不影响主流程；
+- 开关：环境变量 `REVIEW_AGENT_ENABLED`（默认开启，设 0/false/no 关闭）；
+- 成本：每次回答多一次 GLM 调用（约 1~3 秒），法律场景值得；已配离线单测（`tests/test_review_agent.py`，stub judge，不调用真实 API）。
 
 ### 混合检索：向量 + 词面双路召回
 

@@ -14,6 +14,7 @@ from llm_client import llm, planner_llm
 from logger import get_logger
 from tools.legal_tools import legal_rag_search, web_legal_search
 from agent.hallucination_guard import check_hallucination, format_hallucination_warning
+from agent.review_agent import review_answer, format_review_warning
 from config import MAX_HISTORY_TURNS, PLANNER_CONTEXT_TURNS, RECURSION_LIMIT
 
 logger = get_logger("legal_agent.agent")
@@ -282,6 +283,12 @@ async def run_legal_agent(
         warning = format_hallucination_warning(check)
         if warning:
             answer = answer + warning
+        # ── 在线合规复核：GLM 判卷（异构模型，语义级事实一致性）──
+        # 与上面的规则校验互补：规则抓"引用不存在/覆盖度低"，复核抓"语义编造"。
+        review = review_answer(user_input, answer, tool_results_text)
+        review_warning = format_review_warning(review)
+        if review_warning:
+            answer = answer + review_warning
 
     # ── 工具调用记录：按调用顺序返回 (工具名, 真实工具输出)，不再用假数据 ──
     # ToolMessage 通过 tool_call_id 关联回 AIMessage 的 tool_calls，取到实际输出。
@@ -415,5 +422,10 @@ async def run_legal_agent_stream(
         warning = format_hallucination_warning(check)
         if warning:
             yield {"type": "token", "text": warning}
+        # ── 在线合规复核：GLM 判卷（异构模型），与规则校验互补 ──
+        review = review_answer(user_input, full_answer, tool_results_text)
+        review_warning = format_review_warning(review)
+        if review_warning:
+            yield {"type": "token", "text": review_warning}
 
     yield {"type": "done", "tools_used": list(tools_used)}

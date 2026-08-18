@@ -45,3 +45,25 @@ def _make_llm(
 
 llm = _make_llm()                      # 主回答：默认采样，语言更自然
 planner_llm = _make_llm(temperature=0) # 意图识别：确定性输出，追问决策可复现
+
+
+def _make_judge_llm() -> ChatOpenAI:
+    """合规复核 Agent 的判卷模型：默认智谱 GLM，OpenAI 兼容接口。
+
+    与主模型（DeepSeek）异构，避免"自己判自己"的自评偏好（同 LLM-as-Judge 评测的设计）。
+    配置：LEGAL_AGENT_JUDGE_MODEL / LEGAL_AGENT_JUDGE_API_KEY（缺省 GLM_API_KEY）/
+    LEGAL_AGENT_JUDGE_API_BASE（缺省智谱 OpenAI 兼容端点）。
+    temperature=0：复核是决策任务，要求同一输入可复现的判定。
+    """
+    return ChatOpenAI(
+        model=os.getenv("LEGAL_AGENT_JUDGE_MODEL", "glm-4.7"),
+        openai_api_key=os.getenv("LEGAL_AGENT_JUDGE_API_KEY") or os.getenv("GLM_API_KEY"),
+        openai_api_base=os.getenv("LEGAL_AGENT_JUDGE_API_BASE", "https://open.bigmodel.cn/api/paas/v4"),
+        timeout=60,
+        max_retries=1,
+        http_client=httpx.Client(trust_env=False),
+        temperature=0,
+    )
+
+
+judge_llm = _make_judge_llm()          # 合规复核：GLM 判卷（无 key 时调用会失败，由复核层 fail-open 兜底）
