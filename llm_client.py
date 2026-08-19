@@ -66,4 +66,22 @@ def _make_judge_llm() -> ChatOpenAI:
     )
 
 
-judge_llm = _make_judge_llm()          # 合规复核：GLM 判卷（无 key 时调用会失败，由复核层 fail-open 兜底）
+_judge_llm_cache = None
+_judge_llm_resolved = False
+
+
+def get_judge_llm() -> ChatOpenAI | None:
+    """惰性构造合规复核判卷模型；缺少 GLM key 时返回 None（复核层 fail-open 跳过）。
+
+    不在 import 时构造：无 key 的 CI/裸环境不会因缺 key 报错（openai SDK 新版会在
+    构造时抛 Missing credentials），只有真正要复核时才建客户端。
+    """
+    global _judge_llm_cache, _judge_llm_resolved
+    if _judge_llm_resolved:
+        return _judge_llm_cache
+    _judge_llm_resolved = True
+    key = os.getenv("LEGAL_AGENT_JUDGE_API_KEY") or os.getenv("GLM_API_KEY")
+    if not key:
+        return None
+    _judge_llm_cache = _make_judge_llm()
+    return _judge_llm_cache

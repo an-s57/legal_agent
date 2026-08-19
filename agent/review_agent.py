@@ -17,7 +17,7 @@ import re
 
 from langchain_core.messages import SystemMessage, HumanMessage
 
-from llm_client import judge_llm
+from llm_client import get_judge_llm
 
 REVIEW_ENABLED = os.getenv("REVIEW_AGENT_ENABLED", "1").lower() not in ("0", "false", "no")
 MAX_EVIDENCE_CHARS = 6000  # 证据文本上限，防止超出窗口
@@ -74,16 +74,22 @@ def review_answer(
     question: str,
     answer: str,
     evidence: str,
-    judge=judge_llm,
+    judge=None,
 ) -> dict:
     """对主 Agent 的回答做一次 GLM 合规复核。
 
     返回 {"verdict": 1|0|None, "reason": str}：
     - verdict=1 事实正确；verdict=0 事实错误/编造；verdict=None 未复核
-      （开关关闭、缺少证据、调用失败或解析失败，全部 fail-open）。
+      （开关关闭、缺少证据、缺少 GLM key、调用失败或解析失败，全部 fail-open）。
+    judge 参数用于测试注入 stub；生产缺省为 None → 惰性取全局判卷模型。
     """
     if not REVIEW_ENABLED or not evidence or not answer:
         return {"verdict": None, "reason": ""}
+
+    if judge is None:
+        judge = get_judge_llm()
+        if judge is None:
+            return {"verdict": None, "reason": ""}
 
     prompt = REVIEW_PROMPT.format(
         question=question,
