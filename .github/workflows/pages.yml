@@ -1,0 +1,54 @@
+name: Deploy to GitHub Pages
+
+# 为什么需要这个文件：GitHub Pages 默认用 Jekyll 把 Markdown 构建成"文档网站"，
+# 而这个项目要部署的是 React 前端产物（frontend/dist）。此工作流用 GitHub Actions
+# 直接构建前端并部署，彻底绕开 Jekyll（见 README"界面展示"）。
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # 允许在 Actions 页手动触发
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: 安装前端依赖并构建
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: 配置 Pages
+        uses: actions/configure-pages@v5
+
+      - name: 上传构建产物
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 部署到 Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
