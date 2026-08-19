@@ -21,6 +21,9 @@ cd frontend && npm install && npm run build && cd ..
 # 启动服务器
 python main.py
 # 或者：uvicorn main:app --host 127.0.0.1 --port 8000 --reload
+
+# 运行离线单元测试（不依赖 Ollama / LLM / 联网）
+python -m unittest discover -s tests -v
 ```
 
 接口：
@@ -52,6 +55,5 @@ Planner 节点先判断用户消息是否包含四个关键维度（事件描述
 - **会话已持久化到 `data/legal_agent.db`**（`memory/case_memory.py`）：`sessions` 保存会话和案情摘要，`messages` 保存多轮消息；服务重启后可按 `session_id` 恢复。前端把当前会话 ID 保存到浏览器 `localStorage`，刷新后恢复这一个会话（侧栏历史列表暂不跨刷新保存）。不要提交本地数据库文件或真实会话数据。
 - **`recursion_limit=12`**（`agent/legal_agent.py`）限制了 LangGraph 最多 ~5 轮工具调用，防止 ReAct 循环失控。
 - **Reranker 在 FastAPI lifespan 中预加载**（`main.py`），避免首次请求等待 5s+。
-- **`1.py`、`2.py`、`3.py`** 是学习/草稿文件，直接忽略。真正的入口是 `main.py`。
-- **项目暂无 pytest 等自动化单元测试**；已有检索参数评测和联网搜索对比脚本，不能把它们等同于完整回归测试。
+- **单元测试：** `tests/` 下 38 个纯内存离线单测（`python -m unittest discover -s tests -v`，毫秒级跑完，CI 自动执行），覆盖 SQLite 会话持久化、混合检索、幻觉守卫、Planner 决策等，LLM 用 stub 替换。`evaluation/` 下的评测脚本需真实 LLM/向量库/联网，仅开发期手动跑，不等同于回归测试。
 - `.env` 已被 gitignore，但里面包含真实 API key，**千万不要提交**。

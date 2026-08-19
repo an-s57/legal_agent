@@ -23,6 +23,7 @@ legal_pdfs/
 .vscode/
 .idea/
 .claude/
+.qoder/
 _resume_render_review/
 
 # 本地交付物与个人简历
@@ -32,6 +33,7 @@ deliverables/
 ~$*.docx
 
 # 临时测试文件
+.tmp_test/
 result*.txt
 test_clean*.txt
 test_result.txt

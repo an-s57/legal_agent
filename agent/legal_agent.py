@@ -1,4 +1,5 @@
 """LangGraph ReAct 法律智能体"""
+import asyncio
 import json
 import time
 from typing import Annotated, TypedDict
@@ -285,7 +286,11 @@ async def run_legal_agent(
             answer = answer + warning
         # ── 在线合规复核：GLM 判卷（异构模型，语义级事实一致性）──
         # 与上面的规则校验互补：规则抓"引用不存在/覆盖度低"，复核抓"语义编造"。
-        review = review_answer(user_input, answer, tool_results_text)
+        # review_answer 内部是同步 LLM 调用，用 to_thread 丢进线程池，
+        # 避免 1~3s 的判卷请求阻塞事件循环（与 main.py 摘要更新同款写法）。
+        review = await asyncio.to_thread(
+            review_answer, user_input, answer, tool_results_text
+        )
         review_warning = format_review_warning(review)
         if review_warning:
             answer = answer + review_warning
@@ -423,7 +428,10 @@ async def run_legal_agent_stream(
         if warning:
             yield {"type": "token", "text": warning}
         # ── 在线合规复核：GLM 判卷（异构模型），与规则校验互补 ──
-        review = review_answer(user_input, full_answer, tool_results_text)
+        # 同步 LLM 调用走线程池，避免阻塞事件循环（同非流式路径）。
+        review = await asyncio.to_thread(
+            review_answer, user_input, full_answer, tool_results_text
+        )
         review_warning = format_review_warning(review)
         if review_warning:
             yield {"type": "token", "text": review_warning}
