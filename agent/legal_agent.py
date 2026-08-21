@@ -82,7 +82,7 @@ class AgentState(TypedDict):
     skip_planner: bool
 
 
-llm_with_tools = llm.bind_tools(tools)
+llm_with_tools = llm.bind_tools(tools, strict=True)
 
 PLANNER_PROMPT = """你是一个法律咨询信息收集员。
 你的任务是判断用户的消息属于哪种类型，并决定是否需要追问。
