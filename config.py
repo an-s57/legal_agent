@@ -12,6 +12,7 @@ from pathlib import Path
 MAX_HISTORY_TURNS = 12        # 传给 LLM 的最大对话轮数（1 轮 = 用户 + AI 各一条）
 PLANNER_CONTEXT_TURNS = 3     # 传给 Planner 的最近对话轮数（理解多轮上下文）
 RECURSION_LIMIT = 12          # LangGraph 递归上限（约 ~5 轮工具调用），防 ReAct 循环失控
+MAX_TOOL_ROUNDS = 5           # 单次请求最多工具调用轮次，超过强制 END（防死循环）
 
 # ── 检索（rag/retriever.py + rag/hybrid.py）──
 FAISS_DB_PATH = "rag/vectorstore/db_faiss"

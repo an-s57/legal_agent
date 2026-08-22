@@ -16,7 +16,7 @@ from logger import get_logger
 from tools.legal_tools import legal_rag_search, web_legal_search
 from agent.hallucination_guard import check_hallucination, format_hallucination_warning
 from agent.review_agent import review_answer, format_review_warning
-from config import MAX_HISTORY_TURNS, PLANNER_CONTEXT_TURNS, RECURSION_LIMIT
+from config import MAX_HISTORY_TURNS, PLANNER_CONTEXT_TURNS, RECURSION_LIMIT, MAX_TOOL_ROUNDS
 
 logger = get_logger("legal_agent.agent")
 
@@ -80,6 +80,7 @@ class AgentState(TypedDict):
     info_complete: bool
     case_summary: str
     skip_planner: bool
+    tool_rounds: int = 0          # 本轮已执行的工具调用轮次，用于 MAX_TOOL_ROUNDS 限制
 
 
 llm_with_tools = llm.bind_tools(tools, strict=True)
@@ -212,18 +213,112 @@ def call_model(state: AgentState):
 tool_node = ToolNode(tools)
 
 
+# ── 工具调用去重 + 最大轮次：在 ToolNode 外面包一层业务守卫 ──
+# LangGraph 的 ToolNode 只负责「把 tool_calls 跑成 ToolMessage」，
+# 不管「同一个工具能不能反复调」。这里加一层业务守卫：
+#   1. 去重：相同 (tool_name, args_hash) 只真调一次，后续直接返回缓存结果
+#   2. 计数：每轮工具调用累加 tool_rounds，超过 MAX_TOOL_ROUNDS 强制 END
+import hashlib
+import json as _json
+
+
+def _args_hash(args: dict) -> str:
+    """把工具参数字典做成稳定 hash，用于去重键。"""
+    raw = _json.dumps(args, sort_keys=True, ensure_ascii=False, default=str)
+    return hashlib.md5(raw.encode("utf-8")).hexdigest()
+
+
+async def _dedup_tool_node(state: AgentState):
+    """替代 ToolNode 的自定义节点：去重 + 计数 + 缓存。
+
+    - 遍历 state 里最新 AIMessage 的 tool_calls
+    - 每个 call 先查 (name, args_hash) 是否已调过
+      - 已调过 → 直接构造 ToolMessage，内容标注「[重复调用]」，不真跑工具
+      - 未调过 → 真跑 ToolNode，把结果缓存到 _call_cache
+    - 同时累加 tool_rounds，供 should_continue 判断是否超限
+    """
+    global _call_cache
+    last_message = state["messages"][-1]
+    tool_calls = getattr(last_message, "tool_calls", None) or []
+    if not tool_calls:
+        return {"messages": [], "tool_rounds": state.get("tool_rounds", 0)}
+
+    # 初始化缓存（进程级，单次请求内有效）
+    if "_call_cache" not in globals():
+        globals()["_call_cache"] = {}
+
+    new_messages = []
+    for tc in tool_calls:
+        name = tc.get("name", "")
+        args = tc.get("args", {}) or {}
+        call_id = tc.get("id", "")
+        key = (name, _args_hash(args))
+
+        if key in _call_cache:
+            # 命中缓存 → 不真调工具，直接返回上次结果并标注重复
+            cached_content = _call_cache[key]
+            new_messages.append(
+                ToolMessage(
+                    content=f"[重复调用] {cached_content}\n\n"
+                            f"（提示：工具 {name} 已在本轮调用过，以上为缓存结果，请勿重复调用。）",
+                    tool_call_id=call_id,
+                )
+            )
+            logger.info(f"[DEDUP] 命中缓存: {name} args_hash={key[1][:8]}…")
+        else:
+            # 未命中 → 真跑工具，结果落缓存
+            tool_obj = next((t for t in tools if t.name == name), None)
+            if tool_obj is None:
+                new_messages.append(
+                    ToolMessage(
+                        content=f"错误：未找到工具 {name}",
+                        tool_call_id=call_id,
+                    )
+                )
+                continue
+            try:
+                result = await tool_obj.ainvoke(args)
+                result_content = result.content if hasattr(result, "content") else str(result)
+                _call_cache[key] = result_content
+                new_messages.append(
+                    ToolMessage(content=result_content, tool_call_id=call_id)
+                )
+                logger.info(f"[DEDUP] 新调用: {name} args_hash={key[1][:8]}… 结果长度={len(result_content)}")
+            except Exception as e:
+                new_messages.append(
+                    ToolMessage(
+                        content=f"工具调用失败: {type(e).__name__}: {e}",
+                        tool_call_id=call_id,
+                    )
+                )
+
+    return {
+        "messages": new_messages,
+        "tool_rounds": state.get("tool_rounds", 0) + 1,
+    }
+
+
 def should_continue(state: AgentState):
     last_message = state["messages"][-1]
-    if last_message.tool_calls:
-        return "tools"
-    return END
+    if not getattr(last_message, "tool_calls", None):
+        return END
+
+    # 最大工具轮次限制：超过直接 END，防止死循环
+    tool_rounds = state.get("tool_rounds", 0)
+    if tool_rounds >= MAX_TOOL_ROUNDS:
+        logger.warning(
+            f"[LOOP] 工具调用达上限 {MAX_TOOL_ROUNDS} 轮，强制结束"
+        )
+        return END
+
+    return "tools"
 
 
 def create_legal_agent():
     graph = StateGraph(AgentState)
     graph.add_node("planner", call_planner)
     graph.add_node("llm", call_model)
-    graph.add_node("tools", tool_node)
+    graph.add_node("tools", _dedup_tool_node)   # 用去重 + 计数守卫替代原生 ToolNode
 
     graph.add_edge(START, "planner")
     graph.add_conditional_edges(
@@ -245,6 +340,9 @@ async def run_legal_agent(
     request_id: str = "",
     skip_planner: bool = False,
 ) -> dict:
+    # 每次请求开始时清空工具调用缓存，避免跨请求泄漏
+    globals()["_call_cache"] = {}
+
     messages = _trim_history(chat_history)
     messages.insert(0, SystemMessage(content=SYSTEM_PROMPT))
     if case_summary:
@@ -254,7 +352,7 @@ async def run_legal_agent(
     messages.append(HumanMessage(content=user_input + _retrieval_reminder))
 
     result = await _compiled_graph.ainvoke(
-        {"messages": messages, "case_summary": case_summary, "skip_planner": skip_planner},
+        {"messages": messages, "case_summary": case_summary, "skip_planner": skip_planner, "tool_rounds": 0},
         config={"recursion_limit": RECURSION_LIMIT},  # 限制最多 ~5 轮工具调用
     )
 
@@ -329,6 +427,9 @@ async def run_legal_agent_stream(
     skip_planner: bool = False,
 ):
     """流式版本 — 逐 token yield，格式 {"type": "token"|"planner_question"|"tool_start"|"tool_end"|"done", ...}"""
+    # 每次请求开始时清空工具调用缓存，避免跨请求泄漏
+    globals()["_call_cache"] = {}
+
     messages = _trim_history(chat_history)
     messages.insert(0, SystemMessage(content=SYSTEM_PROMPT))
     if case_summary:
@@ -337,7 +438,7 @@ async def run_legal_agent_stream(
     _retrieval_reminder = "\n\n[系统指令：请先调用 legal_rag_search 检索法条原文，再根据检索结果回答。不要凭记忆直接回答。]"
     messages.append(HumanMessage(content=user_input + _retrieval_reminder))
 
-    state = {"messages": messages, "case_summary": case_summary, "skip_planner": skip_planner}
+    state = {"messages": messages, "case_summary": case_summary, "skip_planner": skip_planner, "tool_rounds": 0}
 
     planner_buf = ""
     tools_used = set()
