@@ -16,7 +16,8 @@ from pydantic import BaseModel
 from agent.legal_agent import run_legal_agent, run_legal_agent_stream
 from config import HOST, LOCAL_ORIGINS, PORT
 from logger import get_logger
-from memory.case_memory import get_session, init_db, save_exchange, update_case_summary
+from memory.case_memory import init_db, save_exchange, update_case_summary
+from memory.redis_memory import redis_memory, init_redis_memory
 from rag.retriever import preload_reranker
 
 logger = get_logger("legal_agent.main")
@@ -26,6 +27,7 @@ logger = get_logger("legal_agent.main")
 async def lifespan(app: FastAPI):
     """启动时初始化数据库并预加载模型。"""
     init_db()
+    init_redis_memory()  # Redis 会话缓存初始化
     preload_reranker()
     yield
 
@@ -60,7 +62,8 @@ async def legal_chat(req: ChatRequest):
     logger.info(f"[PERF] trace={request_id} stage=request status=start route=chat")
 
     try:
-        session = get_session(req.session_id)
+        # 从 Redis 加载会话（比 SQLite 快得多）
+        session = redis_memory.load_session_from_db(req.session_id)
 
         history = []
         for turn in session["history"]:
@@ -141,7 +144,8 @@ async def legal_chat_stream(req: ChatRequest):
     request_id = uuid.uuid4().hex[:8]
     request_started_at = time.perf_counter()
     logger.info(f"[PERF] trace={request_id} stage=request status=start route=stream")
-    session = get_session(req.session_id)
+    # 从 Redis 加载会话
+    session = redis_memory.load_session_from_db(req.session_id)
 
     history = []
 
@@ -231,6 +235,11 @@ async def legal_chat_stream(req: ChatRequest):
 
 @app.get("/legal/session/{session_id}")
 async def get_session_info(session_id: str):
+    # 优先从 Redis 读取，如果不存在再回退到 SQLite
+    redis_session = redis_memory.load_session_from_db(session_id)
+    if redis_session and redis_session.get("case_summary"):
+        return redis_session
+    # 回退到 SQLite
     return get_session(session_id)
 
 
