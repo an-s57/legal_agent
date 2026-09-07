@@ -16,6 +16,7 @@ from logger import get_logger
 from tools.legal_tools import legal_rag_search, web_legal_search
 from agent.hallucination_guard import check_hallucination, format_hallucination_warning
 from agent.review_agent import review_answer, format_review_warning
+from cache.redis_client import get_intent_decision, set_intent_decision
 from config import MAX_HISTORY_TURNS, PLANNER_CONTEXT_TURNS, RECURSION_LIMIT, MAX_TOOL_ROUNDS
 
 logger = get_logger("legal_agent.agent")
@@ -159,6 +160,25 @@ def call_planner(state: AgentState):
     case_summary = state.get("case_summary", "{}")
     recent_history = _format_planner_context(state["messages"])
 
+    # ── 意图识别缓存：仅对"无任何对话/案情上下文的首次提问"生效 ──
+    # 有上下文时 Planner 判定依赖前文（如追问后补一句"昨天"要结合案情判断），缓存会错；
+    # 无上下文时同一问题的判定稳定（temperature=0），可安全缓存、跳过 Planner 的 LLM 调用。
+    _ctx_free = (
+        (not case_summary or case_summary.strip() in ("", "{}", "null"))
+        and sum(isinstance(m, HumanMessage) for m in state["messages"]) == 1
+        and not any(isinstance(m, AIMessage) for m in state["messages"])
+    )
+    if _ctx_free:
+        _cached = get_intent_decision(user_message)
+        if _cached is not None:
+            logger.info(f"[CACHE] intent hit: {str(user_message)[:40]}")
+            if not _cached.get("info_complete", True) and _cached.get("follow_up"):
+                return {
+                    "messages": [AIMessage(content=_cached["follow_up"])],
+                    "info_complete": False,
+                }
+            return {"info_complete": True}
+
     prompt = PLANNER_PROMPT.format(
         recent_history=recent_history,
         case_summary=case_summary,
@@ -189,6 +209,13 @@ def call_planner(state: AgentState):
         logger.warning("[WARN] Planner 未调用工具，放行进入 ReAct")
         info_complete = True
         follow_up = ""
+
+    # 无上下文的首问：把判定结果写入缓存，供后续重复提问直接命中
+    if _ctx_free:
+        set_intent_decision(
+            user_message,
+            {"info_complete": bool(info_complete), "follow_up": follow_up},
+        )
 
     if not info_complete and follow_up:
         return {

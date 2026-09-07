@@ -7,6 +7,7 @@ import os
 from unittest import mock
 
 os.environ.setdefault("DEEPSEEK_API_KEY", "test-key")  # 占位，只保证导入模块不依赖真实密钥
+os.environ.setdefault("CACHE_ENABLED", "0")            # 离线单测不连 Redis（意图缓存 fail-open）
 
 import unittest
 
