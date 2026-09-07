@@ -1,5 +1,7 @@
 """SQLite 会话持久化的最小回归测试。"""
+import gc
 import os
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -25,7 +27,10 @@ class CaseMemorySQLiteTest(unittest.TestCase):
     def tearDown(self) -> None:
         case_memory.DATA_DIR = self.original_data_dir
         case_memory.DB_PATH = self.original_db_path
-        self.temp_dir.cleanup()
+        # Windows 沙箱下 SQLite 的 WAL 句柄在 close() 后可能仍有短暂残留，
+        # 直接 cleanup() 会 PermissionError。先 gc 强制回收，再幂等删除并容忍权限错误。
+        gc.collect()
+        shutil.rmtree(self.temp_dir.name, ignore_errors=True)
 
     def test_save_and_restore_session(self) -> None:
         session_id = "test-session-001"

@@ -36,14 +36,18 @@ python -m unittest discover -s tests -v
 
 ```
 main.py （FastAPI 入口，端口 8000）
-  ├─ agent/legal_agent.py     — LangGraph 智能体（Planner + ReAct + SSE 流式）
-  │    ├─ tools/legal_tools.py  — legal_rag_search + web_legal_search（AnySearch 主搜索 + ddgs 兜底）
-  │    └─ rag/retriever.py      — FAISS 检索 + CrossEncoder Reranker + 自定义 OllamaEmbeddings
-  ├─ memory/case_memory.py    — SQLite 会话/消息持久化 + LLM 增量案情摘要
-  └─ frontend/                — React + TypeScript + Tailwind CSS
+  ├─ agent/legal_agent.py         — LangGraph 智能体（Planner + ReAct + SSE 流式）
+  │    ├─ tools/legal_tools.py      — legal_rag_search + web_legal_search（AnySearch 主搜索 + ddgs 兜底）
+  │    ├─ rag/retriever.py          — 混合检索：FAISS 向量 + BM25 词面 + RRF 融合 + CrossEncoder Reranker + 自定义 OllamaEmbeddings
+  │    ├─ agent/hallucination_guard.py — 幻觉守卫（规则校验：引用存在性 + 覆盖度）
+  │    └─ agent/review_agent.py       — GLM-4.7 异构判卷（LLM-as-Judge，语义级事实一致性复核）
+  ├─ memory/case_memory.py        — SQLite 会话/消息持久化 + LLM 增量案情摘要
+  └─ frontend/                    — React + TypeScript + Tailwind CSS
 ```
 
 Agent 状态图流程：`START → planner（信息完整性检查）→ llm（ReAct 决策）⇄ tools（条件跳转）→ END`。
+
+注意：`tools` 节点用的是**自定义 `_dedup_tool_node`**（`agent/legal_agent.py`），在原生 ToolNode 之外包了**工具去重 + 轮次计数（MAX_TOOL_ROUNDS）**：相同 `(tool, args_hash)` 只真调一次、后续直接返回缓存结果，防止同一工具反复调用、ReAct 循环失控。
 
 Planner 节点先判断用户消息是否包含四个关键维度（事件描述、时间、损失/后果、诉求）。缺失则生成自然追问，信息完整后才进入 ReAct 检索+回答流程。
 
