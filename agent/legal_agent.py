@@ -104,9 +104,10 @@ PLANNER_PROMPT = """你是一个法律咨询信息收集员。
 - 客观知识/法条查询：问一般性规定、法条内容、某类行为的法律后果，
   主语通常是抽象的（消费者/用人单位/平台），不涉及用户本人的具体遭遇，
   不需要知道个人情况就能回答。
-  → 直接放行检索，绝不追问个人案情：{{"info_complete": true}}
+  → 直接放行检索，绝不追问个人案情，并标记 is_general_knowledge：
+    {{"info_complete": true, "is_general_knowledge": true}}
 - 个人案情咨询：用户描述自己的具体遭遇（"我遇到/我买了/我公司/我被……"），
-  需要结合具体案情才能给出针对性建议。
+  需要结合具体案情才能给出针对性建议。is_general_knowledge 保持 false。
   → 进入第三步检查四槽位。
 
 第三步：仅对「个人案情咨询」检查以下四个维度
@@ -131,9 +132,9 @@ PLANNER_PROMPT = """你是一个法律咨询信息收集员。
 {{"info_complete": true}}
 
 判别示例（务必遵守）：
-- "试用期最多可以约定几个月？" → 客观知识查询 → 放行
-- "消费者买到过期食品能不能要求十倍赔偿？" → 客观知识查询 → 放行
-- "上周我在网上买了个手机结果是翻新机，花了5000块，想退货" → 个人案情咨询，四槽位齐全 → 放行
+- "试用期最多可以约定几个月？" → 客观知识查询 → {{"info_complete": true, "is_general_knowledge": true}}
+- "消费者买到过期食品能不能要求十倍赔偿？" → 客观知识查询 → {{"info_complete": true, "is_general_knowledge": true}}
+- "上周我在网上买了个手机结果是翻新机，花了5000块，想退货" → 个人案情咨询，四槽位齐全 → 放行（is_general_knowledge 保持 false）
 - "我在工地受伤了" → 个人案情咨询，缺时间/损失/诉求 → 追问
 """
 
@@ -143,6 +144,9 @@ class PlannerDecision(BaseModel):
     info_complete: bool
     missing_fields: list[str] = Field(default_factory=list)
     follow_up: str = ""
+    # 是否为「客观知识/法条查询」（不涉及用户个人遭遇）。
+    # 回答缓存（1.1B）仅缓存此类问题的完整回答——案情咨询的答案绝不缓存，防止答错。
+    is_general_knowledge: bool = False
 
 
 planner_tool_llm = planner_llm.bind_tools([PlannerDecision])
@@ -190,6 +194,7 @@ def call_planner(state: AgentState):
     logger.info(f"[PERF] stage=planner duration_ms={_planner_ms:.0f}")
 
     # 从工具调用参数里拿结构化判定；模型偶尔不调用工具或参数异常时保守放行
+    is_general_knowledge = False
     if response.tool_calls:
         try:
             args = response.tool_calls[0]["args"]
@@ -199,6 +204,7 @@ def call_planner(state: AgentState):
             decision = PlannerDecision(**args)
             info_complete = decision.info_complete
             follow_up = decision.follow_up or ""
+            is_general_knowledge = bool(decision.is_general_knowledge)
         except Exception as e:
             logger.warning(
                 f"[WARN] Planner 决策解析失败（{type(e).__name__}），放行进入 ReAct"
@@ -210,11 +216,16 @@ def call_planner(state: AgentState):
         info_complete = True
         follow_up = ""
 
-    # 无上下文的首问：把判定结果写入缓存，供后续重复提问直接命中
+    # 无上下文的首问：把判定结果写入缓存，供后续重复提问直接命中。
+    # 一并存 is_general_knowledge —— 回答缓存（1.1B）据此判断"能否缓存整条回答"。
     if _ctx_free:
         set_intent_decision(
             user_message,
-            {"info_complete": bool(info_complete), "follow_up": follow_up},
+            {
+                "info_complete": bool(info_complete),
+                "follow_up": follow_up,
+                "is_general_knowledge": bool(is_general_knowledge),
+            },
         )
 
     if not info_complete and follow_up:

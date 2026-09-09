@@ -14,6 +14,7 @@ from config import (
     WEB_SEARCH_TOP_N,
 )
 from logger import get_logger
+from cache.redis_client import get_retrieval, set_retrieval
 from rag.retriever import retrieve_legal_docs
 
 logger = get_logger("legal_agent.tools")
@@ -25,13 +26,20 @@ def legal_rag_search(query: str) -> str:
     适合回答法律条文定义、法律概念解释、历史案例引用、某法条的具体规定。
     不适合：查询涉及最新动态、司法解释、时效性强的法律新闻。
     """
+    # 检索结果缓存（#3）：缓存的是客观法条原文（不会"答错"），故无需语义门控，任何 query 都可缓存。
+    # 命中即跳过最慢的 hybrid+rerank（~3s）。key 绑定向量库版本+k+top_k，库/配置一变自动失效。
+    _cached = get_retrieval(query)
+    if _cached is not None:
+        logger.info(f"[CACHE] retrieval hit: {query[:40]}")
+        return _cached
+
     # 基于开发集调参与验证集确认后的线上检索配置：K=40，Top-K=5（值在 config.py）。
     # 注意：k 会作为 k_vector 传给 hybrid_candidates（FAISS 召回数），
     # K 扫描定案 k=40 是"最小安全候选池"，不能砍小。
     results = retrieve_legal_docs(query, k=RETRIEVAL_K_VECTOR, top_k=RETRIEVAL_TOP_K)
-    if not results:
-        return "法律文档库中未找到相关内容"
-    return "\n\n---\n\n".join(results)
+    text = "法律文档库中未找到相关内容" if not results else "\n\n---\n\n".join(results)
+    set_retrieval(query, text)   # 未命中的哨兵串也缓存：对固定向量库是确定结果
+    return text
 
 # 联网搜索策略：AnySearch 主搜索；缺少密钥、请求异常或结果异常时回退到 ddgs。
 def _request_anysearch_payload(query: str) -> object:

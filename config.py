@@ -16,6 +16,9 @@ MAX_TOOL_ROUNDS = 5           # 单次请求最多工具调用轮次，超过强
 
 # ── 检索（rag/retriever.py + rag/hybrid.py）──
 FAISS_DB_PATH = "rag/vectorstore/db_faiss"
+# 向量库版本号：重建/增量更新向量库后手动 +1（v1→v2）。
+# 回答缓存 + 检索缓存的 key 都带它，改版本号 = 让这两类旧缓存全部自动失效。
+VECTORSTORE_VERSION = "v1"
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")  # docker-compose 会注入
 OLLAMA_EMBED_MODEL = "nomic-embed-text"
 RERANKER_MODEL_NAME = "BAAI/bge-reranker-base"
