@@ -21,6 +21,7 @@ COPY agent/ ./agent/
 COPY tools/ ./tools/
 COPY rag/ ./rag/
 COPY memory/ ./memory/
+COPY cache/ ./cache/
 COPY build_vectorstore.py .
 COPY llm_client.py .
 #6.����ǰ�˹�������
