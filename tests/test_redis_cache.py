@@ -2,6 +2,8 @@
 
 运行：python -m unittest tests.test_redis_cache -v
 """
+import sys
+import types
 import unittest
 from unittest import mock
 
@@ -208,6 +210,61 @@ class TestCacheStats(unittest.TestCase):
             self.assertIn(layer, s)
             self.assertIn("hit_rate", s[layer])
             self.assertIsNone(s[layer]["hit_rate"])   # 无样本时命中率为 None
+
+
+class TestClientReprobe(unittest.TestCase):
+    """_get_client：探测失败进入冷却，冷却后自动重试——Redis 恢复无需重启进程。"""
+
+    def setUp(self):
+        # 恢复到"未探测"状态，避免用例间相互影响
+        rc._client_ok = None
+        rc._client = None
+        rc._client_failed_at = 0.0
+
+    def tearDown(self):
+        rc._client_ok = None
+        rc._client = None
+        rc._client_failed_at = 0.0
+
+    @staticmethod
+    def _fake_redis_module(ping_results: list):
+        """假的 redis 模块：ping 依次抛出/返回 ping_results，并记录 from_url 次数。"""
+        counter = {"from_url": 0, "ping": 0}
+
+        class _FakeClient:
+            def ping(self):
+                idx = min(counter["ping"], len(ping_results) - 1)
+                counter["ping"] += 1
+                result = ping_results[idx]
+                if isinstance(result, Exception):
+                    raise result
+                return result
+
+        def _from_url(*a, **k):
+            counter["from_url"] += 1
+            return _FakeClient()
+
+        fake = types.SimpleNamespace()
+        fake.Redis = types.SimpleNamespace(from_url=_from_url)
+        return fake, counter
+
+    def test_探测失败_冷却期内不重复建连(self):
+        fake, counter = self._fake_redis_module([ConnectionError("down")])
+        with mock.patch.object(rc, "CACHE_ENABLED", True), \
+             mock.patch.object(rc, "PROBE_RETRY_SECONDS", 60.0), \
+             mock.patch.dict(sys.modules, {"redis": fake}):
+            self.assertIsNone(rc._get_client())   # 第一次探测失败
+            self.assertIsNone(rc._get_client())   # 冷却期内：不再建连
+            self.assertEqual(counter["from_url"], 1)
+
+    def test_冷却结束_重新探测成功(self):
+        fake, counter = self._fake_redis_module([ConnectionError("down"), True])
+        with mock.patch.object(rc, "CACHE_ENABLED", True), \
+             mock.patch.dict(sys.modules, {"redis": fake}):
+            self.assertIsNone(rc._get_client())                    # 第一次失败，进入冷却
+            rc._client_failed_at -= rc.PROBE_RETRY_SECONDS + 1     # 把时刻拨出冷却期
+            self.assertIsNotNone(rc._get_client())                 # 重新探测成功
+            self.assertEqual(counter["ping"], 2)
 
 
 if __name__ == "__main__":

@@ -192,13 +192,19 @@ def update_case_summary(
 
         response = llm.invoke(prompt)
         try:
-            text = response.content.strip().strip("```json").strip("```").strip()
-            updated = json.loads(text)
+            # 定位首个 { 到最后一个 } 之间的 JSON 对象，天然容错 ```json 围栏等包裹；
+            # 不用 strip("```json")——strip 按字符集剥字符，可能误伤正文
+            text = response.content or ""
+            start, end = text.find("{"), text.rfind("}")
+            if start == -1 or end <= start:
+                raise ValueError("响应中未找到 JSON 对象")
+            updated = json.loads(text[start : end + 1])
             save_case_summary(session_id, updated)
             status = "ok"
             return updated
-        except Exception:
+        except Exception as e:
             status = "parse_fallback"
+            logger.warning(f"[WARN] 案情摘要解析失败（{type(e).__name__}: {e}），保留旧摘要")
             return session["case_summary"]
     finally:
         duration_ms = (time.perf_counter() - started_at) * 1000

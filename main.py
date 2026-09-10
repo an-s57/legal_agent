@@ -6,7 +6,7 @@ import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
@@ -53,6 +53,89 @@ class ChatRequest(BaseModel):
     message: str
     skip_planner: bool = False
 
+
+# ── 两条路由（/legal/chat 与 /legal/chat/stream）共用的会话/缓存/落库逻辑 ──
+
+def _load_conversation(session_id: str) -> dict:
+    """加载会话上下文：历史消息、案情摘要、是否"无上下文首问"。
+
+    两条路由共用，保证缓存读写门控与上下文判定语义一致。
+    """
+    session = get_session(session_id)
+    history = []
+    for turn in session["history"]:
+        history.append(HumanMessage(content=turn["human"]))
+        history.append(AIMessage(content=turn["ai"]))
+    return {
+        "history": history,
+        "case_summary_str": (
+            json.dumps(session["case_summary"], ensure_ascii=False)
+            if session["case_summary"]
+            else ""
+        ),
+        "case_summary": session["case_summary"],
+        # 无上下文首问判定：history 空 + 无案情摘要（与 call_planner 的 _ctx_free 同语义）
+        "ctx_free": (not session["history"]) and (not session["case_summary"]),
+    }
+
+
+def _lookup_answer_cache(
+    session_id: str, message: str, ctx_free: bool, skip_planner: bool
+) -> str | None:
+    """回答缓存读取（1.1B）：客观知识问题命中则跳过整条 Agent 链路；命中即落库。"""
+    if not ctx_free or skip_planner:
+        return None
+    cached = get_answer(message)
+    if cached is None:
+        return None
+    logger.info(f"[CACHE] answer hit: {message[:40]}")
+    save_exchange(session_id, message, cached)
+    return cached
+
+
+def _maybe_store_answer(message: str, answer: str, ctx_free: bool, skip_planner: bool) -> None:
+    """回答缓存写入门控（1.1B）：仅"无上下文 + Planner 判定客观知识"才缓存整条回答。
+
+    案情咨询的答案绝不入缓存（防止把个性化答案错发给别人）。
+    """
+    if not ctx_free or skip_planner or not answer:
+        return
+    if answer.startswith("服务器内部错误"):
+        return
+    intent = get_intent_decision(message)
+    if intent and intent.get("is_general_knowledge"):
+        set_answer(message, answer)
+
+
+async def _persist_and_summarize(
+    session_id: str,
+    message: str,
+    answer: str,
+    request_id: str,
+    background: bool = False,
+) -> dict | None:
+    """保存本轮对话，再同步更新案情摘要（to_thread 避免阻塞事件循环）。
+
+    摘要更新失败不影响已保存的回答：返回 None，由调用方决定兜底行为。
+    """
+    save_exchange(session_id, message, answer)
+    exchange = f"用户：{message}\n助手：{answer}"
+    try:
+        return await asyncio.to_thread(
+            update_case_summary,
+            session_id,
+            exchange,
+            request_id,
+            background,
+        )
+    except Exception as e:
+        logger.error(
+            f"[ERROR] trace={request_id} stage=summary "
+            f"error={type(e).__name__}: {e}"
+        )
+        return None
+
+
 @app.post("/legal/chat")
 async def legal_chat(req: ChatRequest):
     logger.debug(f"[DEBUG] /legal/chat skip_planner={req.skip_planner} msg={req.message[:30]}")
@@ -61,74 +144,40 @@ async def legal_chat(req: ChatRequest):
     logger.info(f"[PERF] trace={request_id} stage=request status=start route=chat")
 
     try:
-        session = get_session(req.session_id)
+        ctx = _load_conversation(req.session_id)
 
-        history = []
-        for turn in session["history"]:
-            history.append(HumanMessage(content=turn["human"]))
-            history.append(AIMessage(content=turn["ai"]))
-
-        case_summary = (
-            json.dumps(session["case_summary"], ensure_ascii=False)
-            if session["case_summary"]
-            else ""
-        )
-
-        # 无上下文首问判定：history 空 + 无案情摘要（与 call_planner 的 _ctx_free 同语义）
-        ctx_free = (not session["history"]) and (not session["case_summary"])
-
-        # ── 回答缓存读取（1.1B）：客观知识问题命中则秒回，跳过整条 Agent 链路 ──
-        if ctx_free and not req.skip_planner:
-            _cached_answer = get_answer(req.message)
-            if _cached_answer is not None:
-                logger.info(f"[CACHE] answer hit: {req.message[:40]}")
-                save_exchange(req.session_id, req.message, _cached_answer)
-                duration_ms = (time.perf_counter() - request_started_at) * 1000
-                logger.info(
-                    f"[PERF] trace={request_id} stage=request_total "
-                    f"duration_ms={duration_ms:.0f} status=ok route=chat cache=answer_hit"
-                )
-                return {
-                    "answer": _cached_answer,
-                    "session_id": req.session_id,
-                    "tools_used": [],
-                    "case_summary": session["case_summary"],
-                }
+        # ── 回答缓存读取（1.1B）：命中则秒回 ──
+        cached = _lookup_answer_cache(req.session_id, req.message, ctx["ctx_free"], req.skip_planner)
+        if cached is not None:
+            duration_ms = (time.perf_counter() - request_started_at) * 1000
+            logger.info(
+                f"[PERF] trace={request_id} stage=request_total "
+                f"duration_ms={duration_ms:.0f} status=ok route=chat cache=answer_hit"
+            )
+            return {
+                "answer": cached,
+                "session_id": req.session_id,
+                "tools_used": [],
+                "case_summary": ctx["case_summary"],
+            }
 
         result = await run_legal_agent(
             req.message,
-            history,
-            case_summary,
+            ctx["history"],
+            ctx["case_summary_str"],
             request_id=request_id,
             skip_planner=req.skip_planner,
         )
         answer = result["output"]
 
-        # ── 回答缓存写入（1.1B）：仅"无上下文 + Planner 判定客观知识"才缓存整条回答 ──
-        # 案情咨询的答案绝不入缓存（防止把个性化答案错发给别人）。
-        if ctx_free and not req.skip_planner and answer and not answer.startswith("服务器内部错误"):
-            _intent = get_intent_decision(req.message)
-            if _intent and _intent.get("is_general_knowledge"):
-                set_answer(req.message, answer)
+        # ── 回答缓存写入（1.1B）：门控见 _maybe_store_answer ──
+        _maybe_store_answer(req.message, answer, ctx["ctx_free"], req.skip_planner)
 
-        save_exchange(req.session_id, req.message, answer)
-
-        exchange = f"用户：{req.message}\n助手：{answer}"
-        try:
-            # 同步更新案情摘要（to_thread 避免阻塞事件循环），
-            # 返回给调用方的是本轮更新后的最新摘要，而不是陈旧值。
-            updated_summary = await asyncio.to_thread(
-                update_case_summary,
-                req.session_id,
-                exchange,
-                request_id,
-            )
-        except Exception as e:
-            logger.error(
-                f"[ERROR] trace={request_id} stage=summary "
-                f"error={type(e).__name__}: {e}"
-            )
-            updated_summary = session["case_summary"]
+        updated_summary = await _persist_and_summarize(
+            req.session_id, req.message, answer, request_id
+        )
+        if updated_summary is None:
+            updated_summary = ctx["case_summary"]   # 摘要更新失败 → 返回旧摘要
 
         tools_used = [step[0] for step in result.get("intermediate_steps", [])]
 
@@ -149,20 +198,14 @@ async def legal_chat(req: ChatRequest):
         duration_ms = (time.perf_counter() - request_started_at) * 1000
         logger.error(
             f"[ERROR] trace={request_id} error={type(e).__name__}: {e}",
-            exc_info=True,  # 附带完整堆栈，替代原 traceback.print_exc()
+            exc_info=True,  # 附带完整堆栈
         )
         logger.info(
             f"[PERF] trace={request_id} stage=request_total "
             f"duration_ms={duration_ms:.0f} status=error route=chat "
             f"error_type={type(e).__name__}"
         )
-        return {
-            "answer": f"服务器内部错误: {type(e).__name__}",
-            "session_id": req.session_id,
-            "tools_used": [],
-            "case_summary": {},
-            "error": str(e),
-        }
+        raise HTTPException(status_code=500, detail=f"服务器内部错误: {type(e).__name__}")
 
 
 @app.post("/legal/chat/stream")
@@ -170,43 +213,46 @@ async def legal_chat_stream(req: ChatRequest):
     request_id = uuid.uuid4().hex[:8]
     request_started_at = time.perf_counter()
     logger.info(f"[PERF] trace={request_id} stage=request status=start route=stream")
-    session = get_session(req.session_id)
 
-    history = []
+    # 会话加载放在流开始之前：失败时提前返回错误事件，而不是让异常直接断开连接
+    try:
+        ctx = _load_conversation(req.session_id)
+    except Exception as e:
+        duration_ms = (time.perf_counter() - request_started_at) * 1000
+        logger.error(
+            f"[ERROR] trace={request_id} stage=load_session "
+            f"error={type(e).__name__}: {e}",
+            exc_info=True,
+        )
+        logger.info(
+            f"[PERF] trace={request_id} stage=request_total "
+            f"duration_ms={duration_ms:.0f} status=error route=stream "
+            f"error_type={type(e).__name__}"
+        )
 
-    for turn in session["history"]:
-        history.append(HumanMessage(content=turn["human"]))
-        history.append(AIMessage(content=turn["ai"]))
+        async def _load_error_stream():
+            _err = {"type": "error", "message": "会话加载失败，请稍后重试"}
+            yield f"data: {json.dumps(_err, ensure_ascii=False)}\n\n"
 
-    case_summary = (
-        json.dumps(session["case_summary"], ensure_ascii=False)
-        if session["case_summary"]
-        else ""
-    )
-
-    # 无上下文首问判定（与非流式路由同语义）
-    ctx_free = (not session["history"]) and (not session["case_summary"])
+        return StreamingResponse(_load_error_stream(), media_type="text/event-stream")
 
     async def _event_generator_body():
         full_answer = ""
 
         # ── 回答缓存读取（1.1B）：命中则把缓存回答分段推成 token，再发 done，跳过整条链路 ──
-        if ctx_free and not req.skip_planner:
-            _cached_answer = get_answer(req.message)
-            if _cached_answer is not None:
-                logger.info(f"[CACHE] answer hit(stream): {req.message[:40]}")
-                for _i in range(0, len(_cached_answer), 24):
-                    _chunk = {"type": "token", "text": _cached_answer[_i:_i + 24]}
-                    yield f"data: {json.dumps(_chunk, ensure_ascii=False)}\n\n"
-                save_exchange(req.session_id, req.message, _cached_answer)
-                _done = {"type": "done", "tools_used": [], "cache": "answer_hit"}
-                yield f"data: {json.dumps(_done, ensure_ascii=False)}\n\n"
-                return
+        cached = _lookup_answer_cache(req.session_id, req.message, ctx["ctx_free"], req.skip_planner)
+        if cached is not None:
+            for _i in range(0, len(cached), 24):
+                _chunk = {"type": "token", "text": cached[_i:_i + 24]}
+                yield f"data: {json.dumps(_chunk, ensure_ascii=False)}\n\n"
+            _done = {"type": "done", "tools_used": [], "cache": "answer_hit"}
+            yield f"data: {json.dumps(_done, ensure_ascii=False)}\n\n"
+            return
 
         async for event in run_legal_agent_stream(
             req.message,
-            history,
-            case_summary,
+            ctx["history"],
+            ctx["case_summary_str"],
             request_id=request_id,
             skip_planner=req.skip_planner,
         ):
@@ -215,27 +261,16 @@ async def legal_chat_stream(req: ChatRequest):
             if event["type"] in ("token", "planner_question"):
                 full_answer += event["text"]
 
-        # ── 回答缓存写入（1.1B）：仅"无上下文 + Planner 判定客观知识"才缓存整条回答 ──
-        if full_answer and ctx_free and not req.skip_planner:
-            _intent = get_intent_decision(req.message)
-            if _intent and _intent.get("is_general_knowledge"):
-                set_answer(req.message, full_answer)
+        # ── 回答缓存写入（1.1B）：门控见 _maybe_store_answer ──
+        _maybe_store_answer(req.message, full_answer, ctx["ctx_free"], req.skip_planner)
 
         # 流结束：先持久化本轮对话，再同步更新案情摘要，
         # 并把最新摘要作为 case_summary 事件推给前端（侧边栏实时刷新）。
-        # 摘要更新失败不影响已完成的回答，只记日志。
         if full_answer:
-            save_exchange(req.session_id, req.message, full_answer)
-
-            exchange = f"用户:{req.message}\n助手:{full_answer}"
-            try:
-                updated_summary = await asyncio.to_thread(
-                    update_case_summary,
-                    req.session_id,
-                    exchange,
-                    request_id,
-                    True,
-                )
+            updated_summary = await _persist_and_summarize(
+                req.session_id, req.message, full_answer, request_id, background=True,
+            )
+            if updated_summary is not None:
                 yield (
                     "data: "
                     + json.dumps(
@@ -243,11 +278,6 @@ async def legal_chat_stream(req: ChatRequest):
                         ensure_ascii=False,
                     )
                     + "\n\n"
-                )
-            except Exception as e:
-                logger.error(
-                    f"[ERROR] trace={request_id} stage=summary "
-                    f"error={type(e).__name__}: {e}"
                 )
 
     async def event_generator():
@@ -273,11 +303,11 @@ async def legal_chat_stream(req: ChatRequest):
                 f"duration_ms={duration_ms:.0f} status={status} route=stream"
                 f"{error_suffix}"
             )
+
     return StreamingResponse(
         event_generator(),
         media_type="text/event-stream",
-    )        
-            
+    )
 
 
 @app.get("/legal/session/{session_id}")

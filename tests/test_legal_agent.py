@@ -3,6 +3,7 @@
 Planner 测试用自定义 stub 替换 planner_tool_llm（不调用真实 LLM）。
 import agent.legal_agent 会构建 LangGraph 图（离线，不联网）。
 """
+import asyncio
 import os
 from unittest import mock
 
@@ -134,6 +135,65 @@ class CallPlannerTest(unittest.TestCase):
         state["skip_planner"] = True
         result = legal_agent.call_planner(state)
         self.assertTrue(result["info_complete"])
+
+
+class _StubToolResult:
+    """假工具返回：只需满足 _dedup_tool_node 读 .content。"""
+
+    def __init__(self, content):
+        self.content = content
+
+
+class _StubTool:
+    """假工具：记录真实调用次数，供去重测试断言。"""
+
+    name = "stub_search"
+
+    def __init__(self):
+        self.calls = 0
+
+    async def ainvoke(self, args):
+        self.calls += 1
+        return _StubToolResult(f"结果#{self.calls}")
+
+
+class DedupToolNodeTest(unittest.TestCase):
+    """_dedup_tool_node：请求级去重缓存（ContextVar）— 同请求去重、跨请求隔离。"""
+
+    def setUp(self):
+        # 模拟请求入口：每个请求开始时 set 一个全新的去重缓存
+        legal_agent._tool_call_cache.set({})
+
+    def _state(self, call_id: str = "c1") -> dict:
+        ai = AIMessage(
+            content="",
+            tool_calls=[{"name": "stub_search", "args": {"query": "试用期"}, "id": call_id}],
+        )
+        return {"messages": [ai], "tool_rounds": 0}
+
+    def test_同请求内重复调用_命中缓存(self) -> None:
+        tool = _StubTool()
+        with mock.patch.object(legal_agent, "tools", [tool]):
+            r1 = asyncio.run(legal_agent._dedup_tool_node(self._state()))
+            r2 = asyncio.run(legal_agent._dedup_tool_node(self._state()))
+        self.assertEqual(tool.calls, 1)   # 相同 (tool, args) 只真调一次
+        self.assertIn("结果#1", r1["messages"][0].content)
+        self.assertIn("[重复调用]", r2["messages"][0].content)
+
+    def test_跨请求隔离_新请求重新真调(self) -> None:
+        tool = _StubTool()
+        with mock.patch.object(legal_agent, "tools", [tool]):
+            asyncio.run(legal_agent._dedup_tool_node(self._state()))
+            legal_agent._tool_call_cache.set({})   # 第二个请求开始：全新缓存
+            r2 = asyncio.run(legal_agent._dedup_tool_node(self._state()))
+        self.assertEqual(tool.calls, 2)            # 不复用上一请求的缓存结果
+        self.assertNotIn("[重复调用]", r2["messages"][0].content)
+
+    def test_工具轮次计数_每轮加一(self) -> None:
+        tool = _StubTool()
+        with mock.patch.object(legal_agent, "tools", [tool]):
+            r = asyncio.run(legal_agent._dedup_tool_node(self._state()))
+        self.assertEqual(r["tool_rounds"], 1)
 
 
 if __name__ == "__main__":

@@ -15,6 +15,7 @@ import json
 import os
 import re
 import threading
+import time
 
 from config import VECTORSTORE_VERSION, RETRIEVAL_K_VECTOR, RETRIEVAL_TOP_K
 
@@ -24,6 +25,9 @@ ANSWER_CACHE_TTL = int(os.getenv("ANSWER_CACHE_TTL", str(24 * 3600)))
 # 检索结果只随向量库变、不随时间变 → TTL 只当兜底，真正失效靠版本号。默认 7 天。
 RETRIEVAL_CACHE_TTL = int(os.getenv("RETRIEVAL_CACHE_TTL", str(7 * 24 * 3600)))
 CACHE_ENABLED = os.getenv("CACHE_ENABLED", "1").lower() not in ("0", "false", "no")
+# 探测失败后的重试冷却（秒）：冷却结束后的下一次访问重新探测，Redis 恢复后无需重启进程。
+# 探测成功后不重复 ping——redis-py 每条命令自带断线重连。
+PROBE_RETRY_SECONDS = float(os.getenv("REDIS_PROBE_RETRY_SECONDS", "30"))
 PREFIX = "intent_cache:"
 # 回答缓存（1.1B）：与意图缓存隔离；版本号取自 config.VECTORSTORE_VERSION，
 # 重建/更新向量库后 +1，旧回答缓存自动失效（防止法条更新后仍回放旧答案）。
@@ -32,7 +36,8 @@ ANSWER_PREFIX = f"answer_cache:{VECTORSTORE_VERSION}:"
 RETRIEVAL_PREFIX = f"retrieval_cache:{VECTORSTORE_VERSION}_k{RETRIEVAL_K_VECTOR}_tk{RETRIEVAL_TOP_K}:"
 
 _client = None
-_client_ok = None  # None=未探测；True/False=探测结果
+_client_ok = None  # None=未探测；True/False=最近一次探测结果
+_client_failed_at = 0.0  # 上次探测失败的时刻（time.monotonic 秒），用于冷却计算
 
 # ── 命中率统计（纯旁路观测，fail-safe：任何异常都不影响答题）──
 # 每层缓存记：hit（命中）/ miss（真未命中）/ unavailable（Redis 不可用，非 miss）/ write（写入）。
@@ -77,21 +82,30 @@ def get_cache_stats() -> dict:
 
 
 def _get_client():
-    """惰性创建 Redis 客户端；连接失败返回 None（fail-open）。"""
-    global _client, _client_ok
+    """惰性创建 Redis 客户端；连接失败返回 None（fail-open）。
+
+    探测失败后进入冷却期（PROBE_RETRY_SECONDS，默认 30s）：期间直接返回 None、
+    不反复建连；冷却结束后的下一次访问重新探测——Redis 恢复后无需重启进程。
+    （探测成功后不再重复 ping：redis-py 每条命令自带断线重连。）
+    """
+    global _client, _client_ok, _client_failed_at
     if not CACHE_ENABLED:
         return None
-    if _client_ok is not None:
-        return _client if _client_ok else None
+    if _client_ok is True:
+        return _client
+    if _client_ok is False and (time.monotonic() - _client_failed_at) < PROBE_RETRY_SECONDS:
+        return None  # 冷却期内：上次刚探测失败，不重复建连
     try:
         import redis as _redis
         _client = _redis.Redis.from_url(REDIS_URL, socket_connect_timeout=2, socket_timeout=2)
         _client.ping()
         _client_ok = True
+        return _client
     except Exception:
         _client_ok = False
+        _client_failed_at = time.monotonic()
         _client = None
-    return _client
+        return None
 
 
 def normalize_key(message: str) -> str:
