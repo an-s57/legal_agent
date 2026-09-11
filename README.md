@@ -4,6 +4,8 @@
 
 基于 **LangGraph + RAG + FastAPI** 的智能法律问答系统。Agent 链路：Planner 节点先做**一次 LLM 调用完成意图识别（五分类）**，仅对"个人案情咨询"检查四个维度信息（事件/时间/损失/诉求）是否完整、缺失则追问，放行后进入 ReAct 循环自主决策调用 RAG 法条检索（FAISS 向量 + BM25 词面混合召回 + Reranker 精排）或联网搜索，回答经幻觉守卫校验后带来源标注输出；会话历史与案情摘要使用 SQLite 持久化。前端会在浏览器本地保存当前 `session_id`，刷新页面后恢复该会话。
 
+项目另含**运营数据问答模块（text-to-SQL）**：自然语言查 MySQL 运营数据，四道门只读安全链路 + 50 题评测（见[下文专节](#运营数据问答text-to-sql)）。
+
 对“你好”“谢谢”等简单输入，前端优先走快速回复，避免进入 Planner、LLM 与工具调用；完整回答通过 SSE 逐事件推送，回答结束后再由后台更新案情摘要，避免摘要生成阻塞用户界面。
 
 ## 界面展示
@@ -78,7 +80,7 @@ legal_agent/
 ├── mcp_server.py            # MCP server：把两个工具暴露给任意 MCP 客户端
 ├── mcp_client_demo.py       # 最小 MCP 客户端 demo（官方 mcp SDK，三步流程）
 ├── Dockerfile               # 后端镜像（CPU torch + 依赖 + 前端产物）
-├── docker-compose.yml       # 编排 Ollama 与后端，注入配置与挂载
+├── docker-compose.yml       # 编排 Ollama、Redis 与后端，注入配置与挂载
 ├── .dockerignore            # 构建上下文过滤（.env / .venv 不进镜像）
 ├── frontend/                # React + TypeScript + Tailwind 前端
 │   ├── src/
@@ -97,6 +99,8 @@ legal_agent/
 │   └── vectorstore/         # 本地 FAISS 向量库（build_vectorstore.py 生成）
 ├── memory/
 │   └── case_memory.py       # SQLite 会话持久化 + LLM 案情摘要
+├── ops_data_qa/             # 运营数据问答（text-to-SQL）：意图门 + sqlglot 校验 + 50 题评测
+├── mysql_lab/               # MySQL 索引实验（百万行造数脚本 + 实验手册）
 ├── evaluation/              # 检索评测、参数调优与原始结果
 ├── tests/                   # 离线单元测试（不依赖 Ollama / LLM / 联网）
 ├── build_vectorstore.py     # 构建向量库（首次运行执行一次）
@@ -117,6 +121,7 @@ legal_agent/
 | Web 搜索 | AnySearch（主搜索）+ ddgs（失败兜底） |
 | 后端 | FastAPI + Uvicorn |
 | 会话持久化 | SQLite |
+| 运营数据问答 | MySQL（PyMySQL）+ sqlglot（SQL 语法树安全校验） |
 | 前端 | React + TypeScript + Tailwind CSS |
 
 ## 快速开始
@@ -190,7 +195,7 @@ python main.py
 
 ### 7. 运行单元测试
 
-回归测试覆盖：SQLite 会话持久化、混合检索（RRF 融合 + 双路召回）、幻觉守卫（引用提取/校验）、Agent 层（历史截断 + Planner 决策，LLM 用 stub 替换）。全部**离线运行**：不调用 Ollama、DeepSeek 或联网搜索：
+回归测试覆盖：SQLite 会话持久化、混合检索（RRF 融合 + 双路召回）、幻觉守卫（引用提取/校验）、Agent 层（历史截断 + Planner 决策，LLM 用 stub 替换）、三层缓存行为与 fail-open、Redis 重连冷却、SQL 语法树校验（含旧正则版漏洞的回归用例）、LLM 意图门（stub 判卷模型），共 105 个。全部**离线运行**：不调用 Ollama、DeepSeek、GLM 或联网搜索：
 
 ```bash
 python -m unittest discover -s tests -v
@@ -202,13 +207,24 @@ python -m unittest discover -s tests -v
 
 ```bash
 docker compose up -d --build
+# 首次容器化部署：新建的 Ollama 容器中需要拉取 embedding 模型一次
+docker compose exec ollama ollama pull nomic-embed-text
 ```
 
 - **Dockerfile**：基于 `python:3.13-slim`，先装 CPU 版 torch，再装依赖、拷入项目代码与前端构建产物，`uvicorn main:app` 启动
-- **docker-compose.yml**：编排 Ollama（embedding 服务）与后端；宿主机 `8000` 端口映射；从 `.env` 注入 API Key（不写进镜像）；挂载 SQLite 数据（`./data`）与 HuggingFace 模型缓存（只读）
+- **docker-compose.yml**：编排 Ollama（embedding 服务）、Redis（缓存层）与后端；宿主机 `8000` 端口映射；从 `.env` 注入 API Key（不写进镜像）；挂载 SQLite 数据（`./data`）与 HuggingFace 模型缓存（只读）。Redis 不持久化业务数据，重启后仅缓存失效，核心问答会自动降级为完整链路。
 - **.dockerignore**：排除 `.env`、`.env.example`、`.venv` 等，防止真实 API Key 与 1.2G 虚拟环境进构建上下文
 
-启动后访问 http://localhost:8000（前端已内置到镜像）。注意：容器内 Ollama embedding 走 `http://ollama:11434`，首次启动需等模型拉取。
+启动后访问 http://localhost:8000（前端已内置到镜像）。注意：容器内 Ollama embedding 走 `http://ollama:11434`，Redis 走 `redis://redis:6379/0`；`nomic-embed-text` 只需在首次容器化部署时执行一次拉取命令。
+
+首次部署后可在 PowerShell 验证：
+
+```powershell
+docker compose ps
+Invoke-RestMethod http://localhost:8000/health
+Invoke-RestMethod http://localhost:8000/legal/cache/stats
+docker compose exec redis redis-cli ping
+```
 
 ### 使用边界
 
@@ -257,6 +273,29 @@ docker compose up -d --build
 
 查询指定会话的历史记录和案情摘要。
 
+### POST /ops/qa
+
+运营数据问答（后台专用，需鉴权）。请求头必须带 `X-OPS-TOKEN`（值取 `.env` 的 `OPS_QA_TOKEN`，不配置则接口停用返回 503）。
+
+```json
+// Request
+{
+  "message": "8月有多少个会话？"
+}
+
+// Response
+{
+  "question": "8月有多少个会话？",
+  "sql": "SELECT COUNT(*) AS cnt FROM sessions WHERE created_at >= '2026-08-01' AND created_at < '2026-09-01';",
+  "answer": "8月共有 14 个咨询会话。",
+  "allowed": true,
+  "rows": [[14]],
+  "retries": 0,
+  "elapsed_ms": 3120,
+  "trace": "a1b2c3d4"
+}
+```
+
 ### GET /health
 
 健康检查。
@@ -296,6 +335,40 @@ fastmcp dev inspector mcp_server.py
 Windows 侧同理：`command` 改为 `.venv\Scripts\python.exe`，`args` 指向 `D:\legal_agent\mcp_server.py`。
 
 > 注意：调用工具时需要 Ollama 在运行且向量库已构建（与主项目同一前置条件）。
+
+## 运营数据问答（text-to-SQL）
+
+面向运营/管理员的**只读**数据问答网关：自然语言 → LLM 生成 SQL → 安全校验 → 只读账号执行 → 结果人话化，回答附带生成的 SQL 原文（可解释、可审计）。数据为演示库 `ops_demo`（咨询会话/消息/评价三张表，建表与种子数据在 `ops_data_qa/schema.sql`、`seed*.sql`）。
+
+### 安全设计：四道门（纵深防御）
+
+| 门 | 实现 | 成本 | 失败策略 |
+|---|---|---|---|
+| ① 词面意图拦截 | 正则：删除/清空/改写类词直接拒绝，不生成 SQL | 零 | fail-closed |
+| ② LLM 意图门 | GLM-4.7 判定"是否想改数据"（temperature=0），抓①抓不住的拐弯说法（如"帮我把差评处理掉"） | 一次便宜调用 | fail-open，退回①的结论 |
+| ③ sqlglot 语法树校验 | 单条 SELECT、表白名单、库名前缀校验、危险函数黑名单、自动补 LIMIT | 零 | fail-closed |
+| ④ MySQL 只读账号 | 仅授 ops_demo 库 SELECT 权限 | — | 物理底线（实测 1142 拒绝 DELETE） |
+
+第③道门从正则方案升级而来：正则按字符串找表名，挡不住 `FROM sessions, mysql.user`（逗号多表捎带越权表）、反引号表名、子查询里的越权表，还会误杀正常查询；sqlglot 把 SQL 解析成**语法树**，在结构层面数表、验语句类型，花招藏不住、正常语句不误杀。这些绕过样例全部固化为回归单测（`tests/test_ops_sql_validator.py`，21 个用例）。
+
+其他设计：SQL 执行报错会把报错喂回 LLM 重试（≤2 次）；每层拦截记录在返回值 `blocked_by`（word/llm），供评测分层统计。
+
+### 评测
+
+50 题评测集（basic 15 / time 10 / agg 12 / join 8 / danger 5，金标 SQL 经真实数据验证）：
+
+```bash
+python ops_data_qa/run_eval.py                # 全量 50 题，自动判卷
+python ops_data_qa/run_eval.py --type danger  # 只跑 danger 类
+```
+
+普通题按结果集与金标 SQL 比对（行序不敏感）；danger 题只验证"被拦截"且**不执行**金标。`.env` 设 `OPS_INTENT_LLM_ENABLED=0/1` 可做词面规则与 LLM 意图门的 A/B 对比，汇总里分层报告各自拦了几道。
+
+命令行直接可用：`python ops_data_qa/mysql_ops_query.py "上个月哪种案件类型咨询最多？"`（`--explain` 只生成 SQL 不执行）。
+
+### 附：MySQL 索引实验
+
+`mysql_lab/` 提供百万行造数脚本（`make_big_table.py`，写入独立表 `sessions_big`，不影响评测数据）与实验手册（`EXPERIMENT.md`）：全表扫描 vs 索引的 EXPLAIN 前后对比、联合索引最左前缀、三种索引失效写法。
 
 ## 核心设计
 

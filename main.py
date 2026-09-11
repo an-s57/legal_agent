@@ -1,12 +1,13 @@
 """FastAPI 入口 — AI 法律助手"""
 import asyncio
+import hmac
 import json
 import time
 import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
@@ -15,9 +16,10 @@ from pydantic import BaseModel
 
 from agent.legal_agent import run_legal_agent, run_legal_agent_stream
 from cache.redis_client import get_answer, set_answer, get_intent_decision, get_cache_stats
-from config import HOST, LOCAL_ORIGINS, PORT
+from config import HOST, LOCAL_ORIGINS, OPS_QA_TOKEN, PORT
 from logger import get_logger
 from memory.case_memory import get_session, init_db, save_exchange, update_case_summary
+from ops_data_qa.mysql_ops_query import ask as ops_ask
 from rag.retriever import preload_reranker
 
 logger = get_logger("legal_agent.main")
@@ -308,6 +310,39 @@ async def legal_chat_stream(req: ChatRequest):
         event_generator(),
         media_type="text/event-stream",
     )
+
+
+class OpsQaRequest(BaseModel):
+    message: str
+    explain: bool = False
+
+
+@app.post("/ops/qa")
+async def ops_qa(req: OpsQaRequest, x_ops_token: str = Header(default="", alias="X-OPS-TOKEN")):
+    """运营数据问答（text-to-SQL 查询网关）。
+
+    后台专用接口：请求头必须带 X-OPS-TOKEN（值在 .env 的 OPS_QA_TOKEN，不配置则接口停用）。
+    链路：意图拦截 → LLM 生成 SQL → sqlglot 语法树校验 → 只读账号执行 → 结果人话化。
+    ask() 内部是同步 LLM + MySQL 调用，丢线程池避免阻塞事件循环。
+    """
+    request_id = uuid.uuid4().hex[:8]
+    request_started_at = time.perf_counter()
+
+    if not OPS_QA_TOKEN:
+        raise HTTPException(status_code=503, detail="运营问答未启用：请在 .env 配置 OPS_QA_TOKEN")
+    if not hmac.compare_digest(x_ops_token, OPS_QA_TOKEN):
+        raise HTTPException(status_code=401, detail="X-OPS-TOKEN 校验失败")
+
+    result = await asyncio.to_thread(ops_ask, req.message, req.explain)
+    elapsed_ms = round((time.perf_counter() - request_started_at) * 1000)
+    result["elapsed_ms"] = elapsed_ms
+    result["trace"] = request_id
+    logger.info(
+        f"[PERF] trace={request_id} stage=ops_qa duration_ms={elapsed_ms} "
+        f"allowed={result.get('allowed')} retries={result.get('retries')} "
+        f"error={result.get('error')}"
+    )
+    return result
 
 
 @app.get("/legal/session/{session_id}")

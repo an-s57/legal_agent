@@ -22,8 +22,14 @@ python-dotenv==1.2.2
 torch==2.12.0
 transformers==5.12.1
 httpx==0.28.1
+# Redis 是可选的加速层；服务不可用时缓存代码会 fail-open，但依赖必须锁定，
+# 才能让 Docker 与本地环境一致。
+redis==8.1.0
 jieba==0.42.1
 # rank-bm25：pip 分发名带连字符，代码里 import 名是 rank_bm25
 rank-bm25==0.2.2
 # MCP server（mcp_server.py）依赖；含底层 mcp SDK
 fastmcp==3.4.7
+# 运营数据问答（ops_data_qa/）：MySQL 连接 + SQL 语法树安全校验
+pymysql==2.2.8
+sqlglot==30.18.0

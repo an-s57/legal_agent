@@ -8,6 +8,13 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+# config 是几乎所有模块的第一个导入：在这里加载 .env，保证不管走服务入口
+# 还是命令行入口（ops_data_qa 脚本、评测 runner），环境配置都已就位。
+# 不覆盖已有环境变量（override=False），CI 里显式设置的值优先。
+load_dotenv()
+
 # ── Agent / 上下文管理（agent/legal_agent.py）──
 MAX_HISTORY_TURNS = 12        # 传给 LLM 的最大对话轮数（1 轮 = 用户 + AI 各一条）
 PLANNER_CONTEXT_TURNS = 3     # 传给 Planner 的最近对话轮数（理解多轮上下文）
@@ -34,6 +41,17 @@ ANYSEARCH_URL = "https://api.anysearch.com/v1/search"
 WEB_SEARCH_SUFFIX = "法律法规 中国"
 WEB_SEARCH_TOP_N = 3
 WEB_SEARCH_TIMEOUT_SECONDS = 10.0
+
+# ── 运营数据问答（ops_data_qa/，text-to-SQL）──
+OPS_DB_HOST = os.getenv("OPS_DB_HOST", "127.0.0.1")
+OPS_DB_PORT = int(os.getenv("OPS_DB_PORT", "3306"))
+OPS_DB_USER = os.getenv("OPS_DB_USER", "query_user")
+OPS_DB_PASSWORD = os.getenv("OPS_DB_PASSWORD", "")   # 真实密码放 .env，绝不写进代码
+OPS_DB_NAME = os.getenv("OPS_DB_NAME", "ops_demo")
+OPS_QA_MAX_ROWS = 200         # 结果行数上限：没写 LIMIT 的查询自动补上
+OPS_QA_MAX_RETRY = 2          # SQL 执行报错后喂回 LLM 重试次数
+# 后台接口 /ops/qa 的鉴权令牌；不配置 = 接口停用（fail-closed）
+OPS_QA_TOKEN = os.getenv("OPS_QA_TOKEN", "")
 
 # ── 记忆（memory/case_memory.py）──
 DATA_DIR = Path(__file__).resolve().parent / "data"

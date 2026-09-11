@@ -46,6 +46,7 @@ data/*.db-shm
 # 评测生成结果（脚本与数据集保留，运行产物不入库；需要强制添加用 git add -f）
 evaluation/results/
 evaluation/results.json
+ops_data_qa/eval_report.json
 
 # OS
 .DS_Store
