@@ -31,5 +31,7 @@ rank-bm25==0.2.2
 # MCP server（mcp_server.py）依赖；含底层 mcp SDK
 fastmcp==3.4.7
 # 运营数据问答（ops_data_qa/）：MySQL 连接 + SQL 语法树安全校验
-pymysql==2.2.8
+# 锁版本教训：pymysql 包内 __version__ 字符串是 2.2.8，但 PyPI 发行版是 1.2.0——
+# 按 __version__ 锁版本导致 CI 装不上（本地能跑、CI 全红）。查版本用 importlib.metadata
+pymysql==1.2.0
 sqlglot==30.18.0
