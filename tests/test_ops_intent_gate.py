@@ -15,10 +15,14 @@ from ops_data_qa.intent_gate import check_intent_llm
 
 
 class _StubJudge:
-    """假判卷模型：invoke 返回预设内容或抛异常，并记录调用次数。"""
+    """假判卷模型：invoke 返回预设内容或抛异常，并记录调用次数。
+
+    content 传 list 时按调用次序依次返回（用于测多轮投票）；列表用完后重复最后一个。
+    """
 
     def __init__(self, content=None, raise_exc=None):
-        self._content = content
+        self._contents = content if isinstance(content, list) else None
+        self._content = None if self._contents else content
         self._raise = raise_exc
         self.calls = 0
 
@@ -31,18 +35,28 @@ class _StubJudge:
             pass
 
         resp = _Resp()
-        resp.content = self._content
+        if self._contents:
+            resp.content = self._contents[min(self.calls - 1, len(self._contents) - 1)]
+        else:
+            resp.content = self._content
         return resp
 
 
 class CheckIntentLlmTest(unittest.TestCase):
     """check_intent_llm：判定解析 + fail-open（缺 key/异常/脏输出/开关关）。"""
 
+    def setUp(self):
+        # INTENT_LLM_ENABLED 在模块导入时读 .env，会被本机配置（A/B 评测时常设 0）带偏，
+        # 这里显式打开，保证单测不依赖运行环境。
+        patcher = mock.patch.object(intent_gate, "INTENT_LLM_ENABLED", True)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
     def test_判为破坏意图(self):
         judge = _StubJudge('{"destructive": 1, "reason": "想删差评"}')
         out = check_intent_llm("把差评处理掉", judge)
         self.assertIs(out["destructive"], True)
-        self.assertEqual(out["reason"], "想删差评")
+        self.assertIn("想删差评", out["reason"])
 
     def test_判为查询意图(self):
         judge = _StubJudge('{"destructive": 0, "reason": "统计问题"}')
@@ -63,6 +77,41 @@ class CheckIntentLlmTest(unittest.TestCase):
         judge = _StubJudge(raise_exc=TimeoutError("GLM 超时"))
         out = check_intent_llm("任意问题", judge)
         self.assertIsNone(out["destructive"])
+
+    def test_多轮投票_少数服从多数(self):
+        # GLM 单次判定有波动，3 轮投票取多数：1改 + 2查 → 判为查询
+        judge = _StubJudge(
+            [
+                '{"destructive": 1, "reason": "想改"}',
+                '{"destructive": 0, "reason": "只是查"}',
+                '{"destructive": 0, "reason": "只是查"}',
+            ]
+        )
+        out = check_intent_llm("最近更新的会话有哪些", judge)
+        self.assertIs(out["destructive"], False)
+        self.assertEqual(judge.calls, 3)
+
+    def test_多轮投票_多数已定_提前收敛不再多花钱(self):
+        judge = _StubJudge('{"destructive": 1, "reason": "要改数据"}')
+        out = check_intent_llm("帮我把差评处理掉", judge)
+        self.assertIs(out["destructive"], True)
+        self.assertEqual(judge.calls, 2)   # 2:0 时剩下 1 票翻不了盘，省一次调用
+
+    def test_平票判为破坏性_安全优先(self):
+        judge = _StubJudge(
+            ['{"destructive": 1, "reason": "改"}', '{"destructive": 0, "reason": "查"}']
+        )
+        with mock.patch.object(intent_gate, "INTENT_VOTES", 2):
+            out = check_intent_llm("帮我收拾一下数据", judge)
+        self.assertIs(out["destructive"], True)
+
+    def test_退回单次判定_投票数为1(self):
+        judge = _StubJudge('{"destructive": 0, "reason": "统计"}')
+        with mock.patch.object(intent_gate, "INTENT_VOTES", 1):
+            out = check_intent_llm("8月有多少会话", judge)
+        self.assertIs(out["destructive"], False)
+        self.assertEqual(judge.calls, 1)
+        self.assertEqual(out["reason"], "统计")   # 单票时不加 [N改/M查] 前缀
 
     def test_开关关闭_不调模型直接返回None(self):
         judge = _StubJudge('{"destructive": 1, "reason": "x"}')

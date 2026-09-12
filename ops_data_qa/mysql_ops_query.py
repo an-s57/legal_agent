@@ -5,7 +5,7 @@
 安全纵深（每层各管一段、互为兜底；哪层拦的记在 result["blocked_by"]）：
   1. 词面意图拦截（validator.check_intent，fail-closed）：明显的删除/清空词直接拒，零成本
   2. LLM 意图门（intent_gate.check_intent_llm，fail-open）：抓词面抓不住的拐弯说法
-     （"把差评处理掉"），GLM-4.7 判定；本层故障时退回词面结论
+     （"把差评处理掉"），由判卷模型（GLM，config.JUDGE_MODEL）判定；本层故障时退回词面结论
   3. sqlglot 语法树校验（validator.validate_sql）：单条 SELECT、表白名单、
      库名前缀校验、危险函数黑名单 + 自动补 LIMIT
   4. 数据库层：query_user 只读账号（只能 SELECT，实测 1142 拒绝 DELETE）——
@@ -33,9 +33,12 @@ from config import (
     OPS_QA_MAX_RETRY,
     OPS_QA_MAX_ROWS,
 )
-from llm_client import llm  # 复用项目已有的 LLM 封装
+from llm_client import llm, text2sql_llm  # SQL 生成用确定性客户端，人话化用采样客户端
+from logger import get_logger
 from ops_data_qa.intent_gate import check_intent_llm
 from ops_data_qa.validator import check_intent, enforce_limit, validate_sql
+
+logger = get_logger("legal_agent.ops_qa")
 
 # ── 配置：连接参数全部走 config（.env 注入），密码绝不写进代码 ──
 DB_CONFIG = {
@@ -84,6 +87,36 @@ SQL："""
 
 
 # ── 第 1 步：自然语言 → SQL ────────────────────────────
+def _extract_sql(raw: str) -> str:
+    """从 LLM 输出里抽出纯 SQL。
+
+    评测实测：模型偶尔把"思考过程"写在 SQL 后面（例如 SQL 后接一段英文推理说明），
+    直接交给 sqlglot 会解析失败。这里只截取第一条 SELECT/WITH 语句。
+    """
+    text = (raw or "").strip()
+    # 去 markdown 代码块围栏
+    text = re.sub(r"```(?:sql)?", "", text, flags=re.IGNORECASE).strip()
+    # 从第一个 SELECT / WITH 开始截取（丢弃前置的解释性文字）
+    m = re.search(r"\b(SELECT|WITH)\b", text, flags=re.IGNORECASE)
+    if m:
+        text = text[m.start():]
+    # 只取第一条语句：截到第一个分号（含）
+    if ";" in text:
+        text = text.split(";")[0]
+    # 逐行清理：丢弃 SQL 之后混进来的自然语言行
+    lines = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        # 已经收集到内容后，遇到明显的中文/英文说明行就停止
+        if lines and re.match(r"^[\u4e00-\u9fff]", stripped):
+            break
+        lines.append(line.rstrip())
+    text = "\n".join(lines).strip()
+    return text + ";"
+
+
 def nl_to_sql(question: str, error_hint: str = "") -> str:
     """调 LLM 把问题转成 SQL；error_hint 非空时把上次报错喂回去让它改。"""
     # 运行时注入真实当前时间（原来写死"当前时间视为 2026-09-15"，日期一过评测全错）
@@ -95,13 +128,8 @@ def nl_to_sql(question: str, error_hint: str = "") -> str:
     if error_hint:
         prompt += f"\n\n上一次生成的 SQL 执行报错了，请修正。报错信息：{error_hint}"
 
-    resp = llm.invoke(prompt)
-    sql = (resp.content or "").strip()
-    # 清理：去掉可能的 ```sql 代码块标记
-    sql = re.sub(r"^```(?:sql)?\s*|\s*```$", "", sql, flags=re.IGNORECASE).strip()
-    # 只取第一条语句（防 LLM 输出多条）
-    sql = sql.split(";")[0].strip() + ";"
-    return sql
+    resp = text2sql_llm.invoke(prompt)
+    return _extract_sql(resp.content)
 
 
 # ── 第 2 步：安全校验（意图拦截 validate 语法树校验、LIMIT 兜底）──────
@@ -147,8 +175,10 @@ def ask(question: str, explain_only: bool = False, answer_text: bool = True) -> 
     answer_text=False 时跳过"人话翻译"这一次 LLM 调用（评测批量跑时省一半成本）。
     """
     result = {"question": question, "sql": None, "allowed": False,
-              "rows": [], "answer": None, "error": None, "retries": 0,
-              "blocked_by": None}   # word=词面拦截 / llm=意图门拦截
+              "rows": [], "columns": [], "answer": None, "error": None, "retries": 0,
+              "blocked_by": None,      # word=词面拦截 / llm=意图门拦截 / validator=语法树校验
+              "intent_gate": None,     # 意图门状态：disabled/unavailable/pass/block
+              "intent_gate_error": ""} # 意图门不可用时的原因（评测报告要能自证）
 
     # ── 第一道门：词面意图拦截（免费、瞬时；fail-closed，不生成 SQL）──
     destructive, reason = check_intent(question)
@@ -159,11 +189,19 @@ def ask(question: str, explain_only: bool = False, answer_text: bool = True) -> 
 
     # ── 第二道门：LLM 意图门（抓词面抓不住的拐弯说法；fail-open）──
     llm_intent = check_intent_llm(question)
+    result["intent_gate"] = llm_intent.get("gate")
+    result["intent_gate_error"] = llm_intent.get("error", "")
     if llm_intent["destructive"] is True:
         why = llm_intent["reason"] or "意图门判定为数据变更请求"
         result["error"] = f"拒绝执行：{why}。本工具是只读查询网关，不支持删除/修改数据。"
         result["blocked_by"] = "llm"
         return result
+    if result["intent_gate"] == "unavailable":
+        # fail-open：本层故障不拖垮问答，但必须留下痕迹——
+        # 否则评测报告会把"意图门根本没工作"读成"意图门开着但没拦住"（实测踩过：GLM 余额不足）
+        logger.warning(
+            f"[OPS-QA] 意图门不可用，本次仅靠词面规则兜底：{result['intent_gate_error']}"
+        )
 
     error_hint = ""
     for attempt in range(OPS_QA_MAX_RETRY + 1):
@@ -177,6 +215,15 @@ def ask(question: str, explain_only: bool = False, answer_text: bool = True) -> 
         # ── 第二道门：sqlglot 语法树安全校验（语句类型/越权表/危险函数）──
         ok, reason2 = validate_sql(sql, ALLOWED_TABLES, OPS_DB_NAME)
         if not ok:
+            # 语法解析失败 = 模型输出坏了，值得把报错喂回去让它重写一次（实测 #8 属此类）；
+            # 越权表/危险语句 = 安全判定，直接拒绝、绝不重试。
+            if "解析失败" in reason2 and attempt < OPS_QA_MAX_RETRY:
+                result["retries"] = attempt + 1
+                error_hint = (
+                    f"你输出的不是合法 SQL：{reason2}。"
+                    "请只输出一条 SELECT 语句，不要任何解释文字。"
+                )
+                continue
             result["error"] = f"安全校验未通过: {reason2}"
             return result
         result["allowed"] = True
@@ -188,6 +235,7 @@ def ask(question: str, explain_only: bool = False, answer_text: bool = True) -> 
         try:
             cols, rows = execute_sql(safe_sql)
             result["rows"] = rows
+            result["columns"] = list(cols)
             if answer_text:
                 result["answer"] = rows_to_text(question, safe_sql, cols, rows)
             return result

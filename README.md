@@ -112,7 +112,7 @@ legal_agent/
 
 | 组件 | 技术 |
 |------|------|
-| LLM | DeepSeek V4 Flash（主回答/意图识别）+ GLM-4.7（合规复核 judge，异构） |
+| LLM | DeepSeek V4 Flash（主回答/意图识别）+ GLM-4.5-Air（合规复核 judge，异构；模型名可在 config.JUDGE_MODEL / .env 切换） |
 | Agent 框架 | LangGraph（手写 StateGraph，含 Planner + ReAct） |
 | 向量库 | FAISS（本地） |
 | Embedding | nomic-embed-text（Ollama 本地服务） |
@@ -345,7 +345,7 @@ Windows 侧同理：`command` 改为 `.venv\Scripts\python.exe`，`args` 指向 
 | 门 | 实现 | 成本 | 失败策略 |
 |---|---|---|---|
 | ① 词面意图拦截 | 正则：删除/清空/改写类词直接拒绝，不生成 SQL | 零 | fail-closed |
-| ② LLM 意图门 | GLM-4.7 判定"是否想改数据"（temperature=0），抓①抓不住的拐弯说法（如"帮我把差评处理掉"） | 一次便宜调用 | fail-open，退回①的结论 |
+| ② LLM 意图门 | GLM-4.5-Air 判定"是否想改数据"（temperature=0，`OPS_INTENT_VOTES` 轮多数投票降方差），抓①抓不住的拐弯说法（如"帮我把差评处理掉"） | 一次便宜调用 | fail-open，退回①的结论（并在 `intent_gate` 字段留痕，防"静默失效"） |
 | ③ sqlglot 语法树校验 | 单条 SELECT、表白名单、库名前缀校验、危险函数黑名单、自动补 LIMIT | 零 | fail-closed |
 | ④ MySQL 只读账号 | 仅授 ops_demo 库 SELECT 权限 | — | 物理底线（实测 1142 拒绝 DELETE） |
 
@@ -406,7 +406,7 @@ python ops_data_qa/run_eval.py --type danger  # 只跑 danger 类
 
 ### 合规复核 Agent：LLM-as-Judge 在线化
 
-规则校验之上再加一层**语义级合规复核**（见 [review_agent.py](agent/review_agent.py)）：主 Agent 生成回答后，用**异构判卷模型 GLM-4.7**（与主模型 DeepSeek 不同，避免自评偏好）对 {用户问题 + 最终回答 + 本轮检索到的法条原文} 做一次事实一致性判定，输出 `{"verdict": 0/1, "reason": 一句话理由}`；判 0 时在回答末尾追加"合规复核"提示，不删除回答、只标注风险。
+规则校验之上再加一层**语义级合规复核**（见 [review_agent.py](agent/review_agent.py)）：主 Agent 生成回答后，用**异构判卷模型 GLM-4.5-Air**（与主模型 DeepSeek 不同，避免自评偏好）对 {用户问题 + 最终回答 + 本轮检索到的法条原文} 做一次事实一致性判定，输出 `{"verdict": 0/1, "reason": 一句话理由}`；判 0 时在回答末尾追加"合规复核"提示，不删除回答、只标注风险。
 
 - 设计来源：把事实性评测（LLM-as-Judge，GLM 判 DeepSeek，45/47=95.7%）里的离线判卷逻辑搬进生产链路——评测时的 judge 变成了生产里的复核 Agent；
 - 与规则守卫互补：规则抓"引用不存在/覆盖度低"，复核抓规则抓不到的**语义级编造**；

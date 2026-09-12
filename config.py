@@ -42,6 +42,18 @@ WEB_SEARCH_SUFFIX = "法律法规 中国"
 WEB_SEARCH_TOP_N = 3
 WEB_SEARCH_TIMEOUT_SECONDS = 10.0
 
+# ── LLM 模型（llm_client.py）──
+# 生成模型：主 Agent 回答 + text-to-SQL 生成。
+MAIN_MODEL = os.getenv("LEGAL_AGENT_MODEL", "deepseek-v4-flash")
+MAIN_API_BASE = os.getenv("LEGAL_AGENT_API_BASE", "https://api.deepseek.com/v1")
+# 判卷模型：与生成模型异构（不同厂商），用于合规复核 Agent + 运营问答的 LLM 意图门。
+# 当前用 GLM-4.5-Air：智谱账号里这个模型额度最稳。
+# 教训（真实事故）：曾用 GLM-4.7，余额耗尽后每次调用 429 → 意图门 fail-open 静默放行，
+# 评测报告看起来只是"没拦住"，其实是"这一层根本没工作"。换模型只改这里或 .env 的
+# LEGAL_AGENT_JUDGE_MODEL，代码别处不再出现模型名字面量。
+JUDGE_MODEL = os.getenv("LEGAL_AGENT_JUDGE_MODEL", "glm-4.5-air")
+JUDGE_API_BASE = os.getenv("LEGAL_AGENT_JUDGE_API_BASE", "https://open.bigmodel.cn/api/paas/v4")
+
 # ── 运营数据问答（ops_data_qa/，text-to-SQL）──
 OPS_DB_HOST = os.getenv("OPS_DB_HOST", "127.0.0.1")
 OPS_DB_PORT = int(os.getenv("OPS_DB_PORT", "3306"))
