@@ -64,6 +64,8 @@ OPS_QA_MAX_ROWS = 200         # 结果行数上限：没写 LIMIT 的查询自�
 OPS_QA_MAX_RETRY = 2          # SQL 执行报错后喂回 LLM 重试次数
 # 后台接口 /ops/qa 的鉴权令牌；不配置 = 接口停用（fail-closed）
 OPS_QA_TOKEN = os.getenv("OPS_QA_TOKEN", "")
+# 后台接口限流："最多次数/窗口秒数"；解析失败退回默认 10/60
+OPS_QA_RATE_LIMIT = os.getenv("OPS_QA_RATE_LIMIT", "10/60")
 
 # ── 记忆（memory/case_memory.py）──
 DATA_DIR = Path(__file__).resolve().parent / "data"

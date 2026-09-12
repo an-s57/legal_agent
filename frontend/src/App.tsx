@@ -3,6 +3,7 @@ import Background from './components/Background'
 import Sidebar from './components/Sidebar'
 import ChatArea, { type Message } from './components/ChatArea'
 import InputBox from './components/InputBox'
+import OpsQa from './components/OpsQa'
 
 const WELCOME = '你好，我是 AI 法律助手。请描述你遇到的法律问题，我会先了解案情再为你查找相关法条。'
 const ACTIVE_SESSION_STORAGE_KEY = 'lexagent_active_session_id'
@@ -65,6 +66,8 @@ export default function App() {
   const [isTyping, setIsTyping] = useState(false)
   const [caseSummary, setCaseSummary] = useState<Record<string, string>>({})
   const [sessions, setSessions] = useState<SessionInfo[]>([])
+  // 页签：法律问答（C 端） / 运营数据问答（后台，需令牌）
+  const [tab, setTab] = useState<'chat' | 'ops'>('chat')
   // 防止刷新恢复请求在用户已经开始新操作后，迟到并覆盖当前界面。
   const restoreVersionRef = useRef(0)
 
@@ -284,16 +287,39 @@ export default function App() {
   return (
     <div className="relative h-screen flex">
       <Background />
-      <Sidebar
-        sessionId={sessionId}
-        onNewSession={handleNewSession}
-        caseSummary={caseSummary}
-        sessionList={sessions.map(s => ({ id: s.id, preview: s.preview, time: s.time }))}
-        onSelectSession={handleSelectSession}
-      />
+      {tab === 'chat' && (
+        <Sidebar
+          sessionId={sessionId}
+          onNewSession={handleNewSession}
+          caseSummary={caseSummary}
+          sessionList={sessions.map(s => ({ id: s.id, preview: s.preview, time: s.time }))}
+          onSelectSession={handleSelectSession}
+        />
+      )}
       <main className="flex-1 flex flex-col z-10">
-        <ChatArea messages={messages} isTyping={isTyping} />
-        <InputBox onSend={handleSend} disabled={isTyping} />
+        <div className="z-10 flex justify-center gap-1.5 pt-3">
+          {([['chat', '法律问答'], ['ops', '运营问答']] as const).map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => setTab(key)}
+              className={`px-3 py-1.5 rounded-xl text-[12px] font-medium transition-all duration-200 ${
+                tab === key
+                  ? 'bg-gray-100 text-ink'
+                  : 'text-gray-400 hover:text-gray-600'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        {tab === 'ops' ? (
+          <OpsQa />
+        ) : (
+          <>
+            <ChatArea messages={messages} isTyping={isTyping} />
+            <InputBox onSend={handleSend} disabled={isTyping} />
+          </>
+        )}
       </main>
     </div>
   )

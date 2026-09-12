@@ -275,7 +275,7 @@ docker compose exec redis redis-cli ping
 
 ### POST /ops/qa
 
-运营数据问答（后台专用，需鉴权）。请求头必须带 `X-OPS-TOKEN`（值取 `.env` 的 `OPS_QA_TOKEN`，不配置则接口停用返回 503）。
+运营数据问答（后台专用，需鉴权）。请求头必须带 `X-OPS-TOKEN`（值取 `.env` 的 `OPS_QA_TOKEN`，不配置则接口停用返回 503）；同一令牌受滑动窗口限流，超限返回 429 + `Retry-After`。
 
 ```json
 // Request
@@ -295,6 +295,10 @@ docker compose exec redis redis-cli ping
   "trace": "a1b2c3d4"
 }
 ```
+
+### GET /ops/audit/recent
+
+最近 N 条运营问答审计记录（默认 20、最大 100），同样需要 `X-OPS-TOKEN`。每次 `/ops/qa` 调用都会追加一条 JSONL 审计记录到 `data/ops_audit.jsonl`（时间 / 令牌指纹 / 问题 / SQL / 放行与否 / 拦截层 / 行数 / 耗时；只记 8 位指纹不落原始令牌）。
 
 ### GET /health
 
@@ -353,16 +357,25 @@ Windows 侧同理：`command` 改为 `.venv\Scripts\python.exe`，`args` 指向 
 
 其他设计：SQL 执行报错会把报错喂回 LLM 重试（≤2 次）；每层拦截记录在返回值 `blocked_by`（word/llm），供评测分层统计。
 
+### 接口防护与审计
+
+- **鉴权**：请求头 `X-OPS-TOKEN` 必须匹配 `.env` 的 `OPS_QA_TOKEN`（否则 401）；后端未配置令牌则接口整体停用（503）；
+- **限流**：同一令牌滑动窗口限流（默认 10 次 / 60 秒，`OPS_QA_RATE_LIMIT` 可调），超限返回 429 + `Retry-After`——防脚本失控打爆 LLM 额度和数据库。单进程内存版，多进程部署需换 Redis 计数（`ops_data_qa/ratelimit.py`）；
+- **审计日志**：每次调用追加 JSONL 到 `data/ops_audit.jsonl`（时间 / 令牌指纹 / 问题 / SQL / 放行与否 / 拦截层 / 行数 / 耗时；只记 8 位指纹不落原始令牌），写失败 fail-open 不影响主流程；
+- **前端**：首页顶部页签切换"法律问答 / 运营问答"，运营页填一次令牌（存浏览器本地）即可提问，回答附人话结论、SQL 原文与结果表格，被拦截 / 限流 / 失败均有明确状态提示。
+
 ### 评测
 
-50 题评测集（basic 15 / time 10 / agg 12 / join 8 / danger 5，金标 SQL 经真实数据验证）：
+55 题评测集 v2（basic 13 / time 11 / agg 13 / join 8 / danger 10，金标 SQL 经真实数据验证；题干消歧版，`temperature=0` 保证可复现）：
 
 ```bash
-python ops_data_qa/run_eval.py                # 全量 50 题，自动判卷
+python ops_data_qa/run_eval.py                # 全量 55 题，自动判卷（开跑前自检意图门与数据库连通性）
 python ops_data_qa/run_eval.py --type danger  # 只跑 danger 类
 ```
 
-普通题按结果集与金标 SQL 比对（行序不敏感）；danger 题只验证"被拦截"且**不执行**金标。`.env` 设 `OPS_INTENT_LLM_ENABLED=0/1` 可做词面规则与 LLM 意图门的 A/B 对比，汇总里分层报告各自拦了几道。
+普通题按结果集与金标 SQL 比对（行序不敏感、容忍列名差异与比例↔百分比写法）；danger 题只验证"被拦截"且**不执行**金标。`.env` 设 `OPS_INTENT_LLM_ENABLED=0/1` 可做词面规则与 LLM 意图门的 A/B 对比（`--out` 分档留档，报告带配置指纹与意图门状态自证）。
+
+最新结果：**55/55 满分；danger 拦截 10/10（词面 5 + LLM 意图门 5）；45 道正常查询 0 误拦**。A 组（仅词面）拐弯题全部漏拦——这组对照就是意图门价值的证明。详见 [ops_data_qa/EVAL_ROUND2.md](ops_data_qa/EVAL_ROUND2.md)。
 
 命令行直接可用：`python ops_data_qa/mysql_ops_query.py "上个月哪种案件类型咨询最多？"`（`--explain` 只生成 SQL 不执行）。
 

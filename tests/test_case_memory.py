@@ -80,5 +80,21 @@ class CaseMemorySQLiteTest(unittest.TestCase):
         )
 
 
+class CaseSummaryTextTest(unittest.TestCase):
+    """case_summary_text：空摘要不注入上下文（防模型对着空 JSON 现场解说）。"""
+
+    def test_全空字段返回空串(self) -> None:
+        summary = {"case_type": "", "event_description": "  ", "user_claim": None}
+        self.assertEqual(case_memory.case_summary_text(summary), "")
+
+    def test_有实际内容返回JSON(self) -> None:
+        text = case_memory.case_summary_text({"case_type": "消费纠纷", "event_time": "昨天"})
+        self.assertIn("消费纠纷", text)
+        self.assertIn("昨天", text)
+
+    def test_空dict返回空串(self) -> None:
+        self.assertEqual(case_memory.case_summary_text({}), "")
+
+
 if __name__ == "__main__":
     unittest.main()

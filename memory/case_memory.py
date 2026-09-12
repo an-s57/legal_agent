@@ -162,6 +162,21 @@ def get_session(session_id: str) -> dict:
     return load_session_from_db(session_id)
 
 
+def case_summary_text(case_summary: dict) -> str:
+    """把案情摘要 dict 转成注入 LLM 上下文的 JSON 文本。
+
+    所有字段都是空串（或非字符串）时返回空串：空摘要注入上下文只会诱导模型
+    对着 {"case_type": ""} 现场解说（真实事故：用户问"你是谁"，模型回答
+    "你贴的摘要各项都是空字符串，我没有材料分析"）。
+    """
+    if not case_summary:
+        return ""
+    clean = {k: v for k, v in case_summary.items() if isinstance(v, str) and v.strip()}
+    if not clean:
+        return ""
+    return json.dumps(clean, ensure_ascii=False)
+
+
 def update_case_summary(
     session_id: str,
     new_exchange: str,

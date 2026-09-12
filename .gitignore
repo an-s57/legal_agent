@@ -42,6 +42,8 @@ test_result.txt
 data/*.db
 data/*.db-wal
 data/*.db-shm
+# 运营问答审计日志（含业务查询记录，本地数据）
+data/ops_audit.jsonl
 
 # 评测生成结果（脚本与数据集保留，运行产物不入库；需要强制添加用 git add -f）
 evaluation/results/

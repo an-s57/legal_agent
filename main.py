@@ -16,10 +16,12 @@ from pydantic import BaseModel
 
 from agent.legal_agent import run_legal_agent, run_legal_agent_stream
 from cache.redis_client import get_answer, set_answer, get_intent_decision, get_cache_stats
-from config import HOST, LOCAL_ORIGINS, OPS_QA_TOKEN, PORT
+from config import HOST, LOCAL_ORIGINS, OPS_QA_RATE_LIMIT, OPS_QA_TOKEN, PORT
 from logger import get_logger
-from memory.case_memory import get_session, init_db, save_exchange, update_case_summary
+from memory.case_memory import case_summary_text, get_session, init_db, save_exchange, update_case_summary
+from ops_data_qa import audit
 from ops_data_qa.mysql_ops_query import ask as ops_ask
+from ops_data_qa.ratelimit import SlidingWindowLimiter, parse_rate_limit
 from rag.retriever import preload_reranker
 
 logger = get_logger("legal_agent.main")
@@ -68,16 +70,13 @@ def _load_conversation(session_id: str) -> dict:
     for turn in session["history"]:
         history.append(HumanMessage(content=turn["human"]))
         history.append(AIMessage(content=turn["ai"]))
+    summary_text = case_summary_text(session["case_summary"])
     return {
         "history": history,
-        "case_summary_str": (
-            json.dumps(session["case_summary"], ensure_ascii=False)
-            if session["case_summary"]
-            else ""
-        ),
+        "case_summary_str": summary_text,
         "case_summary": session["case_summary"],
-        # 无上下文首问判定：history 空 + 无案情摘要（与 call_planner 的 _ctx_free 同语义）
-        "ctx_free": (not session["history"]) and (not session["case_summary"]),
+        # 无上下文首问判定：history 空 + 无实际案情内容（全空字段的摘要不算上下文）
+        "ctx_free": (not session["history"]) and (not summary_text),
     }
 
 
@@ -317,6 +316,10 @@ class OpsQaRequest(BaseModel):
     explain: bool = False
 
 
+# 运营问答限流器：单进程内存滑动窗口（多进程部署要换 Redis 计数，见 ratelimit.py 注释）
+_ops_limiter = SlidingWindowLimiter(*parse_rate_limit(OPS_QA_RATE_LIMIT))
+
+
 @app.post("/ops/qa")
 async def ops_qa(req: OpsQaRequest, x_ops_token: str = Header(default="", alias="X-OPS-TOKEN")):
     """运营数据问答（text-to-SQL 查询网关）。
@@ -333,6 +336,16 @@ async def ops_qa(req: OpsQaRequest, x_ops_token: str = Header(default="", alias=
     if not hmac.compare_digest(x_ops_token, OPS_QA_TOKEN):
         raise HTTPException(status_code=401, detail="X-OPS-TOKEN 校验失败")
 
+    # 限流：同一令牌窗口期内超次数直接 429（防脚本失控打爆 LLM 额度和数据库）
+    limit_ok, retry_after = _ops_limiter.allow(x_ops_token)
+    if not limit_ok:
+        logger.info(f"[PERF] trace={request_id} stage=ops_qa status=rate_limited")
+        raise HTTPException(
+            status_code=429,
+            detail=f"问得太快了，请 {retry_after:.0f} 秒后再试",
+            headers={"Retry-After": str(max(1, int(retry_after) + 1))},
+        )
+
     result = await asyncio.to_thread(ops_ask, req.message, req.explain)
     elapsed_ms = round((time.perf_counter() - request_started_at) * 1000)
     result["elapsed_ms"] = elapsed_ms
@@ -342,7 +355,34 @@ async def ops_qa(req: OpsQaRequest, x_ops_token: str = Header(default="", alias=
         f"allowed={result.get('allowed')} retries={result.get('retries')} "
         f"error={result.get('error')}"
     )
+
+    # 审计留痕：谁（令牌指纹）在什么时候查了什么、放行与否、哪层拦的（写失败不影响主流程）
+    audit.record(
+        x_ops_token,
+        question=req.message,
+        sql=result.get("sql"),
+        allowed=result.get("allowed"),
+        blocked_by=result.get("blocked_by"),
+        retries=result.get("retries"),
+        rows=len(result.get("rows") or []),
+        error=result.get("error"),
+        trace=request_id,
+        elapsed_ms=elapsed_ms,
+    )
     return result
+
+
+@app.get("/ops/audit/recent")
+async def ops_audit_recent(
+    x_ops_token: str = Header(default="", alias="X-OPS-TOKEN"),
+    limit: int = 20,
+):
+    """最近 N 条运营问答审计记录（同样需要令牌；限流不计入审计）。"""
+    if not OPS_QA_TOKEN:
+        raise HTTPException(status_code=503, detail="运营问答未启用：请在 .env 配置 OPS_QA_TOKEN")
+    if not hmac.compare_digest(x_ops_token, OPS_QA_TOKEN):
+        raise HTTPException(status_code=401, detail="X-OPS-TOKEN 校验失败")
+    return {"entries": audit.recent(max(1, min(limit, 100)))}
 
 
 @app.get("/legal/session/{session_id}")

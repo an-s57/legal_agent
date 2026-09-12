@@ -399,9 +399,7 @@ async def run_legal_agent(
     messages.insert(0, SystemMessage(content=SYSTEM_PROMPT))
     if case_summary:
         messages.append(SystemMessage(content=f"当前案情摘要：{case_summary}"))
-    # 动态检索提醒：紧贴用户问题，强化"必须先检索"指令
-    _retrieval_reminder = "\n\n[系统指令：请先调用 legal_rag_search 检索法条原文，再根据检索结果回答。不要凭记忆直接回答。]"
-    messages.append(HumanMessage(content=user_input + _retrieval_reminder))
+    messages.append(HumanMessage(content=user_input))
 
     result = await _compiled_graph.ainvoke(
         {"messages": messages, "case_summary": case_summary, "skip_planner": skip_planner, "tool_rounds": 0},
@@ -499,9 +497,7 @@ async def run_legal_agent_stream(
     messages.insert(0, SystemMessage(content=SYSTEM_PROMPT))
     if case_summary:
         messages.append(SystemMessage(content=f"当前案情摘要：{case_summary}"))
-    # 动态检索提醒：紧贴用户问题，强化"必须先检索"指令
-    _retrieval_reminder = "\n\n[系统指令：请先调用 legal_rag_search 检索法条原文，再根据检索结果回答。不要凭记忆直接回答。]"
-    messages.append(HumanMessage(content=user_input + _retrieval_reminder))
+    messages.append(HumanMessage(content=user_input))
 
     state = {"messages": messages, "case_summary": case_summary, "skip_planner": skip_planner, "tool_rounds": 0}
 
