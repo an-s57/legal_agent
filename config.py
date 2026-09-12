@@ -66,6 +66,9 @@ OPS_QA_MAX_RETRY = 2          # SQL 执行报错后喂回 LLM 重试次数
 OPS_QA_TOKEN = os.getenv("OPS_QA_TOKEN", "")
 # 后台接口限流："最多次数/窗口秒数"；解析失败退回默认 10/60
 OPS_QA_RATE_LIMIT = os.getenv("OPS_QA_RATE_LIMIT", "10/60")
+# 本地实验用的管理账号（mysql_lab/ 造数、建索引等写操作；仅限本地实验）
+OPS_DB_ADMIN_USER = os.getenv("OPS_DB_ADMIN_USER", "root")
+OPS_DB_ADMIN_PASSWORD = os.getenv("OPS_DB_ADMIN_PASSWORD", "")
 
 # ── 记忆（memory/case_memory.py）──
 DATA_DIR = Path(__file__).resolve().parent / "data"
