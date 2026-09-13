@@ -70,7 +70,8 @@ class IntentCacheBehaviorTest(unittest.TestCase):
         set_cache.assert_called_once()       # 并把结果写回缓存
         self.assertEqual(
             set_cache.call_args[0][1],
-            {"info_complete": True, "follow_up": "", "is_general_knowledge": False},
+            {"info_complete": True, "follow_up": "", "is_general_knowledge": False,
+             "is_data_query": False},
         )
 
     def test_有上下文_绝不查缓存(self) -> None:
@@ -124,6 +125,30 @@ class IntentCacheBehaviorTest(unittest.TestCase):
             legal_agent.call_planner(_first_ask("上周我买的手机是翻新机想退货"))
         stored = set_cache.call_args[0][1]
         self.assertFalse(stored["is_general_knowledge"])
+
+
+    def test_数据查询_落缓存带标记并返回指路(self) -> None:
+        # Planner 判定 is_data_query=True → 不进法律链路，返回指路提示，缓存带标记
+        planner = _planner_returning({"info_complete": True, "is_data_query": True})
+        with mock.patch.object(legal_agent, "get_intent_decision", return_value=None), \
+             mock.patch.object(legal_agent, "set_intent_decision") as set_cache, \
+             mock.patch.object(legal_agent, "planner_tool_llm", planner):
+            result = legal_agent.call_planner(_first_ask("8月有多少个会话？"))
+        stored = set_cache.call_args[0][1]
+        self.assertTrue(stored["is_data_query"])
+        self.assertFalse(result["info_complete"])
+        self.assertIn("运营问答", result["messages"][-1].content)
+
+    def test_缓存命中数据查询_回放指路提示(self) -> None:
+        # 旧缓存里带 is_data_query 标记 → 命中后回放指路提示，不再调 LLM
+        cached = {"info_complete": False, "follow_up": legal_agent.DATA_QUERY_REDIRECT,
+                  "is_data_query": True}
+        planner = _planner_returning({"info_complete": True})
+        with mock.patch.object(legal_agent, "get_intent_decision", return_value=cached), \
+             mock.patch.object(legal_agent, "planner_tool_llm", planner):
+            result = legal_agent.call_planner(_first_ask("8月有多少个会话？"))
+        self.assertIn("运营问答", result["messages"][-1].content)
+        planner.invoke.assert_not_called()
 
 
 if __name__ == "__main__":

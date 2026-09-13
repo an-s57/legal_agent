@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/an-s57/legal_agent/actions/workflows/ci.yml/badge.svg)](https://github.com/an-s57/legal_agent/actions/workflows/ci.yml)
 
-基于 **LangGraph + RAG + FastAPI** 的智能法律问答系统。Agent 链路：Planner 节点先做**一次 LLM 调用完成意图识别（五分类）**，仅对"个人案情咨询"检查四个维度信息（事件/时间/损失/诉求）是否完整、缺失则追问，放行后进入 ReAct 循环自主决策调用 RAG 法条检索（FAISS 向量 + BM25 词面混合召回 + Reranker 精排）或联网搜索，回答经幻觉守卫校验后带来源标注输出；会话历史与案情摘要使用 SQLite 持久化。前端会在浏览器本地保存当前 `session_id`，刷新页面后恢复该会话。
+基于 **LangGraph + RAG + FastAPI** 的智能法律问答系统。Agent 链路：Planner 节点先做**一次 LLM 调用完成意图识别（六分类，含数据查询指路）**，数据类问题不进法律链路、直接指路到运营问答入口；仅对"个人案情咨询"检查四个维度信息（事件/时间/损失/诉求）是否完整、缺失则追问，放行后进入 ReAct 循环自主决策调用 RAG 法条检索（FAISS 向量 + BM25 词面混合召回 + Reranker 精排）或联网搜索，回答经幻觉守卫校验后带来源标注输出；会话历史与案情摘要使用 SQLite 持久化。前端会在浏览器本地保存当前 `session_id`，刷新页面后恢复该会话。
 
 项目另含**运营数据问答模块（text-to-SQL）**：自然语言查 MySQL 运营数据，四道门只读安全链路 + 50 题评测（见[下文专节](#运营数据问答text-to-sql)）。
 
@@ -32,7 +32,7 @@ flowchart TD
     subgraph BE["FastAPI 服务层"]
         direction TB
         REQ --> LOAD["从 SQLite 加载上下文<br/>history + case_summary"]
-        LOAD --> P["🧠 Planner（必调 1 次 LLM）<br/>意图识别五分类<br/>知识查询/案情咨询/闲聊/无关/宣泄"]
+        LOAD --> P["🧠 Planner（必调 1 次 LLM）<br/>意图识别六分类<br/>知识查询/案情咨询/闲聊/无关/宣泄/数据查询"]
         P -->|"非 case_consult"| LLM["🤖 LLM 节点<br/>ReAct 决策"]
         P -->|"case_consult"| SLOT{"四维度齐备？<br/>事件/时间/损失/诉求"}
         SLOT -->|"✅ 完整"| LLM
@@ -387,7 +387,7 @@ python ops_data_qa/run_eval.py --type danger  # 只跑 danger 类
 
 ### Planner 节点：意图识别 + 信息收集
 
-在传统 ReAct 之前增加 Planner 节点，该节点每次请求**固定调用一次 LLM**（temperature=0，结构化输出），先做**五分类意图识别**：`knowledge_query`（客观法条/知识查询）、`case_consult`（个人案情咨询）、`chitchat`（闲聊）、`non_legal`（无关内容）、`complaint`（情绪宣泄）。
+在传统 ReAct 之前增加 Planner 节点，该节点每次请求**固定调用一次 LLM**（temperature=0，结构化输出），先做**六分类意图识别**：`knowledge_query`（客观法条/知识查询）、`case_consult`（个人案情咨询）、`chitchat`（闲聊）、`non_legal`（无关内容）、`complaint`（情绪宣泄）、`data_query`（运营数据查询——命中时不进法律链路，直接指路到「运营问答」入口；用户自路由为主、智能兜底为辅）。
 
 - 仅对 `case_consult` 进一步检查四个关键维度（**事件描述、发生时间、损失/后果、用户诉求**），缺失则生成自然的追问（`planner_question` 事件）并结束本轮，等待用户补充后重新走 Planner；
 - 其余四类（知识查询/闲聊/宣泄/无关）**直接放行**，避免对不该追问的场景误追问。
@@ -397,7 +397,7 @@ python ops_data_qa/run_eval.py --type danger  # 只跑 danger 类
 - **一次 LLM 调用同时完成意图分类 + 追问生成**，不额外增加调用次数；
 - **temperature=0**：意图识别是决策任务，同一输入必须得到可复现的判定；
 - **fail-open 兜底**：模型未调用工具或解析失败时保守放行，用户永远不会卡在追问上；
-- 用 53 条自建意图评测集验证（五类均衡覆盖）：追问决策准确率 100%，0 误追问、0 漏追问。
+- 用 58 条自建意图评测集验证（v2，六类覆盖）：追问决策准确率 96.6%，**0 误追问**；2 条 case_consult 漏追问为已知问题（新增类别后 prompt 变长的副作用，列入迭代清单）。
 
 ### 为什么手写 LangGraph StateGraph？
 

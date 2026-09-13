@@ -59,6 +59,7 @@ def judge_one(message: str, planner) -> dict:
                 "info_complete": decision.info_complete,
                 "missing_fields": decision.missing_fields or [],
                 "follow_up": decision.follow_up or "",
+                "is_data_query": decision.is_data_query,
             },
         }
     # 模型未调用工具：等价于旧的"解析失败"，走 fail-open 放行
@@ -101,7 +102,11 @@ def main():
             pred_ask = not info_complete
             ok = (pred_ask == gold_ask)
             note = ""
-            if pred_ask:
+            if it["intent"] == "data_query":
+                # 数据查询题：除放行外，还必须带上 is_data_query 标记（主图据此指路）
+                ok = bool(parsed.get("is_data_query", False))
+                note = "data_query ✓" if ok else "缺少 is_data_query 标记"
+            elif pred_ask:
                 note = parsed.get("follow_up", "")[:40]
 
         mark = "✓" if ok else "✗"
@@ -142,7 +147,7 @@ def main():
     # 分意图统计误追问率
     print("-" * 78)
     print("分意图误追问率（该放行的意图里被误追问的比例）：")
-    for intent in ["knowledge_query", "chitchat", "non_legal", "complaint"]:
+    for intent in ["knowledge_query", "chitchat", "non_legal", "complaint", "data_query"]:
         grp = [r for r in results if r["intent"] == intent]
         if not grp:
             continue

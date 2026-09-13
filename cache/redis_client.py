@@ -28,7 +28,10 @@ CACHE_ENABLED = os.getenv("CACHE_ENABLED", "1").lower() not in ("0", "false", "n
 # 探测失败后的重试冷却（秒）：冷却结束后的下一次访问重新探测，Redis 恢复后无需重启进程。
 # 探测成功后不重复 ping——redis-py 每条命令自带断线重连。
 PROBE_RETRY_SECONDS = float(os.getenv("REDIS_PROBE_RETRY_SECONDS", "30"))
-PREFIX = "intent_cache:"
+# 意图缓存版本：Planner 判定类别变化时 +1（如新增"数据查询"分类——旧缓存条目
+# 没有该字段，命中后会静默错过新路由，必须整体作废）
+INTENT_CACHE_VERSION = "v2"
+PREFIX = f"intent_cache:{INTENT_CACHE_VERSION}:"
 # 回答缓存（1.1B）：与意图缓存隔离；版本号取自 config.VECTORSTORE_VERSION，
 # 重建/更新向量库后 +1，旧回答缓存自动失效（防止法条更新后仍回放旧答案）。
 ANSWER_PREFIX = f"answer_cache:{VECTORSTORE_VERSION}:"

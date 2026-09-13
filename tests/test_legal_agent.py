@@ -196,5 +196,29 @@ class DedupToolNodeTest(unittest.TestCase):
         self.assertEqual(r["tool_rounds"], 1)
 
 
+class DataQueryRedirectTest(unittest.TestCase):
+    """数据查询 → 指路提示（不进法律链路瞎答）。"""
+
+    def _state(self, user_msg: str) -> dict:
+        return {
+            "messages": [HumanMessage(content=user_msg)],
+            "case_summary": "{}",
+            "skip_planner": False,
+        }
+
+    def test_判定为数据查询_返回指路提示(self) -> None:
+        stub = _StubPlanner({"info_complete": True, "is_data_query": True})
+        with mock.patch.object(legal_agent, "planner_tool_llm", stub):
+            result = legal_agent.call_planner(self._state("8月有多少个会话？"))
+        self.assertFalse(result["info_complete"])
+        self.assertIn("运营问答", result["messages"][-1].content)
+
+    def test_法律问题_不触发指路(self) -> None:
+        stub = _StubPlanner({"info_complete": True, "is_general_knowledge": True})
+        with mock.patch.object(legal_agent, "planner_tool_llm", stub):
+            result = legal_agent.call_planner(self._state("试用期最长可以约定几个月？"))
+        self.assertTrue(result["info_complete"])   # 正常放行进 ReAct
+
+
 if __name__ == "__main__":
     unittest.main()
