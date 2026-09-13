@@ -21,6 +21,12 @@ PLANNER_CONTEXT_TURNS = 3     # 传给 Planner 的最近对话轮数（理解多
 RECURSION_LIMIT = 12          # LangGraph 递归上限（约 ~5 轮工具调用），防 ReAct 循环失控
 MAX_TOOL_ROUNDS = 5           # 单次请求最多工具调用轮次，超过强制 END（防死循环）
 
+# ── 多 agent 编排（第二阶段"小律所"）──
+# 开关：1 = 新架构（资料员/外勤员并行 + 律师写稿 + 合伙人审稿环）；0 = 旧单干 ReAct。
+# A/B 对照和回退全靠它。
+MULTI_AGENT_ENABLED = os.getenv("MULTI_AGENT_ENABLED", "0").lower() not in ("0", "false", "no")
+VERIFY_MAX_RETRIES = int(os.getenv("VERIFY_MAX_RETRIES", "2"))   # 审稿打回重写上限
+
 # ── 检索（rag/retriever.py + rag/hybrid.py）──
 FAISS_DB_PATH = "rag/vectorstore/db_faiss"
 # 向量库版本号：重建/增量更新向量库后手动 +1（v1→v2）。

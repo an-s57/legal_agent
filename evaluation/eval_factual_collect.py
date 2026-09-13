@@ -168,7 +168,14 @@ if __name__ == "__main__":
         "--output", type=Path,
         help="答案 JSON 输出路径；不写时自动保存到 evaluation/results/",
     )
+    parser.add_argument(
+        "--port", type=int, default=8000,
+        help="被测服务端口（A/B 对照时分别指向新旧模式的服务）",
+    )
     args = parser.parse_args()
+
+    # 模块级脚本：直接按参数重定向被测端口（A/B 对照时分别指向新旧模式的服务）
+    API_BASE = f"http://127.0.0.1:{args.port}"
 
     if args.limit is not None and args.limit <= 0:
         parser.error("--limit 必须是正整数")
