@@ -36,7 +36,7 @@ services:
       - HF_HOME=/models                 # bge-reranker 从挂载目录读
     volumes:
       - ./data:/app/data                # SQLite 数据持久化
-      - C:/Users/an/.cache/huggingface:/models   # 复用模型缓存（只读）
+      - D:/hf_cache:/models   # 复用模型缓存（只读；HF_HOME 已迁到 D 盘）
     depends_on:
       ollama:
         condition: service_started
